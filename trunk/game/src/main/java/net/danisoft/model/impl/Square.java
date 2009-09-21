@@ -1,5 +1,6 @@
 package net.danisoft.model.impl;
 
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import net.danisoft.model.BaseElement;
@@ -11,13 +12,15 @@ public class Square implements BaseElement{
 	private float height;
 	private float width;
 	private float angle;
+	private boolean controlled;
 	
-	public Square(float height, float width, float posX, float posY, float angle){
+	public Square(float height, float width, float posX, float posY, float angle, boolean controlled){
 		this.posX = posX;
 		this.posY = posY;
 		this.angle = angle;
 		this.height = height;
 		this.width = width;
+		this.controlled = controlled;
 	}
 	
 	public void render() {
@@ -83,6 +86,23 @@ public class Square implements BaseElement{
 	public void setWidth(int width) {
 		this.width = width;
 	}
-
+	
+	public void logic(){
+		if(controlled){
+			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
+				this.height = this.height + 1;
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
+				this.height = this.height - 1;
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
+				this.width = this.width + 1;
+			}
+			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
+				this.width = this.width - 1;
+			}
+		}
+		
+	}
 	
 }
