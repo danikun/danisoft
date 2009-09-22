@@ -1,10 +1,17 @@
 package net.danisoft.engine.graphics;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.net.URI;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.nio.IntBuffer;
 
+import org.eclipse.swt.graphics.ImageData;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+
 
 public class Texture {
 	 
@@ -122,74 +129,30 @@ public class Texture {
 	   * @param name Name of texture to load
 	   * @param flip Whether to flip image
 	   * @return Loaded texture or null
+	 * @throws FileNotFoundException 
 	   */
-	  public static Texture loadTexture(String name, boolean flip) {
-	    Texture texture = null;
-	    ByteBuffer imageData = null;
-	    int ilImageHandle;
-	    int oglImageHandle;
-	    IntBuffer scratch = BufferUtils.createIntBuffer(1);
-
-	    // create image in DevIL and bind it
-	    IL.ilGenImages(scratch);
-	    IL.ilBindImage(scratch.get(0));
-	    ilImageHandle = scratch.get(0);
-	   
-	    // load the image
-	    if(!IL.ilLoadFromURL(IL.class.getClassLoader().getResource(name))) {
-	      return null;
-	    }
-	   
-	    // convert image to RGBA
-	    IL.ilConvertImage(IL.IL_RGBA, IL.IL_BYTE);
-	   
-	    // flip if needed
-	    if(flip) {
-	      ILU.iluFlipImage();
-	    }
-	   
-	    // get image attributes
-	    int width = IL.ilGetInteger(IL.IL_IMAGE_WIDTH);
-	    int height = IL.ilGetInteger(IL.IL_IMAGE_HEIGHT);
-	    int textureWidthSize = getNextPowerOfTwo(width);
-	    int textureHeightSize = getNextPowerOfTwo(height);
-	   
-	    // resize image according to poweroftwo
-	    if (textureWidthSize != width || textureHeightSize != height) {
-	      imageData = BufferUtils.createByteBuffer(textureWidthSize * textureHeightSize * 4);
-	      IL.ilCopyPixels(0, 0, 0, textureWidthSize, textureHeightSize, 1, IL.IL_RGBA, IL.IL_BYTE, imageData);
-	    } else {
-	      imageData = IL.ilGetData();
-	    }
-	   
-	    // create OpenGL counterpart
-	    GL11.glGenTextures(scratch);
-	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, scratch.get(0));
-	    oglImageHandle = scratch.get(0);
-	   
-	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-	    GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-	    GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA, textureWidthSize, textureHeightSize, 
-	                      0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE, imageData);
-	   
-	    // Create image (either resized by copying, else directly from IL)
-	    if (textureWidthSize != width || textureHeightSize != height) {
-	      texture = new Texture(oglImageHandle, width, height, (width / (float) textureWidthSize), 
-	                           (height / (float) textureHeightSize), textureWidthSize, textureHeightSize);
-	    } else {
-	      texture = new Texture(oglImageHandle, width, height);
-	    }
-	   
-	    // delete Image in DevIL
-	    scratch.put(0, ilImageHandle);
-	    IL.ilDeleteImages(scratch);
-	   
-	    // revert the gl state back to the default so that accidental texture binding doesn't occur
-	    GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-	   
-	    // return OpenGL texture handle
-	    return texture;
-	  }
+	  public static Texture loadTexture(URI imgPath) throws FileNotFoundException {
+		  	Texture    texture  = null;
+		  	FileInputStream file = new FileInputStream(new File(imgPath));
+			ImageData  img      = new ImageData(file);
+			int        width    = img.width;
+			int        height   = img.height;
+			byte[]     data     = new byte[img.data.length];
+			
+			for(int i=0; i<img.data.length; i++) 
+				data[i] = img.data[img.data.length-(i+0x1)];
+			
+			ByteBuffer scratch  = ByteBuffer.wrap(data);
+			IntBuffer  buffer   = ByteBuffer.allocateDirect(0x4).order(ByteOrder.nativeOrder()).asIntBuffer();
+			GL11.glGenTextures(buffer);
+			GL11.glBindTexture(GL11.GL_TEXTURE_2D, buffer.get(0x0));
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
+			GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
+			GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0x0, GL11.GL_RGB, width, height, 0x0, GL11.GL_RGB, GL11.GL_UNSIGNED_BYTE, scratch);
+			
+			texture = new Texture(buffer.get(0x0),width, height);
+			return texture;
+		}
 	  
 	  /**
 	   * Get the closest greater power of 2 to the fold number
