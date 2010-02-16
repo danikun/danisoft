@@ -1,39 +1,37 @@
-package net.danisoft.model.impl;
+package net.danisoft.model.test;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.URISyntaxException;
 
-import org.lwjgl.input.Keyboard;
+import net.danisoft.engine.controllers.Controller;
+import net.danisoft.model.AbstractControlledElement;
+
 import org.lwjgl.opengl.GL11;
 import org.newdawn.slick.Color;
 import org.newdawn.slick.opengl.Texture;
 import org.newdawn.slick.opengl.TextureLoader;
 
-
-import net.danisoft.model.BaseElement;
-
-public class Square implements BaseElement{
+public class Square extends AbstractControlledElement{
 
 	private float posX;
 	private float posY;
 	private float height;
 	private float width;
 	private float angle;
-	private boolean controlled;
 	private Texture texture;
 	private float[] texCoordinatesX = {0.0f, 0.5f, 0.0f, 0.5f};
 	private float[] texCoordinatesY = {0.0f, 0.0f, 0.5f, 0.5f};
 	private int frame;
 	
-	public Square(float height, float width, float posX, float posY, float angle, boolean controlled){
+	public Square(float height, float width, float posX, float posY, float angle, Controller controller){
+		
+		super(controller);
+		
 		this.posX = posX;
 		this.posY = posY;
 		this.angle = angle;
 		this.height = height;
 		this.width = width;
-		this.controlled = controlled;
 		try {
 			FileInputStream in = new FileInputStream(new File(this.getClass().getClassLoader().getResource("sprites/RYU SPRITES.png").toURI()));
 			this.texture = TextureLoader.getTexture("PNG", in, true);
@@ -108,43 +106,16 @@ public class Square implements BaseElement{
 		return width;
 	}
 
-	public void setWidth(int width) {
+	public void setWidth(float width) {
 		this.width = width;
 	}
-	
-	public void logic(){
-		if(controlled){
-			
-			//Se Controlan las teclas que permiten pulsación continua
-			if(Keyboard.isKeyDown(Keyboard.KEY_UP)){
-				this.height = this.height + 1;
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_DOWN)){
-				this.height = this.height - 1;
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_RIGHT)){
-				this.width = this.width + 1;
-			}
-			if(Keyboard.isKeyDown(Keyboard.KEY_LEFT)){
-				this.width = this.width - 1;
-			}
-			
-			Keyboard.poll();
-			while(Keyboard.next()){
-				//Se controlan las teclas que no permiten pulsación continua
-				switch(Keyboard.getEventKey()){
-					case Keyboard.KEY_F:
-						if(Keyboard.getEventKeyState()){
-							this.frame = this.frame+1;
-							if (this.frame == 4){
-								this.frame = 0;
-							}
-						}
-					break;
-				}
-			}
-		}
-		
+
+	public int getFrame() {
+		return frame;
+	}
+
+	public void setFrame(int frame) {
+		this.frame = frame;
 	}
 	
 }

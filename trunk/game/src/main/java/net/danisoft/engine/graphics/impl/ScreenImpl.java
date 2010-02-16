@@ -11,33 +11,63 @@ import org.lwjgl.opengl.GL11;
 
 import net.danisoft.engine.graphics.Screen;
 
+/**
+ * Implementation of an standard OpenGL display.
+ * 
+ * @author Daniel García Pino
+ *
+ */
 public class ScreenImpl implements Screen {
 	
+	/**
+	 * Pixel height of the display.
+	 */
 	private int height;
+	/**
+	 * Pixel width of the display.
+	 */
 	private int width;
+	/**
+	 * Framerate of the screen.
+	 */
 	private int framerate;
+	/**
+	 * Fullscreen mode enabled or disabled.
+	 */
 	private boolean fullscreen;
 	
-	public ScreenImpl(int height, int width, int framerate, boolean fullscreen){
+	/**
+	 * Class constructor.
+	 * 
+	 * @param framerate framerate of the screen.
+	 * @param fullscreen fullscreen mode.
+	 */
+	public ScreenImpl(int framerate, boolean fullscreen){
 		this.framerate = framerate;
 		this.fullscreen = fullscreen;
-		this.height = height;
-		this.width = width;		
+		
+		this.init();
 	}
 
+	/**
+	 * Method used to print the current frame.
+	 */
 	public void print() {
 		Display.update();
 		GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_STENCIL_BUFFER_BIT);
 	}
 
+	/**
+	 * Method that initialize the screen.
+	 */
 	public void init() {
 		
 		ResourceBundle bundle = null;
 		
 		bundle = ResourceBundle.getBundle("net.danisoft.conf.graphics");
 		
-		String height = bundle.getString("height");
-		String width = bundle.getString("width");
+		height = Integer.parseInt(bundle.getString("height"));
+		width = Integer.parseInt(bundle.getString("width"));
 		
 		DisplayMode chosenMode = null;
 		
@@ -45,7 +75,7 @@ public class ScreenImpl implements Screen {
 		     DisplayMode[] modes = Display.getAvailableDisplayModes();
 		 
 		     for (int i=0;i<modes.length;i++) {
-		          if ((modes[i].getWidth() == Integer.parseInt(width)) && (modes[i].getHeight() == Integer.parseInt(height))) {
+		          if ((modes[i].getWidth() == width) && (modes[i].getHeight() == height)) {
 		               chosenMode = modes[i];
 		               break;
 		          }
