@@ -12,7 +12,12 @@ import org.eclipse.swt.graphics.ImageData;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 
-
+/**
+ * Class to instantiate textures, and load to the OpenGL engine.
+ * 
+ * @author danielg.pino
+ *
+ */
 public class Texture {
 	 
 	  /** Texture id for this image (OpenGL) */

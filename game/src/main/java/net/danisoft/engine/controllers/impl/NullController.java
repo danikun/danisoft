@@ -1,24 +1,23 @@
 package net.danisoft.engine.controllers.impl;
 
-import org.lwjgl.input.Keyboard;
-
 import net.danisoft.engine.controllers.Controller;
 import net.danisoft.model.AbstractControlledElement;
 
 /**
- * Keyboard controller implementation.
+ * Controller for static elements.
  * 
  * @author Daniel García Pino
  *
  */
-public class KeyboardController implements Controller {
+public class NullController implements Controller {
 
+	/**
+	 * Process I/O of the controllers.
+	 * 
+	 * @param element element to control.
+	 */
 	public void logic(AbstractControlledElement element) {
-		
-		if(Keyboard.isKeyDown(Keyboard.KEY_ESCAPE)){
-			
-		}
-
+		//do nothing
 	}
 
 }

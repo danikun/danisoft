@@ -1,16 +1,18 @@
-package net.danisoft.engine.graphics.impl;
-
-import static org.junit.Assert.*;
+package net.danisoft.engine.graphics.test;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.lwjgl.opengl.Display;
 
+import net.danidoft.engine.controllers.test.KeyboardSquareController;
+import net.danisoft.engine.controllers.impl.NullController;
 import net.danisoft.engine.graphics.Screen;
+import net.danisoft.engine.graphics.impl.ScreenImpl;
 import net.danisoft.model.BaseElement;
-import net.danisoft.model.impl.Square;
+import net.danisoft.model.test.Square;
+
 
 public class ScreenImplTest {
 	
@@ -19,8 +21,6 @@ public class ScreenImplTest {
 	
 	@Test
 	public void testInit(){
-		
-		this.init();
 		
 		boolean gameRunning = true;
 		
@@ -39,32 +39,26 @@ public class ScreenImplTest {
 		}
 	}
 	
-	private void init(){
+	@Before
+	public void init(){
 		elements = new ArrayList<BaseElement>();
-		screen = new ScreenImpl(0, 0, 0, false);
-		screen.init();
+		screen = new ScreenImpl(0, false);
 		
-		Square square = new Square(50, 50, 0.0f, 0.0f, 0.0f, true);
-		Square square2 = new Square(100, 100, 400, 400, 0, false);
+		Square square = new Square(50, 50, 0.0f, 0.0f, 0.0f, new KeyboardSquareController());
+		Square square2 = new Square(100, 100, 400, 400, 0, new NullController());
 		
 		elements.add(square);
 		elements.add(square2);
 	}
 	
 	private void render(){
-		Iterator<BaseElement> it = elements.iterator();
-		
-		while(it.hasNext()){
-			BaseElement element = it.next();
+		for(BaseElement element : elements){
 			element.render();
 		}
 	}
 	
 	private void logic(){
-		Iterator<BaseElement> it = elements.iterator();
-		
-		while(it.hasNext()){
-			BaseElement element = it.next();
+		for(BaseElement element : elements){
 			element.logic();
 		}
 	}
