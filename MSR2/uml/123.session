@@ -1,0 +1,13 @@
+window_sizes 1366 712 320 960 512 82
+diagrams
+  active  classdiagram_ref 128123 // net.danisoft.msr2.model
+    1040 556 100 4 0 0
+end
+show_stereotypes
+selected attribute_ref 130043 // wheelPos4
+open
+  class_ref 128123 // Car
+  class_ref 128251 // CarData
+  class_ref 128379 // Track
+end
+end
