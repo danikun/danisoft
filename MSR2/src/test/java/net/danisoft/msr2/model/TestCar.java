@@ -11,6 +11,7 @@ import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
 import com.jme.scene.Node;
+import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Sphere;
 import com.jme.util.export.binary.BinaryImporter;
@@ -42,31 +43,32 @@ public class TestCar extends SimpleGame implements CollisionListener{
 //		Sphere wheel3=new Sphere("wheel",8,8,0.5f);
 //		Sphere wheel4=new Sphere("wheel",8,8,0.5f);
 		
+		URL bodyModel = TestCar.class.getClassLoader().getResource("car-jme.xml");
 		URL wheelModel = TestCar.class.getClassLoader().getResource("wheel-jme.xml");
 		Node wheel1 = null;
 		Node wheel2 = null;
 		Node wheel3 = null;
 		Node wheel4 = null;
+		Node body = null;
 		try {
 			wheel1 = (Node)XMLImporter.getInstance().load(wheelModel);
 			Quaternion quaternion = new Quaternion();
-			quaternion.fromAngleAxis(FastMath.PI/2, new Vector3f(0,0,1));
-			wheel1.setLocalRotation(quaternion);
-			wheel1.updateModelBound();
-			wheel1.updateRenderState();
+			quaternion.fromAngleAxis(FastMath.DEG_TO_RAD * 90, new Vector3f(0,1,0));
+
 			wheel2 = (Node)XMLImporter.getInstance().load(wheelModel);
 			wheel3 = (Node)XMLImporter.getInstance().load(wheelModel);
 			wheel4 = (Node)XMLImporter.getInstance().load(wheelModel);
+			body = (Node)XMLImporter.getInstance().load(bodyModel);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
 		}
 		
 		//Car Data
-		CarData carData = new CarData(500, 4.4f, 2.3f, 20f, new Vector3f(-1f,-0.5f,2f), new Vector3f(1f,-0.5f,2f), new Vector3f(-1f,-0.5f,-2f), new Vector3f(1f,-0.5f,-2f));
+		CarData carData = new CarData(500, 4.4f, 2.3f, 20f, new Vector3f(-0.75f,-0.75f,3.0f), new Vector3f(0.75f,-0.75f,3.0f), new Vector3f(-0.75f,-0.75f,-1.0f), new Vector3f(0.75f,-0.75f,-1.0f));
 
 		//Create the car
-		car = new Car(box1,wheel1, wheel2, wheel3, wheel4, carData, new Vector3f(10,-2,0));
+		car = new Car(body,wheel1, wheel2, wheel3, wheel4, carData, new Vector3f(10,-2,0));
 		
 		//Put the car in the world
 		this.rootNode.attachChild(car.getPhysicNode());
@@ -85,8 +87,8 @@ public class TestCar extends SimpleGame implements CollisionListener{
 	@Override
 	protected void simpleUpdate() {
 		super.simpleUpdate();
-//		car.getPhysicNode().accelerate(0.8f);
-//		car.getPhysicNode().steer(1f);
+		//car.getPhysicNode().accelerate(0.7f);
+		//car.getPhysicNode().steer(0.2f);
 		pSpace.update(this.tpf);
 	}
 
