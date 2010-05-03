@@ -1,4 +1,4 @@
-package net.danisoft.msr2.model;
+package net.danisoft.msr2.model.data;
 
 import com.jme.math.Vector3f;
 
