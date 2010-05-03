@@ -1,5 +1,6 @@
 package net.danisoft.msr2.model;
 
+import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 import com.jmex.jbullet.collision.shapes.CollisionShape;
@@ -25,7 +26,7 @@ public class Car {
 	private CarData carData;
 	
 	/**
-	 * Class constructor for real game structure.
+	 * Constructor for real game structure.
 	 * 
 	 * @param manufacturer Car manufacturer 
 	 * @param model Car model
@@ -75,6 +76,8 @@ public class Car {
 		this.physicNode.setRollInfluence(3, 1);
 
 		//Set the physic vehicle position
+		this.physicNode.setModelBound(new BoundingBox());
+		this.physicNode.updateModelBound();
 		this.physicNode.setLocalTranslation(initPos);
 	}
 

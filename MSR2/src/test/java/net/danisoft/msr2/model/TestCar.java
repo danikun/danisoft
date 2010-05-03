@@ -7,6 +7,8 @@ import org.junit.Test;
 
 import com.jme.app.SimpleGame;
 import com.jme.app.AbstractGame.ConfigShowMode;
+import com.jme.input.KeyBindingManager;
+import com.jme.input.KeyInput;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -38,27 +40,26 @@ public class TestCar extends SimpleGame implements CollisionListener{
 	protected void simpleInitGame() {
 		//Spatials for the car
 		Box box1=new Box("physicscar",Vector3f.ZERO,0.5f,0.5f,2f);
-//		Sphere wheel1=new Sphere("wheel",8,8,0.5f);
-//		Sphere wheel2=new Sphere("wheel",8,8,0.5f);
-//		Sphere wheel3=new Sphere("wheel",8,8,0.5f);
-//		Sphere wheel4=new Sphere("wheel",8,8,0.5f);
-		
+
+		//URL's for the car body and wheels
 		URL bodyModel = TestCar.class.getClassLoader().getResource("car-jme.xml");
 		URL wheelModel = TestCar.class.getClassLoader().getResource("wheel-jme.xml");
+		URL trackModel = TestCar.class.getClassLoader().getResource("track-jme.xml");
+		
+		//Model loading
 		Node wheel1 = null;
 		Node wheel2 = null;
 		Node wheel3 = null;
 		Node wheel4 = null;
 		Node body = null;
+		Node trackNode = null;
 		try {
 			wheel1 = (Node)XMLImporter.getInstance().load(wheelModel);
-			Quaternion quaternion = new Quaternion();
-			quaternion.fromAngleAxis(FastMath.DEG_TO_RAD * 90, new Vector3f(0,1,0));
-
 			wheel2 = (Node)XMLImporter.getInstance().load(wheelModel);
 			wheel3 = (Node)XMLImporter.getInstance().load(wheelModel);
 			wheel4 = (Node)XMLImporter.getInstance().load(wheelModel);
 			body = (Node)XMLImporter.getInstance().load(bodyModel);
+			trackNode = (Node)XMLImporter.getInstance().load(trackModel);
 		} catch (IOException e) {
 			e.printStackTrace();
 			System.exit(0);
@@ -68,7 +69,7 @@ public class TestCar extends SimpleGame implements CollisionListener{
 		CarData carData = new CarData(500, 4.4f, 2.3f, 20f, new Vector3f(-0.75f,-0.75f,3.0f), new Vector3f(0.75f,-0.75f,3.0f), new Vector3f(-0.75f,-0.75f,-1.0f), new Vector3f(0.75f,-0.75f,-1.0f));
 
 		//Create the car
-		car = new Car(body,wheel1, wheel2, wheel3, wheel4, carData, new Vector3f(10,-2,0));
+		car = new Car(body,wheel1, wheel2, wheel3, wheel4, carData, new Vector3f(0,-5,0));
 		
 		//Put the car in the world
 		this.rootNode.attachChild(car.getPhysicNode());
@@ -76,19 +77,41 @@ public class TestCar extends SimpleGame implements CollisionListener{
 		pSpace.add(car.getPhysicNode());
 		
 		//floor
-        PhysicsNode floor =new PhysicsNode(new Box("physicsfloor",Vector3f.ZERO,100f,0.2f,100f),CollisionShape.ShapeTypes.MESH,0);
-        floor.setLocalTranslation(new Vector3f(0f,-6,0f));
-        this.rootNode.attachChild(floor);
-        floor.updateRenderState();
-        pSpace.add(floor);
-
+		Track track = new Track(trackNode.getChild(0), new TrackData(), new Vector3f(0f,-16,0f));
+        
+        this.rootNode.attachChild(track.getPhysicsNode());
+        track.getPhysicsNode().updateRenderState();
+        pSpace.add(track.getPhysicsNode());
+        
+        //Key Mappings
+        KeyBindingManager.getKeyBindingManager().add("accelerate", KeyInput.KEY_NUMPAD8);
+        KeyBindingManager.getKeyBindingManager().add("steer_right", KeyInput.KEY_NUMPAD6);
+        KeyBindingManager.getKeyBindingManager().add("steer_left", KeyInput.KEY_NUMPAD4);
+        KeyBindingManager.getKeyBindingManager().add("brake", KeyInput.KEY_NUMPAD2);
 	}
 	
 	@Override
 	protected void simpleUpdate() {
 		super.simpleUpdate();
-		//car.getPhysicNode().accelerate(0.7f);
-		//car.getPhysicNode().steer(0.2f);
+		
+		if(KeyBindingManager.getKeyBindingManager().isValidCommand("accelerate", true)){
+			car.getPhysicNode().accelerate(0.8f);
+		}else{
+			car.getPhysicNode().accelerate(0f);
+		}
+		if(KeyBindingManager.getKeyBindingManager().isValidCommand("steer_right", true)){
+			car.getPhysicNode().steer(-1f);
+		}else if(KeyBindingManager.getKeyBindingManager().isValidCommand("steer_left", true)){
+			car.getPhysicNode().steer(1f);
+		}else{
+			car.getPhysicNode().steer(0f);
+		}
+		if(KeyBindingManager.getKeyBindingManager().isValidCommand("brake", true)){
+			car.getPhysicNode().brake(1f);
+		}else{
+			car.getPhysicNode().brake(0);
+		}
+		
 		pSpace.update(this.tpf);
 	}
 
