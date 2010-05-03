@@ -1,8 +1,17 @@
 package net.danisoft.msr2.model.data;
 
+import java.io.IOException;
+import java.net.URL;
+import java.util.InvalidPropertiesFormatException;
+import java.util.Properties;
+
+import javax.xml.parsers.ParserConfigurationException;
+
+import org.xml.sax.SAXException;
+
 import com.jme.math.Vector3f;
 
-public class CarData {
+public class CarData{
 	/** The maximum distance the suspension can be compressed (centimetres). */
 	private float maxSuspensionTravelCm;
 	/** The damping coefficient for when the suspension is compressed. */
@@ -46,7 +55,42 @@ public class CarData {
 		this.wheelPos3 = wheelPos3;
 		this.wheelPos4 = wheelPos4;
 	}
+	
+	/**
+	 * Constructor
+	 * 
+	 * @param carDataFile URL pointing to the car data file.
+	 * @throws SAXException 
+	 * @throws ParserConfigurationException 
+	 */
+	public CarData(URL carDataFile){
+		Properties properties = new Properties();
+		try {
+			properties.loadFromXML(carDataFile.openStream());
+		} catch (InvalidPropertiesFormatException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		this.maxSuspensionTravelCm = Float.parseFloat((String)properties.get("maxSuspensionTravelCm"));
+		this.suspensionCompression = Float.parseFloat((String)properties.get("suspensionCompression"));
+		this.suspensionDamping = Float.parseFloat((String)properties.get("suspensionDamping"));
+		this.suspensionStiffness = Float.parseFloat((String)properties.get("suspensionStiffness"));
+		
+		this.wheelPos1 = new Vector3f(Float.parseFloat((String)properties.get("wheelPos1x")), 
+				Float.parseFloat((String)properties.get("wheelPos1y")), Float.parseFloat((String)properties.get("wheelPos1z")));
+		this.wheelPos2 = new Vector3f(Float.parseFloat((String)properties.get("wheelPos2x")), 
+				Float.parseFloat((String)properties.get("wheelPos2y")), Float.parseFloat((String)properties.get("wheelPos2z")));
+		this.wheelPos3 = new Vector3f(Float.parseFloat((String)properties.get("wheelPos3x")), 
+				Float.parseFloat((String)properties.get("wheelPos3y")), Float.parseFloat((String)properties.get("wheelPos3z")));
+		this.wheelPos4 = new Vector3f(Float.parseFloat((String)properties.get("wheelPos4x")), 
+				Float.parseFloat((String)properties.get("wheelPos4y")), Float.parseFloat((String)properties.get("wheelPos4z")));
+	}
 
+	
 	/**
 	 * @return the maxSuspensionTravelCm
 	 */

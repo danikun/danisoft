@@ -48,9 +48,6 @@ public class TestCar extends SimpleGame implements CollisionListener{
 	protected void simpleInitGame() {
 		//Init entities List
 		this.entities = new ArrayList<Entity>();
-		
-		//Spatials for the car
-		Box box1=new Box("physicscar",Vector3f.ZERO,0.5f,0.5f,2f);
 
 		//URL's for the car body and wheels
 		URL bodyModel = TestCar.class.getClassLoader().getResource("car-jme.xml");
@@ -82,10 +79,16 @@ public class TestCar extends SimpleGame implements CollisionListener{
 		//Create the car
 		Car car = new Car(body,wheel1, wheel2, wheel3, wheel4, carData, new Vector3f(0,-5,0));
 		
-		//Put the car in the world
+		//Create file structure car
+		Car car2 = new Car("test", "test", new Vector3f(14,-5,0));
+		
+		//Put the cars in the world
 		this.rootNode.attachChild(car.getPhysicNode());
+		this.rootNode.attachChild(car2.getPhysicNode());
 		car.getPhysicNode().updateRenderState();
+		car2.getPhysicNode().updateRenderState();
 		pSpace.add(car.getPhysicNode());
+		pSpace.add(car2.getPhysicNode());
 		
 		entities.add(car);
 		
