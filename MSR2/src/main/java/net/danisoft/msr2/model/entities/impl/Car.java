@@ -1,6 +1,10 @@
-package net.danisoft.msr2.model;
+package net.danisoft.msr2.model.entities.impl;
+
+import net.danisoft.msr2.model.data.CarData;
+import net.danisoft.msr2.model.entities.Entity;
 
 import com.jme.bounding.BoundingBox;
+import com.jme.input.KeyBindingManager;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 import com.jmex.jbullet.collision.shapes.CollisionShape;
@@ -8,7 +12,7 @@ import com.jmex.jbullet.nodes.PhysicsVehicleNode;
 
 
 
-public class Car {
+public class Car implements Entity{
 	
 	/**	Chassis model */
 	private Spatial body;
@@ -86,6 +90,26 @@ public class Car {
 	 */
 	public PhysicsVehicleNode getPhysicNode() {
 		return physicNode;
+	}
+
+	public void update() {
+		if(KeyBindingManager.getKeyBindingManager().isValidCommand("accelerate", true)){
+			this.getPhysicNode().accelerate(0.8f);
+		}else{
+			this.getPhysicNode().accelerate(0f);
+		}
+		if(KeyBindingManager.getKeyBindingManager().isValidCommand("steer_right", true)){
+			this.getPhysicNode().steer(-1f);
+		}else if(KeyBindingManager.getKeyBindingManager().isValidCommand("steer_left", true)){
+			this.getPhysicNode().steer(1f);
+		}else{
+			this.getPhysicNode().steer(0f);
+		}
+		if(KeyBindingManager.getKeyBindingManager().isValidCommand("brake", true)){
+			this.getPhysicNode().brake(1f);
+		}else{
+			this.getPhysicNode().brake(0);
+		}
 	}
 	
 }

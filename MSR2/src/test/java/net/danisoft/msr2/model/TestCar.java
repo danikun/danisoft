@@ -2,6 +2,14 @@ package net.danisoft.msr2.model;
 
 import java.io.IOException;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
+
+import net.danisoft.msr2.model.data.CarData;
+import net.danisoft.msr2.model.data.TrackData;
+import net.danisoft.msr2.model.entities.Entity;
+import net.danisoft.msr2.model.entities.impl.Car;
+import net.danisoft.msr2.model.entities.impl.Track;
 
 import org.junit.Test;
 
@@ -27,7 +35,7 @@ import com.jmex.jbullet.nodes.PhysicsNode;
 public class TestCar extends SimpleGame implements CollisionListener{
 	
 	private static PhysicsSpace pSpace=PhysicsSpace.getPhysicsSpace();
-	Car car;
+	private List<Entity> entities;
 	
 	@Test
 	public void simpleCarTestCase(){
@@ -38,6 +46,9 @@ public class TestCar extends SimpleGame implements CollisionListener{
 
 	@Override
 	protected void simpleInitGame() {
+		//Init entities List
+		this.entities = new ArrayList<Entity>();
+		
 		//Spatials for the car
 		Box box1=new Box("physicscar",Vector3f.ZERO,0.5f,0.5f,2f);
 
@@ -69,12 +80,14 @@ public class TestCar extends SimpleGame implements CollisionListener{
 		CarData carData = new CarData(500, 4.4f, 2.3f, 20f, new Vector3f(-0.75f,-0.75f,3.0f), new Vector3f(0.75f,-0.75f,3.0f), new Vector3f(-0.75f,-0.75f,-1.0f), new Vector3f(0.75f,-0.75f,-1.0f));
 
 		//Create the car
-		car = new Car(body,wheel1, wheel2, wheel3, wheel4, carData, new Vector3f(0,-5,0));
+		Car car = new Car(body,wheel1, wheel2, wheel3, wheel4, carData, new Vector3f(0,-5,0));
 		
 		//Put the car in the world
 		this.rootNode.attachChild(car.getPhysicNode());
 		car.getPhysicNode().updateRenderState();
 		pSpace.add(car.getPhysicNode());
+		
+		entities.add(car);
 		
 		//floor
 		Track track = new Track(trackNode.getChild(0), new TrackData(), new Vector3f(0f,-16,0f));
@@ -82,6 +95,8 @@ public class TestCar extends SimpleGame implements CollisionListener{
         this.rootNode.attachChild(track.getPhysicsNode());
         track.getPhysicsNode().updateRenderState();
         pSpace.add(track.getPhysicsNode());
+        
+        entities.add(track);
         
         //Key Mappings
         KeyBindingManager.getKeyBindingManager().add("accelerate", KeyInput.KEY_NUMPAD8);
@@ -94,24 +109,10 @@ public class TestCar extends SimpleGame implements CollisionListener{
 	protected void simpleUpdate() {
 		super.simpleUpdate();
 		
-		if(KeyBindingManager.getKeyBindingManager().isValidCommand("accelerate", true)){
-			car.getPhysicNode().accelerate(0.8f);
-		}else{
-			car.getPhysicNode().accelerate(0f);
+		for(Entity entity : entities){
+			entity.update();
 		}
-		if(KeyBindingManager.getKeyBindingManager().isValidCommand("steer_right", true)){
-			car.getPhysicNode().steer(-1f);
-		}else if(KeyBindingManager.getKeyBindingManager().isValidCommand("steer_left", true)){
-			car.getPhysicNode().steer(1f);
-		}else{
-			car.getPhysicNode().steer(0f);
-		}
-		if(KeyBindingManager.getKeyBindingManager().isValidCommand("brake", true)){
-			car.getPhysicNode().brake(1f);
-		}else{
-			car.getPhysicNode().brake(0);
-		}
-		
+
 		pSpace.update(this.tpf);
 	}
 

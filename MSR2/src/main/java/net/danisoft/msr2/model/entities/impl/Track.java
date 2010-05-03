@@ -1,13 +1,15 @@
-package net.danisoft.msr2.model;
+package net.danisoft.msr2.model.entities.impl;
+
+import net.danisoft.msr2.model.data.TrackData;
+import net.danisoft.msr2.model.entities.Entity;
 
 import com.jme.bounding.BoundingBox;
-import com.jme.bounding.BoundingVolume;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
 import com.jmex.jbullet.collision.shapes.CollisionShape;
 import com.jmex.jbullet.nodes.PhysicsNode;
 
-public class Track {
+public class Track implements Entity {
 	
 	/** Track Model. */
 	private Spatial model;
@@ -49,6 +51,11 @@ public class Track {
 	 */
 	public PhysicsNode getPhysicsNode() {
 		return physicsNode;
+	}
+
+	public void update() {
+		// TODO Auto-generated method stub
+		
 	}
 	
 }
