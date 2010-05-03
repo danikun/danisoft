@@ -1,12 +1,18 @@
 package net.danisoft.msr2.model.entities.impl;
 
+import java.io.IOException;
+import java.net.URL;
+
+import net.danisoft.msr2.model.TestCar;
 import net.danisoft.msr2.model.data.CarData;
 import net.danisoft.msr2.model.entities.Entity;
 
 import com.jme.bounding.BoundingBox;
 import com.jme.input.KeyBindingManager;
 import com.jme.math.Vector3f;
+import com.jme.scene.Node;
 import com.jme.scene.Spatial;
+import com.jme.util.export.xml.XMLImporter;
 import com.jmex.jbullet.collision.shapes.CollisionShape;
 import com.jmex.jbullet.nodes.PhysicsVehicleNode;
 
@@ -38,6 +44,27 @@ public class Car implements Entity{
 	 */
 	public Car(String manufacturer, String model, Vector3f initPos){
 		
+		//URL's for the car body and wheels
+		URL bodyModel = TestCar.class.getClassLoader().getResource("cars/" + manufacturer + "/" + model + "/" + "car-jme.xml");
+		URL wheelModel = TestCar.class.getClassLoader().getResource("cars/" + manufacturer + "/" + model + "/" + "wheel-jme.xml");
+		URL carDataFile = TestCar.class.getClassLoader().getResource("cars/" + manufacturer + "/" + model + "/" + "car-data.xml");
+		
+		//Model loading
+		try {
+			wheel1 = (Node)XMLImporter.getInstance().load(wheelModel);
+			wheel2 = (Node)XMLImporter.getInstance().load(wheelModel);
+			wheel3 = (Node)XMLImporter.getInstance().load(wheelModel);
+			wheel4 = (Node)XMLImporter.getInstance().load(wheelModel);
+			body = (Node)XMLImporter.getInstance().load(bodyModel);
+		} catch (IOException e) {
+			e.printStackTrace();
+			System.exit(0);
+		}
+		
+		carData = new CarData(carDataFile);
+		
+		//Setup the car
+		this.setup(initPos);
 	}
 	
 	/**
@@ -55,7 +82,17 @@ public class Car implements Entity{
 		this.wheel3 = wheel3;
 		this.wheel4 = wheel4;
 		this.carData = carData;
-		
+
+		//Setup the car		
+		this.setup(initPos);
+	}
+	
+	/**
+	 * Method that creates and initializes the physic object.
+	 * 
+	 * @param initPos starting position of the car.
+	 */
+	private void setup(Vector3f initPos){
 		//Create the physics vehicle
 		this.physicNode = new PhysicsVehicleNode(this.body, CollisionShape.ShapeTypes.BOX);
 		this.physicNode.setMaxSuspensionTravelCm(carData.getMaxSuspensionTravelCm());
