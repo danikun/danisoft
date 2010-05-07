@@ -10,6 +10,12 @@
       <vertBuf data="51.0 8.45219 -51.0  51.0 0.0 51.0  -51.0 8.45219 51.0  -51.0 0.0 -51.0"/>
       <normBuf data="0.0 1.0 0.0  0.082278 0.993194 0.082278  0.0 1.0 0.0  -0.082278 0.993194 -0.082278"/>
       <indexBuffer data="0 3 2  0 2 1"/>
+      <texBuf>
+        <com.jme.scene.TexCoords perVert="2">
+          <!-- Blender UV Layer 'UVTex' -->
+          <coords data="0.0 1.0  0.0 0.0  1.0 0.0  1.0 1.0"/>
+        </com.jme.scene.TexCoords>
+      </texBuf>
     </com.jme.scene.TriMesh>
   </children>
 </com.jme.scene.Node>

@@ -15,8 +15,11 @@ import org.junit.Test;
 
 import com.jme.app.SimpleGame;
 import com.jme.app.AbstractGame.ConfigShowMode;
+import com.jme.image.Texture;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
+import com.jme.light.Light;
+import com.jme.light.PointLight;
 import com.jme.math.FastMath;
 import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
@@ -24,6 +27,8 @@ import com.jme.scene.Node;
 import com.jme.scene.TriMesh;
 import com.jme.scene.shape.Box;
 import com.jme.scene.shape.Sphere;
+import com.jme.scene.state.TextureState;
+import com.jme.util.TextureManager;
 import com.jme.util.export.binary.BinaryImporter;
 import com.jme.util.export.xml.XMLImporter;
 import com.jmex.jbullet.PhysicsSpace;
@@ -92,8 +97,18 @@ public class TestCar extends SimpleGame implements CollisionListener{
 		
 		entities.add(car);
 		
+		//floor texture
+		URL floorTex = TestCar.class.getClassLoader().getResource("textura-test.png");
+		TextureState ts = display.getRenderer().createTextureState();
+		Texture t = TextureManager.loadTexture(floorTex,
+				Texture.MinificationFilter.BilinearNearestMipMap,
+				Texture.MagnificationFilter.Bilinear);
+		t.setWrap(Texture.WrapMode.BorderClamp);
+		ts.setTexture(t);
+		ts.setEnabled(true);
+		
 		//floor
-		Track track = new Track(trackNode.getChild(0), new TrackData(), new Vector3f(0f,-16,0f));
+		Track track = new Track(trackNode.getChild(0), new TrackData(), new Vector3f(0f,-16,0f), ts);
         
         this.rootNode.attachChild(track.getPhysicsNode());
         track.getPhysicsNode().updateRenderState();
@@ -106,6 +121,7 @@ public class TestCar extends SimpleGame implements CollisionListener{
         KeyBindingManager.getKeyBindingManager().add("steer_right", KeyInput.KEY_NUMPAD6);
         KeyBindingManager.getKeyBindingManager().add("steer_left", KeyInput.KEY_NUMPAD4);
         KeyBindingManager.getKeyBindingManager().add("brake", KeyInput.KEY_NUMPAD2);
+        
 	}
 	
 	@Override

@@ -6,6 +6,7 @@ import net.danisoft.msr2.model.entities.Entity;
 import com.jme.bounding.BoundingBox;
 import com.jme.math.Vector3f;
 import com.jme.scene.Spatial;
+import com.jme.scene.state.TextureState;
 import com.jmex.jbullet.collision.shapes.CollisionShape;
 import com.jmex.jbullet.nodes.PhysicsNode;
 
@@ -35,11 +36,13 @@ public class Track implements Entity {
 	 * @param trackData Track data.
 	 * @param pos Position in the 3D space. 
 	 */
-	public Track(Spatial model, TrackData trackData, Vector3f pos){
+	public Track(Spatial model, TrackData trackData, Vector3f pos, TextureState textureState){
 		this.model = model;
 		this.trackData = trackData;
 		
+		
 		this.physicsNode = new PhysicsNode(this.model, CollisionShape.ShapeTypes.MESH, 0);
+		this.physicsNode.setRenderState(textureState);
 		
 		this.physicsNode.setModelBound(new BoundingBox());
 		this.physicsNode.updateModelBound();
