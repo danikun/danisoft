@@ -13,7 +13,9 @@ import com.jme.math.Vector3f;
 import com.jme.scene.Node;
 import com.jme.scene.Spatial;
 import com.jme.util.export.xml.XMLImporter;
+import com.jmex.jbullet.collision.shapes.BoxCollisionShape;
 import com.jmex.jbullet.collision.shapes.CollisionShape;
+import com.jmex.jbullet.collision.shapes.CompoundCollisionShape;
 import com.jmex.jbullet.nodes.PhysicsVehicleNode;
 
 
@@ -93,8 +95,14 @@ public class Car implements Entity{
 	 * @param initPos starting position of the car.
 	 */
 	private void setup(Vector3f initPos){
+		
+		CompoundCollisionShape compoundCollisionShape=new CompoundCollisionShape();
+		BoxCollisionShape boxCollisionShape=new BoxCollisionShape(new Vector3f(1f,1f,5f));
+		compoundCollisionShape.addChildShape(boxCollisionShape, new Vector3f(0,1f,0));
+		this.body.setLocalTranslation(new Vector3f(0,1f,0));
+		
 		//Create the physics vehicle
-		this.physicNode = new PhysicsVehicleNode(this.body, CollisionShape.ShapeTypes.BOX);
+		this.physicNode = new PhysicsVehicleNode(this.body, compoundCollisionShape, 20);
 		this.physicNode.setMaxSuspensionTravelCm(carData.getMaxSuspensionTravelCm());
 		this.physicNode.setSuspensionCompression(carData.getSuspensionCompression());
 		this.physicNode.setSuspensionDamping(carData.getSuspensionDamping());
@@ -104,10 +112,10 @@ public class Car implements Entity{
 		Vector3f wheelDirection = new Vector3f(0,-1,0);
 		Vector3f wheelAxle = new Vector3f(-1,0,0);
 		
-		this.physicNode.addWheel(this.wheel1, this.carData.getWheelPos1(), wheelDirection, wheelAxle, 0.2f, 0.5f, true);
+		this.physicNode.addWheel(this.wheel1, this.carData.getWheelPos1(), wheelDirection, wheelAxle, 0.1f, 0.5f, true);
 		this.physicNode.setRollInfluence(0, 1);
         
-		this.physicNode.addWheel(this.wheel2, this.carData.getWheelPos2(), wheelDirection, wheelAxle, 0.2f, 0.5f, true);
+		this.physicNode.addWheel(this.wheel2, this.carData.getWheelPos2(), wheelDirection, wheelAxle, 0.1f, 0.5f, true);
 		this.physicNode.setRollInfluence(1, 1);
 
 		this.physicNode.addWheel(this.wheel3, this.carData.getWheelPos3(), wheelDirection, wheelAxle, 0.2f, 0.5f, false);
@@ -131,14 +139,14 @@ public class Car implements Entity{
 
 	public void update() {
 		if(KeyBindingManager.getKeyBindingManager().isValidCommand("accelerate", true)){
-			this.getPhysicNode().accelerate(0.8f);
+			this.getPhysicNode().accelerate(20f);
 		}else{
 			this.getPhysicNode().accelerate(0f);
 		}
 		if(KeyBindingManager.getKeyBindingManager().isValidCommand("steer_right", true)){
-			this.getPhysicNode().steer(-1f);
+			this.getPhysicNode().steer(-0.5f);
 		}else if(KeyBindingManager.getKeyBindingManager().isValidCommand("steer_left", true)){
-			this.getPhysicNode().steer(1f);
+			this.getPhysicNode().steer(0.5f);
 		}else{
 			this.getPhysicNode().steer(0f);
 		}

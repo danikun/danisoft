@@ -14,28 +14,19 @@ import net.danisoft.msr2.model.entities.impl.Track;
 import org.junit.Test;
 
 import com.jme.app.SimpleGame;
-import com.jme.app.AbstractGame.ConfigShowMode;
 import com.jme.image.Texture;
 import com.jme.input.KeyBindingManager;
 import com.jme.input.KeyInput;
-import com.jme.light.Light;
 import com.jme.light.PointLight;
-import com.jme.math.FastMath;
-import com.jme.math.Quaternion;
 import com.jme.math.Vector3f;
+import com.jme.renderer.ColorRGBA;
 import com.jme.scene.Node;
-import com.jme.scene.TriMesh;
-import com.jme.scene.shape.Box;
-import com.jme.scene.shape.Sphere;
 import com.jme.scene.state.TextureState;
 import com.jme.util.TextureManager;
-import com.jme.util.export.binary.BinaryImporter;
 import com.jme.util.export.xml.XMLImporter;
 import com.jmex.jbullet.PhysicsSpace;
 import com.jmex.jbullet.collision.CollisionEvent;
 import com.jmex.jbullet.collision.CollisionListener;
-import com.jmex.jbullet.collision.shapes.CollisionShape;
-import com.jmex.jbullet.nodes.PhysicsNode;
 
 public class TestCar extends SimpleGame implements CollisionListener{
 	
@@ -57,7 +48,7 @@ public class TestCar extends SimpleGame implements CollisionListener{
 		//URL's for the car body and wheels
 		URL bodyModel = TestCar.class.getClassLoader().getResource("car-jme.xml");
 		URL wheelModel = TestCar.class.getClassLoader().getResource("wheel-jme.xml");
-		URL trackModel = TestCar.class.getClassLoader().getResource("track-jme.xml");
+		URL trackModel = TestCar.class.getClassLoader().getResource("bigplane-jme.xml");
 		
 		//Model loading
 		Node wheel1 = null;
@@ -79,7 +70,7 @@ public class TestCar extends SimpleGame implements CollisionListener{
 		}
 		
 		//Car Data
-		CarData carData = new CarData(500, 4.4f, 2.3f, 20f, new Vector3f(-0.75f,-0.75f,3.0f), new Vector3f(0.75f,-0.75f,3.0f), new Vector3f(-0.75f,-0.75f,-1.0f), new Vector3f(0.75f,-0.75f,-1.0f));
+		CarData carData = new CarData(500, 4.4f, 2.3f, 20f, new Vector3f(-0.75f,0.25f,3.0f), new Vector3f(0.75f,0.25f,3.0f), new Vector3f(-0.75f,0.25f,-1.0f), new Vector3f(0.75f,0.25f,-1.0f));
 
 		//Create the car
 		Car car = new Car(body,wheel1, wheel2, wheel3, wheel4, carData, new Vector3f(0,-5,0));
@@ -122,6 +113,7 @@ public class TestCar extends SimpleGame implements CollisionListener{
         KeyBindingManager.getKeyBindingManager().add("steer_left", KeyInput.KEY_NUMPAD4);
         KeyBindingManager.getKeyBindingManager().add("brake", KeyInput.KEY_NUMPAD2);
         
+       
 	}
 	
 	@Override
@@ -131,7 +123,7 @@ public class TestCar extends SimpleGame implements CollisionListener{
 		for(Entity entity : entities){
 			entity.update();
 		}
-
+		
 		pSpace.update(this.tpf);
 	}
 
