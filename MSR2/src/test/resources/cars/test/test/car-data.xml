@@ -4,25 +4,25 @@
 	<entry key="maxSuspensionTravelCm">500</entry>
 	<entry key="suspensionCompression">4.4f</entry>
 	<entry key="suspensionDamping">2.3f</entry>
-	<entry key="suspensionStiffness">20f</entry>
+	<entry key="suspensionStiffness">50f</entry>
 	
 	<!-- Wheel 1 -->
 	<entry key="wheelPos1x">-0.75f</entry>
-	<entry key="wheelPos1y">-0.75f</entry>
+	<entry key="wheelPos1y">0.25f</entry>
 	<entry key="wheelPos1z">3.0f</entry>
 	
 	<!-- Wheel 2 -->
 	<entry key="wheelPos2x">0.75f</entry>
-	<entry key="wheelPos2y">-0.75f</entry>
+	<entry key="wheelPos2y">0.25f</entry>
 	<entry key="wheelPos2z">3.0f</entry>
 	
 	<!-- Wheel 3 -->
 	<entry key="wheelPos3x">-0.75f</entry>
-	<entry key="wheelPos3y">-0.75f</entry>
+	<entry key="wheelPos3y">0.25f</entry>
 	<entry key="wheelPos3z">-1.0f</entry>
 	
 	<!-- Wheel 4 -->
 	<entry key="wheelPos4x">0.75f</entry>
-	<entry key="wheelPos4y">-0.75f</entry>
+	<entry key="wheelPos4y">0.25f</entry>
 	<entry key="wheelPos4z">-1.0f</entry>
 </properties>
