@@ -8,4 +8,4 @@ En esta página y en sus anidadas se describe la arquitectura principal de todas
 
 = Tabla de contenidos =
 
-  * [DataBase Estructura de base de datos]
+  * [EstructuraBaseDatos Estructura de base de datos]
