@@ -6,9 +6,6 @@
 En esta página y en sus anidadas se describe la arquitectura principal de todas las aplicaciones.
 
 
-= Details =
+= Tabla de contenidos =
 
-Add your content here.  Format your content with:
-  * Text in *bold* or _italic_
-  * Headings, paragraphs, and lists
-  * Automatic links to other wiki pages
+  * [WikiSyntax Estructura de base de datos]
