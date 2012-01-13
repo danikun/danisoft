@@ -1,5 +1,7 @@
 package org.danisoft.model;
 
+import java.util.List;
+
 /**
  * Data object to represent a person data.
  * 
@@ -16,6 +18,14 @@ public class Person extends Contact {
 	 * Second surname.
 	 */
 	private String lastName2;
+	
+	public Person(int id, String name, ContactType type,
+			List<PhoneNumber> phoneNumbers, String address, String lastName1,
+			String lastName2) {
+		super(id, name, type, phoneNumbers, address);
+		this.lastName1 = lastName1;
+		this.lastName2 = lastName2;
+	}
 	
 	/**
 	 * @return the lastName1

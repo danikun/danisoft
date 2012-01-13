@@ -30,6 +30,16 @@ public class Contact {
 	 */
 	private String address;
 	
+	public Contact(int id, String name, ContactType type,
+			List<PhoneNumber> phoneNumbers, String address) {
+		super();
+		this.id = id;
+		this.name = name;
+		this.type = type;
+		this.phoneNumbers = phoneNumbers;
+		this.address = address;
+	}
+	
 	/**
 	 * @return the id
 	 */
@@ -89,5 +99,10 @@ public class Contact {
 	 */
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+	@Override
+	public String toString() {
+		return name;
 	}
 }
