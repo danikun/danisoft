@@ -10,7 +10,7 @@
 	xmlns:fx="http://javafx.com/fxml" fx:id="flowButtons" style="-fx-padding: 20 20 20;">
 	
 	<children>
-		<Button onAction="#handleButtonAction" id="Open">
+		<Button onAction="#handleButtonAction" id="Contacts">
 			<graphic>
 				<ImageView>
 					<image>
