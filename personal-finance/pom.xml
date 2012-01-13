@@ -10,5 +10,7 @@
   	<module>data-model</module>
   	<module>data-access</module>
   	<module>user-interface</module>
+  	<module>contacts-manager</module>
+  	<module>common</module>
   </modules>
 </project>
