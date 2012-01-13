@@ -38,5 +38,15 @@ It will provide the framework for the rest of the modules to work.</description>
 			<systemPath>C:\Archivos de programa\Oracle\JavaFX 2.0 SDK\rt\lib\jfxrt.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.danisoft</groupId>
+			<artifactId>common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.danisoft</groupId>
+			<artifactId>contacts-manager</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>
