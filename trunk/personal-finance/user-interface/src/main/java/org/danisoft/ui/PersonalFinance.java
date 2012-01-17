@@ -30,7 +30,7 @@ public class PersonalFinance extends Application {
 	public void start(Stage stage) throws Exception {
 		// Window title
 		stage.setTitle("Personal finance");
-		Image icon = new Image(getClass().getResourceAsStream("images/cash.png"));
+		Image icon = new Image(getClass().getResourceAsStream("/org/danisoft/ui/images/cash.png"));
 		stage.getIcons().add(icon);
 		
 		// Border Pane Layout (top --> menu, center --> current page area)
