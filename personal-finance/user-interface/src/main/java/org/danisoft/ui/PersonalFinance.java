@@ -1,19 +1,13 @@
 package org.danisoft.ui;
 
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
 
 /**
@@ -37,15 +31,10 @@ public class PersonalFinance extends Application {
 		scene = new Scene(new BorderPane(), 1024, 768);
 		
 		// Load the menu from an easily editable FXML file
-		MenuBar menuBar = FXMLLoader.load(getClass().getResource("TopMenu.fxml"));
-		VBox sideButtons = FXMLLoader.load(getClass().getResource("SideButtons.fxml"));
 		FlowPane flowButtons = FXMLLoader.load(getClass().getResource("FlowButtons.fxml"));
 
-		// Add menubar to the top of the border pane
-		//((BorderPane)scene.getRoot()).setTop(menuBar);
-		//((BorderPane)scene.getRoot()).setLeft(sideButtons);
-		
-		Tab tab = new Tab("test tab");
+		// Add flow buttons to the main tab	
+		Tab tab = new Tab("Main menu");
 		tab.setClosable(false);
 		tab.setContent(flowButtons);
 		TabPane tabPane = new TabPane();
