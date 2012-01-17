@@ -1,12 +1,15 @@
 package org.danisoft.ui.pages;
 
+import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Label;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
@@ -14,9 +17,11 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.util.Callback;
 
 import org.danisoft.model.ContactType;
 import org.danisoft.ui.base.Page;
+import org.danisoft.ui.custom.cells.ImageTableCell;
 import org.danisoft.ui.model.UIContact;
 
 /**
@@ -42,7 +47,7 @@ public class ContactsPage implements Page {
 	ObservableList<UIContact> contacts = FXCollections.observableArrayList(
 			new UIContact(1, "Daniel", ContactType.Person, null,
 					"C/Sepulveda, 34, 08015, Barcelona"), new UIContact(1,
-					"Lourdes", ContactType.Person, null,
+					"Lourdes", ContactType.Company, null,
 					"C/Sepulveda, 34, 08015, Barcelona"));
 
 	public Node load() {
@@ -68,9 +73,31 @@ public class ContactsPage implements Page {
 	private void init() {
 		// List of Contacts (Center)
 		layout.setCenter(contactList);
+		
 		TableColumn<UIContact, String> nameColumn = new TableColumn<UIContact, String>("Name");
 		nameColumn.setCellValueFactory(new PropertyValueFactory<UIContact, String>("name"));
-		contactList.getColumns().add(nameColumn);
+		
+		TableColumn<UIContact, String> typeColumn = new TableColumn<UIContact, String>("");
+		typeColumn.setCellFactory(new Callback<TableColumn<UIContact,String>, TableCell<UIContact,String>>() {
+			
+			public TableCell<UIContact, String> call(TableColumn<UIContact, String> arg0) {
+				return new ImageTableCell();
+			}
+		});
+		
+		typeColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UIContact,String>, ObservableValue<String>>() {
+
+			public ObservableValue<String> call(
+					CellDataFeatures<UIContact, String> cellData) {
+				SimpleStringProperty value = 
+						new SimpleStringProperty(cellData.getValue().getType().getDisplayName());
+				return value;
+			}
+		});
+		typeColumn.setPrefWidth(35);
+		typeColumn.setMaxWidth(35);
+		
+		contactList.getColumns().addAll(typeColumn, nameColumn);
 		
 		// Configure contact data pane (Left)
 		ColumnConstraints column1 = new ColumnConstraints();
