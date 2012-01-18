@@ -1,5 +1,7 @@
 package org.danisoft.ui.pages;
 
+import java.util.List;
+
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -26,7 +28,9 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.util.Callback;
 
+import org.danisoft.model.Contact;
 import org.danisoft.model.ContactType;
+import org.danisoft.services.IContactsService;
 import org.danisoft.ui.base.Page;
 import org.danisoft.ui.custom.cells.ImageTableCell;
 import org.danisoft.ui.model.UIContact;
@@ -38,6 +42,9 @@ import org.danisoft.ui.model.UIContact;
  * 
  */
 public class ContactsPage implements Page {
+	
+	// Service
+	IContactsService contactsService = null;
 	
 	// Action Constants
 	public static final String NEW = "new";
@@ -61,14 +68,25 @@ public class ContactsPage implements Page {
 	private final Button deleteButton = new Button("Delete Contact");
 
 	// TODO: this is only a test contact list
-	ObservableList<UIContact> contacts = FXCollections.observableArrayList(
-			new UIContact(1, "Daniel", ContactType.Person, null,
-					"C/Sepulveda, 34, 08015, Barcelona"), new UIContact(1,
-					"Rule Financial", ContactType.Company, null,
-					"C/Consell de Cent, 333, 08007, Barcelona"));
+	private ObservableList<UIContact> contacts = null;
+	private Boolean initialised = false;
 
 	public Node load() {
-		init();
+		contacts = FXCollections.observableArrayList();
+		
+		List<Contact> dbContacts = contactsService.getAllContacts();
+		
+		for (Contact contact : dbContacts) {
+			contacts.add(UIContact.fromContact(contact));
+		}
+		
+		if (!initialised) {
+			init();
+			initialised = true;
+		} else {
+			contactData.getChildren().clear();
+		}
+		
 		contactList.setItems(contacts);
 
 		contactList.getSelectionModel().selectedItemProperty()
@@ -90,6 +108,8 @@ public class ContactsPage implements Page {
 	
 	@SuppressWarnings("unchecked")
 	private void init() {
+		
+		
 		// Button event handler
 		ButtonEventHandler buttonEventHandler = new ButtonEventHandler();
 		
@@ -217,7 +237,10 @@ public class ContactsPage implements Page {
 					saveButton.setId(SAVE);
 					break;
 				case SAVE:
-					UIContact newContact = new UIContact(0, nameText.getText(), ContactType.Person, null, addressText.getText()); 
+					UIContact newContact = new UIContact(0, nameText.getText(), ContactType.Person, null, addressText.getText());
+					int id = contactsService.saveContact(newContact.toContact());
+					newContact.setId(id);
+					
 					contacts.add(newContact);
 					contactList.getSelectionModel().select(newContact);
 					break;
@@ -225,13 +248,24 @@ public class ContactsPage implements Page {
 					UIContact update = contactList.getSelectionModel().getSelectedItem();
 					update.setName(nameText.getText());
 					update.setAddress(addressText.getText());
+					
+					contactsService.saveContact(update.toContact());
 					break;
 				case DELETE:
 					UIContact contact = contactList.getSelectionModel().getSelectedItem();
+					contactsService.deleteContact(contact.toContact());
+					
 					contacts.remove(contact);
 					contactData.getChildren().clear();
 					break;
 			}
 		}
+	}
+
+	/**
+	 * @param contactsService the contactsService to set
+	 */
+	public void setContactsService(IContactsService contactsService) {
+		this.contactsService = contactsService;
 	}
 }
