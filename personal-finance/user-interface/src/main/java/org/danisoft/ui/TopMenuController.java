@@ -12,10 +12,12 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
 
 import org.danisoft.ui.base.Page;
+import org.springframework.context.ApplicationContext;
 
 public class TopMenuController {
 	@FXML private MenuBar menuBar;
 	@FXML private FlowPane flowButtons;
+	private ApplicationContext context;
 
 	@FXML protected void handleMenuItemAction(ActionEvent event) {
 		MenuItem menuItem = (MenuItem)event.getTarget();
@@ -43,7 +45,7 @@ public class TopMenuController {
 		Button button = (Button)event.getTarget();
 		
 		String id = button.getId();
-		String className = "org.danisoft.ui.pages." + id + "Page";
+		String pageName = id + "Page";
 		
 		Page page = null;
 		
@@ -58,7 +60,7 @@ public class TopMenuController {
 				}
 			}
 			
-			page = (Page) Class.forName(className).newInstance();
+			page = (Page) context.getBean(pageName);
 			Tab tab = new Tab(page.getName());
 			tab.setId(id);
 			tab.setContent(page.load());
@@ -70,5 +72,9 @@ public class TopMenuController {
 			System.out.println("Could not load class");
 			return;
 		}
+	}
+
+	public void setContext(ApplicationContext context) {
+		this.context = context;
 	}
 }

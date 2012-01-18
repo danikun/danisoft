@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+
+	<!-- Pages -->
+	<bean name="contactsPage" class="org.danisoft.ui.pages.ContactsPage">
+		<property name="contactsService" ref="contactsService"/>
+	</bean>
+	
+	<!-- Services -->
+	<bean name="contactsService" class="org.danisoft.services.impl.ContactsServiceImpl">
+		<property name="contactDao" ref="contacDao"/>
+	</bean>
+
+	<!-- DAO's -->
+	<bean name="contacDao" class="org.danisoft.dao.mock.ContactDaoMock">
+	</bean>
+
+</beans>
