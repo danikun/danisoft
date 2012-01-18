@@ -1,7 +1,11 @@
 package org.danisoft.ui;
 
+import org.springframework.context.ApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Scene;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
@@ -22,6 +26,9 @@ public class PersonalFinance extends Application {
 	
 	@Override
 	public void start(Stage stage) throws Exception {
+		// Spring application Context
+		ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+		
 		// Window title
 		stage.setTitle("Personal finance");
 		Image icon = new Image(getClass().getResourceAsStream("/org/danisoft/ui/images/cash.png"));
@@ -31,7 +38,13 @@ public class PersonalFinance extends Application {
 		scene = new Scene(new BorderPane(), 1024, 768);
 		
 		// Load the menu from an easily editable FXML file
-		FlowPane flowButtons = FXMLLoader.load(getClass().getResource("FlowButtons.fxml"));
+		FXMLLoader loader = new FXMLLoader();
+		loader.setBuilderFactory(new JavaFXBuilderFactory(false));
+		loader.setLocation(getClass().getResource(""));
+		FlowPane flowButtons = 
+				(FlowPane) loader.load(getClass().getResourceAsStream("FlowButtons.fxml"));
+		TopMenuController controller = (TopMenuController) loader.getController();
+		controller.setContext(context);
 
 		// Add flow buttons to the main tab	
 		Tab tab = new Tab("Main menu");
