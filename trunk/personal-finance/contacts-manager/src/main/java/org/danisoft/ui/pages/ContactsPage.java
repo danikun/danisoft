@@ -1,6 +1,8 @@
 package org.danisoft.ui.pages;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ChangeListener;
@@ -9,31 +11,30 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.geometry.HPos;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
+import javafx.scene.control.Control;
+import javafx.scene.control.MenuButton;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.ColumnConstraints;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.util.Callback;
 
 import org.danisoft.model.Contact;
-import org.danisoft.model.ContactType;
 import org.danisoft.services.IContactsService;
 import org.danisoft.ui.base.Page;
+import org.danisoft.ui.custom.ContactDetailsAbstractComponent;
 import org.danisoft.ui.custom.cells.ImageTableCell;
+import org.danisoft.ui.custom.event.ContactSaveEvent;
 import org.danisoft.ui.model.UIContact;
+import org.danisoft.ui.model.UIPerson;
 
 /**
  * Main view of the contacts manager.
@@ -42,10 +43,10 @@ import org.danisoft.ui.model.UIContact;
  * 
  */
 public class ContactsPage implements Page {
-	
+
 	// Service
 	IContactsService contactsService = null;
-	
+
 	// Action Constants
 	public static final String NEW = "new";
 	public static final String DELETE = "delete";
@@ -55,38 +56,37 @@ public class ContactsPage implements Page {
 	// UI elements of the view
 	private final TableView<UIContact> contactList = new TableView<UIContact>();
 	private final BorderPane layout = new BorderPane();
-	private final GridPane contactData = new GridPane();
-	private final Label nameLabel = new Label("Name:");
-	private final Label typeLabel = new Label("Type:");
-	private final Label addressLabel = new Label("Address:");
-	private final TextField nameText = new TextField();
-	private final TextField typeText = new TextField();
-	private final TextField addressText = new TextField();
-	private final Button saveButton = new Button("Save");
 	private final HBox actionButtons = new HBox();
-	private final Button newButton = new Button("New Contact");
+	private final MenuButton newButton = new MenuButton("New Contact...");
 	private final Button deleteButton = new Button("Delete Contact");
 
-	// TODO: this is only a test contact list
+	// Event handlers
+	private final ButtonEventHandler buttonEventHandler = new ButtonEventHandler();
+	private final SaveEventHandler saveEventHandler = new SaveEventHandler();
+
+	// Contacts list
 	private ObservableList<UIContact> contacts = null;
 	private Boolean initialised = false;
 
+	// Detail components cache
+	Map<String, ContactDetailsAbstractComponent> detailComponents = null;
+
 	public Node load() {
 		contacts = FXCollections.observableArrayList();
-		
+
 		List<Contact> dbContacts = contactsService.getAllContacts();
-		
+
 		for (Contact contact : dbContacts) {
 			contacts.add(UIContact.fromContact(contact));
 		}
-		
+
 		if (!initialised) {
 			init();
 			initialised = true;
 		} else {
-			contactData.getChildren().clear();
+			layout.setLeft(null);
 		}
-		
+
 		contactList.setItems(contacts);
 
 		contactList.getSelectionModel().selectedItemProperty()
@@ -98,128 +98,136 @@ public class ContactsPage implements Page {
 
 						if (curr != null) {
 							generateContactDataPane(curr);
-							saveButton.setId(UPDATE);
 						}
 					}
 				});
 
 		return layout;
 	}
-	
+
 	@SuppressWarnings("unchecked")
 	private void init() {
-		
-		
-		// Button event handler
-		ButtonEventHandler buttonEventHandler = new ButtonEventHandler();
-		
+		detailComponents = new HashMap<String, ContactDetailsAbstractComponent>();
+
 		// List of Contacts (Center)
 		layout.setCenter(contactList);
-		
-		TableColumn<UIContact, String> nameColumn = new TableColumn<UIContact, String>("Name");
-		nameColumn.setCellValueFactory(new PropertyValueFactory<UIContact, String>("name"));
-		nameColumn.prefWidthProperty().bind(contactList.widthProperty().subtract(42));
-		
-		TableColumn<UIContact, String> typeColumn = new TableColumn<UIContact, String>("");
-		typeColumn.setCellFactory(new Callback<TableColumn<UIContact,String>, TableCell<UIContact,String>>() {
-			
-			public TableCell<UIContact, String> call(TableColumn<UIContact, String> arg0) {
-				return new ImageTableCell();
-			}
-		});
-		
-		typeColumn.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UIContact,String>, ObservableValue<String>>() {
 
-			public ObservableValue<String> call(
-					CellDataFeatures<UIContact, String> cellData) {
-				SimpleStringProperty value = 
-						new SimpleStringProperty(cellData.getValue().getType().getDisplayName());
-				return value;
-			}
-		});
+		TableColumn<UIContact, String> nameColumn = new TableColumn<UIContact, String>(
+				"Name");
+		nameColumn
+				.setCellValueFactory(new PropertyValueFactory<UIContact, String>(
+						"name"));
+		nameColumn.prefWidthProperty().bind(
+				contactList.widthProperty().subtract(42));
+
+		TableColumn<UIContact, String> typeColumn = new TableColumn<UIContact, String>(
+				"");
+		typeColumn
+				.setCellFactory(new Callback<TableColumn<UIContact, String>, TableCell<UIContact, String>>() {
+
+					public TableCell<UIContact, String> call(
+							TableColumn<UIContact, String> arg0) {
+						return new ImageTableCell();
+					}
+				});
+
+		typeColumn
+				.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UIContact, String>, ObservableValue<String>>() {
+
+					public ObservableValue<String> call(
+							CellDataFeatures<UIContact, String> cellData) {
+						SimpleStringProperty value = new SimpleStringProperty(
+								cellData.getValue().getType().getDisplayName());
+						return value;
+					}
+				});
 		typeColumn.setPrefWidth(40);
 		typeColumn.setMaxWidth(40);
 		typeColumn.setMinWidth(40);
-		
+
 		contactList.getColumns().addAll(typeColumn, nameColumn);
-		
-		// Configure contact data pane (Left)
-		ColumnConstraints column1 = new ColumnConstraints();
-		column1.setPercentWidth(30);
-		ColumnConstraints column2 = new ColumnConstraints();
-		column2.setPercentWidth(70);
-		contactData.getColumnConstraints().addAll(column1, column2);
-		contactData.setPrefSize(300, Double.MAX_VALUE);
-		contactData.setMaxSize(Region.USE_COMPUTED_SIZE,
-				Region.USE_COMPUTED_SIZE);
-		contactData.setStyle("-fx-hgap: 10; -fx-padding: 20;");
-		
-		// Labels TODO: move it to a css
-		nameLabel.setStyle("-fx-font-weight: bold;");
-		typeLabel.setStyle("-fx-font-weight: bold;");
-		addressLabel.setStyle("-fx-font-weight: bold;");
-		
-		layout.setLeft(contactData);
-		
+
 		// Action buttons (Down)
 		actionButtons.setAlignment(Pos.CENTER_RIGHT);
 		actionButtons.setPadding(new Insets(10));
 		actionButtons.setSpacing(5);
-		actionButtons.setStyle("-fx-border-style: solid; -fx-border-color: black");
+		actionButtons
+				.setStyle("-fx-border-style: solid; -fx-border-color: black");
 		actionButtons.getChildren().addAll(newButton, deleteButton);
-		
+
 		layout.setBottom(actionButtons);
-		
+
 		// New button
-		newButton.setOnAction(buttonEventHandler);
-		newButton.setId(NEW);
-		
+		MenuItem personItem = new MenuItem("Person");
+		personItem.setOnAction(buttonEventHandler);
+		personItem.setId(NEW);
+		newButton.getItems().add(personItem);
+
 		// Delete button
 		deleteButton.setOnAction(buttonEventHandler);
 		deleteButton.setId(DELETE);
-		
-		// Save button
-		saveButton.setOnAction(buttonEventHandler);
-		saveButton.setId(SAVE);
 	}
 
 	private void generateContactDataPane(UIContact contact) {
-		contactData.getChildren().clear();
-		
-		// Labels
-		contactData.getChildren().add(nameLabel);
-		GridPane.setColumnIndex(nameLabel, 0);
-		GridPane.setRowIndex(nameLabel, 0);
-		
-		contactData.getChildren().add(typeLabel);
-		GridPane.setColumnIndex(typeLabel, 0);
-		GridPane.setRowIndex(typeLabel, 1);
+		// contactData.getChildren().clear();
+		//
+		// // Labels
+		// contactData.getChildren().add(nameLabel);
+		// GridPane.setColumnIndex(nameLabel, 0);
+		// GridPane.setRowIndex(nameLabel, 0);
+		//
+		// contactData.getChildren().add(typeLabel);
+		// GridPane.setColumnIndex(typeLabel, 0);
+		// GridPane.setRowIndex(typeLabel, 1);
+		//
+		// contactData.getChildren().add(addressLabel);
+		// GridPane.setColumnIndex(addressLabel, 0);
+		// GridPane.setRowIndex(addressLabel, 2);
+		//
+		// // Text fields
+		// contactData.getChildren().add(nameText);
+		// GridPane.setColumnIndex(nameText, 1);
+		// GridPane.setRowIndex(nameText, 0);
+		//
+		// contactData.getChildren().add(typeText);
+		// GridPane.setColumnIndex(typeText, 1);
+		// GridPane.setRowIndex(typeText, 1);
+		//
+		// contactData.getChildren().add(addressText);
+		// GridPane.setColumnIndex(addressText, 1);
+		// GridPane.setRowIndex(addressText, 2);
+		//
+		// contactData.getChildren().add(saveButton);
+		// GridPane.setColumnIndex(saveButton, 1);
+		// GridPane.setRowIndex(saveButton, 3);
+		// GridPane.setHalignment(saveButton, HPos.RIGHT);
+		//
+		// nameText.setText(contact.getName());
+		// typeText.setText(contact.getType().getDisplayName());
+		// addressText.setText(contact.getAddress());
 
-		contactData.getChildren().add(addressLabel);
-		GridPane.setColumnIndex(addressLabel, 0);
-		GridPane.setRowIndex(addressLabel, 2);
+		String type = contact.getType().getDisplayName();
+		ContactDetailsAbstractComponent detailsComponent = detailComponents
+				.get(type);
 
-		// Text fields
-		contactData.getChildren().add(nameText);
-		GridPane.setColumnIndex(nameText, 1);
-		GridPane.setRowIndex(nameText, 0);
+		if (detailsComponent == null) {
+			String detailsClass = "org.danisoft.ui.custom." + type + "DetailsComponent";
+
+			try {
+				detailsComponent = (ContactDetailsAbstractComponent) Class.forName(detailsClass).newInstance();
+				detailsComponent.setSaveEventHandler(saveEventHandler);
+				detailComponents.put(type, detailsComponent);
+			} catch (Exception e) {
+				//TODO: Log
+				System.out.print("Invalid class name");
+			}
+		}
 		
-		contactData.getChildren().add(typeText);
-		GridPane.setColumnIndex(typeText, 1);
-		GridPane.setRowIndex(typeText, 1);
-		
-		contactData.getChildren().add(addressText);
-		GridPane.setColumnIndex(addressText, 1);
-		GridPane.setRowIndex(addressText, 2);
-		
-		contactData.getChildren().add(saveButton);
-		GridPane.setColumnIndex(saveButton, 1);
-		GridPane.setRowIndex(saveButton, 3);
-		GridPane.setHalignment(saveButton, HPos.RIGHT);
-		
-		nameText.setText(contact.getName());
-		typeText.setText(contact.getType().getDisplayName());
-		addressText.setText(contact.getAddress());
+		if (detailsComponent != null) {
+			detailsComponent.setContact(contact);
+			detailsComponent.setEditable(true);
+		}
+		layout.setLeft(detailsComponent);
 	}
 
 	public String getName() {
@@ -228,42 +236,49 @@ public class ContactsPage implements Page {
 
 	private class ButtonEventHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent event) {
-			Button button = (Button) event.getTarget();
-			String actionId = button.getId();
+			String actionId = null;
+			
+			if (event.getTarget() instanceof MenuItem) {
+				actionId = ((MenuItem)event.getTarget()).getId();
+			} else {
+				Control node = (Control) event.getTarget();
+				actionId = node.getId();
+			}
 			
 			switch (actionId) {
-				case NEW:
-					generateContactDataPane(new UIContact(0, "", ContactType.Person, null, ""));
-					saveButton.setId(SAVE);
-					break;
-				case SAVE:
-					UIContact newContact = new UIContact(0, nameText.getText(), ContactType.Person, null, addressText.getText());
-					int id = contactsService.saveContact(newContact.toContact());
-					newContact.setId(id);
-					
-					contacts.add(newContact);
-					contactList.getSelectionModel().select(newContact);
-					break;
-				case UPDATE:
-					UIContact update = contactList.getSelectionModel().getSelectedItem();
-					update.setName(nameText.getText());
-					update.setAddress(addressText.getText());
-					
-					contactsService.saveContact(update.toContact());
-					break;
-				case DELETE:
-					UIContact contact = contactList.getSelectionModel().getSelectedItem();
-					contactsService.deleteContact(contact.toContact());
-					
-					contacts.remove(contact);
-					contactData.getChildren().clear();
-					break;
+			case NEW:
+				generateContactDataPane(new UIPerson(0, "", "", "", null, ""));
+				break;
+			case DELETE:
+				UIContact contact = contactList.getSelectionModel()
+						.getSelectedItem();
+				contactsService.deleteContact(contact.toContact());
+
+				contacts.remove(contact);
+				layout.setLeft(null);
+				break;
 			}
 		}
 	}
+	
+	private class SaveEventHandler implements EventHandler<ContactSaveEvent> {
+
+		@Override
+		public void handle(ContactSaveEvent event) {
+			UIContact contact = event.getContact();
+			int id = contactsService.saveContact(contact.toContact());
+			
+			if (contact.getId() == 0) {
+				contact.setId(id);
+				contacts.add(contact);
+			}
+		}
+		
+	}
 
 	/**
-	 * @param contactsService the contactsService to set
+	 * @param contactsService
+	 *            the contactsService to set
 	 */
 	public void setContactsService(IContactsService contactsService) {
 		this.contactsService = contactsService;
