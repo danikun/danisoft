@@ -23,6 +23,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.input.KeyCombination;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
@@ -161,6 +162,7 @@ public class ContactsPage implements Page {
 		MenuItem personItem = new MenuItem("Person");
 		personItem.setOnAction(buttonEventHandler);
 		personItem.setId(NEW);
+		personItem.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
 		newButton.getItems().add(personItem);
 
 		// Delete button
@@ -169,43 +171,6 @@ public class ContactsPage implements Page {
 	}
 
 	private void generateContactDataPane(UIContact contact) {
-		// contactData.getChildren().clear();
-		//
-		// // Labels
-		// contactData.getChildren().add(nameLabel);
-		// GridPane.setColumnIndex(nameLabel, 0);
-		// GridPane.setRowIndex(nameLabel, 0);
-		//
-		// contactData.getChildren().add(typeLabel);
-		// GridPane.setColumnIndex(typeLabel, 0);
-		// GridPane.setRowIndex(typeLabel, 1);
-		//
-		// contactData.getChildren().add(addressLabel);
-		// GridPane.setColumnIndex(addressLabel, 0);
-		// GridPane.setRowIndex(addressLabel, 2);
-		//
-		// // Text fields
-		// contactData.getChildren().add(nameText);
-		// GridPane.setColumnIndex(nameText, 1);
-		// GridPane.setRowIndex(nameText, 0);
-		//
-		// contactData.getChildren().add(typeText);
-		// GridPane.setColumnIndex(typeText, 1);
-		// GridPane.setRowIndex(typeText, 1);
-		//
-		// contactData.getChildren().add(addressText);
-		// GridPane.setColumnIndex(addressText, 1);
-		// GridPane.setRowIndex(addressText, 2);
-		//
-		// contactData.getChildren().add(saveButton);
-		// GridPane.setColumnIndex(saveButton, 1);
-		// GridPane.setRowIndex(saveButton, 3);
-		// GridPane.setHalignment(saveButton, HPos.RIGHT);
-		//
-		// nameText.setText(contact.getName());
-		// typeText.setText(contact.getType().getDisplayName());
-		// addressText.setText(contact.getAddress());
-
 		String type = contact.getType().getDisplayName();
 		ContactDetailsAbstractComponent detailsComponent = detailComponents
 				.get(type);
@@ -228,6 +193,7 @@ public class ContactsPage implements Page {
 			detailsComponent.setEditable(true);
 		}
 		layout.setLeft(detailsComponent);
+		detailsComponent.setFocus();
 	}
 
 	public String getName() {
@@ -247,7 +213,7 @@ public class ContactsPage implements Page {
 			
 			switch (actionId) {
 			case NEW:
-				generateContactDataPane(new UIPerson(0, "", "", "", null, ""));
+				generateContactDataPane(new UIPerson(0, "", "", "", null, "", null));
 				break;
 			case DELETE:
 				UIContact contact = contactList.getSelectionModel()

@@ -30,7 +30,7 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 	 */
 	public ContactDetailsAbstractComponent() {
 		super();
-				
+		
 		// Save button eventHandler
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			
@@ -78,4 +78,7 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 	public void setSaveEventHandler(EventHandler<ContactSaveEvent> saveEventHandler) {
 		this.saveEventHandler = saveEventHandler;
 	}
+	
+	public abstract void setFocus();
+		
 }
