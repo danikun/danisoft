@@ -28,8 +28,8 @@ public class UIPerson extends UIContact {
 	private StringProperty lastName2;
 
 	public UIPerson(int id, String name, String lastName1, String lastName2,
-			List<PhoneNumber> phoneNumbers, String address) {
-		super(id, name, ContactType.Person, phoneNumbers, address);
+			List<PhoneNumber> phoneNumbers, String address, String photoPath) {
+		super(id, name, ContactType.Person, phoneNumbers, address, photoPath);
 		this.lastName1 = new SimpleStringProperty(lastName1);
 		this.lastName2 = new SimpleStringProperty(lastName2);
 	}
