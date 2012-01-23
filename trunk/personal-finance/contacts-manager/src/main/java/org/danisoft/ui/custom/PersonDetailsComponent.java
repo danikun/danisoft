@@ -1,14 +1,26 @@
 package org.danisoft.ui.custom;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+
 import org.danisoft.ui.model.UIContact;
 import org.danisoft.ui.model.UIPerson;
 
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.geometry.Pos;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
+import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.ColumnConstraints;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
+import javafx.stage.FileChooser;
 
 /**
  * Component to show/edit the contact details of a person contact.
@@ -30,6 +42,7 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 	private final Label lastName2Label = new Label("Last Name 2");
 	private final TextField lastName2Text = new TextField();
 	private final ImageView photo = new ImageView();
+	private final Button setPhoto = new Button("set...");
 	
 	public PersonDetailsComponent() {
 		super();
@@ -37,6 +50,11 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		this.add(title, 0, 0);
 		GridPane.setColumnSpan(title, 2);
 		this.add(photo, 0, 1);
+		this.add(setPhoto, 1, 1);
+		setPhoto.setAlignment(Pos.BOTTOM_LEFT);
+		setPhoto.setOnAction(new PersonButtonsEventHandler());
+		photo.setFitHeight(64);
+		photo.setFitWidth(64);
 		
 		this.add(firstNameLabel, 0, 2);
 		this.add(firstNameText, 1, 2);
@@ -60,10 +78,11 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 				Region.USE_COMPUTED_SIZE);
 		
 		// Style of controls TODO: move to css
-		this.setStyle("-fx-hgap: 10; -fx-padding: 20;");
+		this.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 20;");
 		firstNameLabel.setStyle("-fx-font-weight: bold;");
 		lastName1Label.setStyle("-fx-font-weight: bold;");
 		lastName2Label.setStyle("-fx-font-weight: bold;");
+		title.setStyle("-fx-font-weight: bold; -fx-font-size: 32;");
 	}
 
 	@Override
@@ -73,6 +92,12 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		firstNameText.setText(person.getName());
 		lastName1Text.setText(person.getLastName1());
 		lastName2Text.setText(person.getLastName2());
+		
+		if (person.getPhotoPath() != null) {
+			//TODO: get the photo from JCR
+		} else {
+			photo.setImage(new Image(getClass().getResourceAsStream("/org/danisoft/ui/images/Person.png")));
+		}
 	}
 
 	@Override
@@ -82,5 +107,28 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		person.setLastName2(lastName2Text.getText());
 		
 		return person;
+	}
+
+	@Override
+	public void setFocus() {
+		firstNameText.requestFocus();
+		prefWidthProperty().bind(getScene().widthProperty().multiply(0.3));
+	}
+	
+	private class PersonButtonsEventHandler implements EventHandler<ActionEvent> {
+
+		@Override
+		public void handle(ActionEvent arg0) {
+			FileChooser fileChooser = new FileChooser();
+			File file = fileChooser.showOpenDialog(getScene().getWindow());
+			try {
+				InputStream stream = new BufferedInputStream(new FileInputStream(file));
+				photo.setImage(new Image(stream));
+			} catch (FileNotFoundException e) {
+				//TODO: Log
+				System.out.println("File not found");
+			}
+		}
+		
 	}
 }
