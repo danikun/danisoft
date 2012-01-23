@@ -39,15 +39,20 @@ public class UIContact {
 	 * Contact address
 	 */
 	private StringProperty address;
+	/**
+	 * JCR Path of the photo
+	 */
+	private StringProperty photoPath;
 
 	public UIContact(int id, String name, ContactType type,
-			List<PhoneNumber> phoneNumbers, String address) {
+			List<PhoneNumber> phoneNumbers, String address, String photoPath) {
 		super();
 		this.id = new SimpleIntegerProperty(id);
 		this.name = new SimpleStringProperty(name);
 		this.type = type;
 		this.phoneNumbers = phoneNumbers;
 		this.address = new SimpleStringProperty(address);
+		this.photoPath = new SimpleStringProperty(photoPath);
 	}
 
 	/**
@@ -116,6 +121,17 @@ public class UIContact {
 	public String getAddress() {
 		return address.get();
 	}
+	
+	/**
+	 * @param photoPath the photoPath to set
+	 */
+	public void setPhotoPath(String photoPath) {
+		this.photoPath.set(photoPath);
+	}
+	
+	public String getPhotoPath() {
+		return this.photoPath.get();
+	}
 
 	/**
 	 * @param address
@@ -136,6 +152,10 @@ public class UIContact {
 	public StringProperty addressProperty() {
 		return address;
 	}
+	
+	public StringProperty photoPathProperty() {
+		return photoPath;
+	}
 
 	@Override
 	public String toString() {
@@ -150,16 +170,22 @@ public class UIContact {
 	public static UIContact fromContact(Contact contact) {
 
 		UIContact uiContact = null;
+		
+		String photoPath = null; 
+		
+		if (contact.getId() > 0) {
+			photoPath = "ContactData/" + contact.getId() + "/photo.png";
+		}
 
 		if (contact instanceof Person) {
 			Person person = (Person) contact;
 			uiContact = new UIPerson(person.getId(), person.getName(),
 					person.getLastName1(), person.getLastName2(),
-					person.getPhoneNumbers(), person.getAddress());
+					person.getPhoneNumbers(), person.getAddress(), photoPath);
 		} else {
 			uiContact = new UIContact(contact.getId(), contact.getName(),
 					contact.getType(), contact.getPhoneNumbers(),
-					contact.getAddress()); 
+					contact.getAddress(), photoPath); 
 		}
 
 		return uiContact;
