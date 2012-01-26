@@ -1,5 +1,6 @@
 package org.danisoft.services;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.danisoft.model.Contact;
@@ -30,9 +31,10 @@ public interface IContactsService {
 	 * Saves a new contact
 	 * 
 	 * @param contact the contact to save
+	 * @param stream the photo stream of the contact
 	 * @return the id of the newly created contact
 	 */
-	int saveContact(Contact contact);
+	int saveContact(Contact contact, InputStream stream);
 	
 	/**
 	 * Deletes a contact
@@ -40,4 +42,10 @@ public interface IContactsService {
 	 * @param contact the contact to delete
 	 */
 	void deleteContact(Contact contact);
+
+	/**
+	 * @param id contact id
+	 * @return the image that represents a contact
+	 */
+	InputStream getContactImage(int id);
 }

@@ -1,14 +1,23 @@
 package org.danisoft.services.impl;
 
+import java.io.InputStream;
 import java.util.List;
 
 import org.danisoft.dao.IContactDao;
 import org.danisoft.model.Contact;
+import org.danisoft.repo.IJcrTemplate;
 import org.danisoft.services.IContactsService;
 
+/**
+ * Contacts service implementation
+ * 
+ * @author Daniel Garcia
+ *
+ */
 public class ContactsServiceImpl implements IContactsService {
 	
 	private IContactDao contactDao = null;
+	private IJcrTemplate jcrTemplate = null;
 
 	public List<Contact> getAllContacts() {
 		return contactDao.getAll();
@@ -18,12 +27,21 @@ public class ContactsServiceImpl implements IContactsService {
 		return null;
 	}
 
-	public int saveContact(Contact contact) {
+	public int saveContact(Contact contact, InputStream stream) {
+		int id = 0;
+		
 		if (contact.getId() > 0) {
 			contactDao.update(contact);
-			return contact.getId();
+			id = contact.getId();
+		} else {
+			id = contactDao.save(contact); 
 		}
-		return contactDao.save(contact);
+		
+		if (stream != null) {
+			jcrTemplate.addBinary("image.png", "image/png", "contacts/" + id + "/", stream);
+		}
+		
+		return id;
 	}
 
 	/**
@@ -36,5 +54,18 @@ public class ContactsServiceImpl implements IContactsService {
 	@Override
 	public void deleteContact(Contact contact) {
 		contactDao.delete(contact);
+		jcrTemplate.deleteNode("/contacts/" + contact.getId());
+	}
+
+	/**
+	 * @param jcrTemplate the jcrTemplate to set
+	 */
+	public void setJcrTemplate(IJcrTemplate jcrTemplate) {
+		this.jcrTemplate = jcrTemplate;
+	}
+
+	@Override
+	public InputStream getContactImage(int id) {
+		return jcrTemplate.getBinary("/contacts/" + id + "/image.png");
 	}
 }
