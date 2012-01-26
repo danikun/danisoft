@@ -1,5 +1,8 @@
 package org.danisoft.ui.pages;
 
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +19,8 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Control;
-import javafx.scene.control.MenuButton;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
@@ -58,7 +62,8 @@ public class ContactsPage implements Page {
 	private final TableView<UIContact> contactList = new TableView<UIContact>();
 	private final BorderPane layout = new BorderPane();
 	private final HBox actionButtons = new HBox();
-	private final MenuButton newButton = new MenuButton("New Contact...");
+	private final MenuBar menuBar = new MenuBar();
+	private final Menu fileMenu = new Menu("File");
 	private final Button deleteButton = new Button("Delete Contact");
 
 	// Event handlers
@@ -154,20 +159,31 @@ public class ContactsPage implements Page {
 		actionButtons.setSpacing(5);
 		actionButtons
 				.setStyle("-fx-border-style: solid; -fx-border-color: black");
-		actionButtons.getChildren().addAll(newButton, deleteButton);
+		actionButtons.getChildren().add(deleteButton);
 
 		layout.setBottom(actionButtons);
 
-		// New button
+		// Menu Bar
+		Menu newMenu = new Menu("New");
 		MenuItem personItem = new MenuItem("Person");
 		personItem.setOnAction(buttonEventHandler);
 		personItem.setId(NEW);
 		personItem.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
-		newButton.getItems().add(personItem);
+		
+		MenuItem companyItem = new MenuItem("Company");
+		
+		newMenu.getItems().add(personItem);
+		menuBar.getMenus().add(fileMenu);
+		fileMenu.getItems().add(newMenu);
+		newMenu.getItems().add(personItem);
+		newMenu.getItems().add(companyItem);
+		
+		layout.setTop(menuBar);
 
 		// Delete button
 		deleteButton.setOnAction(buttonEventHandler);
 		deleteButton.setId(DELETE);
+		
 	}
 
 	private void generateContactDataPane(UIContact contact) {
@@ -181,6 +197,7 @@ public class ContactsPage implements Page {
 			try {
 				detailsComponent = (ContactDetailsAbstractComponent) Class.forName(detailsClass).newInstance();
 				detailsComponent.setSaveEventHandler(saveEventHandler);
+				detailsComponent.setContactsService(contactsService);
 				detailComponents.put(type, detailsComponent);
 			} catch (Exception e) {
 				//TODO: Log
@@ -213,7 +230,7 @@ public class ContactsPage implements Page {
 			
 			switch (actionId) {
 			case NEW:
-				generateContactDataPane(new UIPerson(0, "", "", "", null, "", null));
+				generateContactDataPane(new UIPerson(0, "", "", "", null, ""));
 				break;
 			case DELETE:
 				UIContact contact = contactList.getSelectionModel()
@@ -232,11 +249,22 @@ public class ContactsPage implements Page {
 		@Override
 		public void handle(ContactSaveEvent event) {
 			UIContact contact = event.getContact();
-			int id = contactsService.saveContact(contact.toContact());
 			
-			if (contact.getId() == 0) {
-				contact.setId(id);
-				contacts.add(contact);
+			int id;
+			try {
+				if (contact.getPhoto() != null) {
+					id = contactsService.saveContact(contact.toContact(), new BufferedInputStream(new FileInputStream(contact.getPhoto())));
+				} else {
+					id = contactsService.saveContact(contact.toContact(), null);
+				}
+				
+				if (contact.getId() == 0) {
+					contact.setId(id);
+					contacts.add(contact);
+				}
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 		

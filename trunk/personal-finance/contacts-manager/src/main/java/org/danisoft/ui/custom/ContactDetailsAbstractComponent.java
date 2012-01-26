@@ -5,6 +5,7 @@ import javafx.event.EventHandler;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
+import org.danisoft.services.IContactsService;
 import org.danisoft.ui.custom.event.ContactSaveEvent;
 import org.danisoft.ui.model.UIContact;
 
@@ -80,5 +81,7 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 	}
 	
 	public abstract void setFocus();
+	
+	public abstract void setContactsService(IContactsService contactsService);
 		
 }
