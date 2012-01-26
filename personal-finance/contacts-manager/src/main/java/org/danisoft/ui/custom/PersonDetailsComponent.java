@@ -4,8 +4,10 @@ import java.io.BufferedInputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 
+import org.danisoft.services.IContactsService;
 import org.danisoft.ui.model.UIContact;
 import org.danisoft.ui.model.UIPerson;
 
@@ -43,6 +45,9 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 	private final TextField lastName2Text = new TextField();
 	private final ImageView photo = new ImageView();
 	private final Button setPhoto = new Button("set...");
+	
+	// Contacts service
+	private IContactsService contactsService = null;
 	
 	public PersonDetailsComponent() {
 		super();
@@ -93,8 +98,10 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		lastName1Text.setText(person.getLastName1());
 		lastName2Text.setText(person.getLastName2());
 		
-		if (person.getPhotoPath() != null) {
-			//TODO: get the photo from JCR
+		InputStream stream = contactsService.getContactImage(contact.getId());
+		
+		if (stream != null) {
+			photo.setImage(new Image(stream));
 		} else {
 			photo.setImage(new Image(getClass().getResourceAsStream("/org/danisoft/ui/images/Person.png")));
 		}
@@ -124,11 +131,25 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 			try {
 				InputStream stream = new BufferedInputStream(new FileInputStream(file));
 				photo.setImage(new Image(stream));
+				stream.close();
+				person.setPhoto(file);
 			} catch (FileNotFoundException e) {
 				//TODO: Log
 				System.out.println("File not found");
+			} catch (IOException e) {
+				// TODO LOG
+				e.printStackTrace();
 			}
 		}
 		
 	}
+
+	/**
+	 * @param contactsService the contactsService to set
+	 */
+	public void setContactsService(IContactsService contactsService) {
+		this.contactsService = contactsService;
+	}
+	
+	
 }
