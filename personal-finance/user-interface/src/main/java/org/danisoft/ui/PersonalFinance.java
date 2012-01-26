@@ -58,7 +58,7 @@ public class PersonalFinance extends Application {
 		stage.setScene(scene);
 		stage.show();
 	}
-
+	
 	/**
 	 * @param args
 	 */

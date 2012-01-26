@@ -5,16 +5,44 @@
 
 	<!-- Pages -->
 	<bean name="contactsPage" class="org.danisoft.ui.pages.ContactsPage">
-		<property name="contactsService" ref="contactsService"/>
+		<property name="contactsService" ref="contactsService" />
 	</bean>
-	
+
 	<!-- Services -->
 	<bean name="contactsService" class="org.danisoft.services.impl.ContactsServiceImpl">
-		<property name="contactDao" ref="contacDao"/>
+		<property name="contactDao" ref="contacDao" />
+		<property name="jcrTemplate" ref="jcrTemplate"/>
 	</bean>
 
 	<!-- DAO's -->
 	<bean name="contacDao" class="org.danisoft.dao.mock.ContactDaoMock">
+	</bean>
+
+	<!-- JCR -->
+	<bean id="repositoryFactory" class="org.danisoft.repo.impl.RepositoryFactoryBeanImpl">
+		<!-- normal factory beans params -->
+		<property name="xml" value="classpath:repository.xml" />
+		<property name="path" value="./jackrabbit" />
+	</bean>
+	
+	<bean id="jcrSessionFactory" class="org.danisoft.repo.impl.JcrSessionFactoryImpl" init-method="openSession" destroy-method="closeSession">
+		<property name="repositoryFactory" ref="repositoryFactory"/>
+		<property name="credentials">
+			<bean class="javax.jcr.SimpleCredentials">
+				<constructor-arg index="0" name="userID" value="admin"/>
+				<constructor-arg index="1" name="password">
+					<bean factory-bean="password" factory-method="toCharArray"/>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+	
+	<bean id="password" class="java.lang.String">
+		<constructor-arg index="0" value="admin"/>
+	</bean>
+	
+	<bean id="jcrTemplate" class="org.danisoft.repo.impl.JcrTemplateImpl">
+		<property name="sessionFactory" ref="jcrSessionFactory"/>
 	</bean>
 
 </beans>

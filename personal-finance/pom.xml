@@ -13,5 +13,6 @@
   	<module>contacts-manager</module>
   	<module>common</module>
   	<module>services</module>
+  	<module>content-repository</module>
   </modules>
 </project>
