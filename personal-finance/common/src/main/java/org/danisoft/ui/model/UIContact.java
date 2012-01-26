@@ -1,5 +1,6 @@
 package org.danisoft.ui.model;
 
+import java.io.File;
 import java.util.List;
 
 import javafx.beans.property.IntegerProperty;
@@ -42,17 +43,16 @@ public class UIContact {
 	/**
 	 * JCR Path of the photo
 	 */
-	private StringProperty photoPath;
+	private File photo;
 
 	public UIContact(int id, String name, ContactType type,
-			List<PhoneNumber> phoneNumbers, String address, String photoPath) {
+			List<PhoneNumber> phoneNumbers, String address) {
 		super();
 		this.id = new SimpleIntegerProperty(id);
 		this.name = new SimpleStringProperty(name);
 		this.type = type;
 		this.phoneNumbers = phoneNumbers;
 		this.address = new SimpleStringProperty(address);
-		this.photoPath = new SimpleStringProperty(photoPath);
 	}
 
 	/**
@@ -125,12 +125,12 @@ public class UIContact {
 	/**
 	 * @param photoPath the photoPath to set
 	 */
-	public void setPhotoPath(String photoPath) {
-		this.photoPath.set(photoPath);
+	public void setPhoto(File file) {
+		this.photo = file;
 	}
 	
-	public String getPhotoPath() {
-		return this.photoPath.get();
+	public File getPhoto() {
+		return this.photo;
 	}
 
 	/**
@@ -153,10 +153,6 @@ public class UIContact {
 		return address;
 	}
 	
-	public StringProperty photoPathProperty() {
-		return photoPath;
-	}
-
 	@Override
 	public String toString() {
 		return name.get();
@@ -171,21 +167,15 @@ public class UIContact {
 
 		UIContact uiContact = null;
 		
-		String photoPath = null; 
-		
-		if (contact.getId() > 0) {
-			photoPath = "ContactData/" + contact.getId() + "/photo.png";
-		}
-
 		if (contact instanceof Person) {
 			Person person = (Person) contact;
 			uiContact = new UIPerson(person.getId(), person.getName(),
 					person.getLastName1(), person.getLastName2(),
-					person.getPhoneNumbers(), person.getAddress(), photoPath);
+					person.getPhoneNumbers(), person.getAddress());
 		} else {
 			uiContact = new UIContact(contact.getId(), contact.getName(),
 					contact.getType(), contact.getPhoneNumbers(),
-					contact.getAddress(), photoPath); 
+					contact.getAddress()); 
 		}
 
 		return uiContact;
