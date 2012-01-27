@@ -8,27 +8,32 @@ CREATE TABLE ContactType
 );
 
 INSERT INTO ContactType values(1, 'P', 'Person');
-INSERT INTO ContactType values(1, 'C', 'Company');
-INSERT INTO ContactType values(1, 'F', 'Family');
+INSERT INTO ContactType values(2, 'C', 'Company');
+INSERT INTO ContactType values(3, 'F', 'Family');
 
 CREATE TABLE Contact
 (
   id integer NOT NULL PRIMARY KEY,
   name varchar(255) NOT NULL,
-  contactType integer NOT NULL FOREIGN KEY REFERENCES ContactType(id),
+  contactType integer NOT NULL,
   address varchar(255)
 );
+
+ALTER TABLE Contact ADD FOREIGN KEY (contactType) REFERENCES ContactType(id);
 
 CREATE TABLE Person
 (
   id integer NOT NULL PRIMARY KEY,
-  contact integer NOT NULL FOREIGN KEY REFERENCES Contact(id)
-)
+  contact integer NOT NULL,
+  lastName1 VARCHAR(255),
+  lastName2 VARCHAR(255)
+);
+
+ALTER TABLE Person ADD FOREIGN KEY (contact) REFERENCES Contact(id);
 
 
 --//@UNDO
 -- SQL to undo the change goes here.
+DROP TABLE Person;
 DROP TABLE Contact;
 DROP TABLE ContactType;
-
-

@@ -11,7 +11,7 @@
 	<!-- Services -->
 	<bean name="contactsService" class="org.danisoft.services.impl.ContactsServiceImpl">
 		<property name="contactDao" ref="contacDao" />
-		<property name="jcrTemplate" ref="jcrTemplate"/>
+		<property name="jcrTemplate" ref="jcrTemplate" />
 	</bean>
 
 	<!-- DAO's -->
@@ -24,25 +24,42 @@
 		<property name="xml" value="classpath:repository.xml" />
 		<property name="path" value="./jackrabbit" />
 	</bean>
-	
-	<bean id="jcrSessionFactory" class="org.danisoft.repo.impl.JcrSessionFactoryImpl" init-method="openSession" destroy-method="closeSession">
-		<property name="repositoryFactory" ref="repositoryFactory"/>
+
+	<bean id="jcrSessionFactory" class="org.danisoft.repo.impl.JcrSessionFactoryImpl"
+		init-method="openSession" destroy-method="closeSession">
+		<property name="repositoryFactory" ref="repositoryFactory" />
 		<property name="credentials">
 			<bean class="javax.jcr.SimpleCredentials">
-				<constructor-arg index="0" name="userID" value="admin"/>
+				<constructor-arg index="0" name="userID" value="admin" />
 				<constructor-arg index="1" name="password">
-					<bean factory-bean="password" factory-method="toCharArray"/>
+					<bean factory-bean="password" factory-method="toCharArray" />
 				</constructor-arg>
 			</bean>
 		</property>
 	</bean>
-	
+
 	<bean id="password" class="java.lang.String">
-		<constructor-arg index="0" value="admin"/>
+		<constructor-arg index="0" value="admin" />
 	</bean>
-	
+
 	<bean id="jcrTemplate" class="org.danisoft.repo.impl.JcrTemplateImpl">
-		<property name="sessionFactory" ref="jcrSessionFactory"/>
+		<property name="sessionFactory" ref="jcrSessionFactory" />
+	</bean>
+
+	<!-- MyBatis -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
+		<property name="url"
+			value="jdbc:derby:directory:../personalFinanceDB;create=true" />
+	</bean>
+
+	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+	</bean>
+
+	<bean id="personMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.danisoft.Mapper.PersonMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
 
 </beans>
