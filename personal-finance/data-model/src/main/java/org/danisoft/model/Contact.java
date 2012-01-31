@@ -40,6 +40,9 @@ public class Contact {
 		this.address = address;
 	}
 	
+	public Contact() {
+	}
+
 	/**
 	 * @return the id
 	 */
@@ -70,11 +73,16 @@ public class Contact {
 	public ContactType getType() {
 		return type;
 	}
+	
+	public int getTypeId() {
+		return type.getId();
+	}
+	
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(ContactType type) {
-		this.type = type;
+	public void setType(String code) {
+		this.type = ContactType.contactTypeByCode(code);
 	}
 	/**
 	 * @return the phoneNumbers
