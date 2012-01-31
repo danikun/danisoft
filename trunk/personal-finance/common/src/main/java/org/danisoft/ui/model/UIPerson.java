@@ -1,5 +1,6 @@
 package org.danisoft.ui.model;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
@@ -28,7 +29,7 @@ public class UIPerson extends UIContact {
 	private StringProperty lastName2;
 
 	public UIPerson(int id, String name, String lastName1, String lastName2,
-			List<PhoneNumber> phoneNumbers, String address) {
+			List<UIPhoneNumber> phoneNumbers, String address) {
 		super(id, name, ContactType.Person, phoneNumbers, address);
 		this.lastName1 = new SimpleStringProperty(lastName1);
 		this.lastName2 = new SimpleStringProperty(lastName2);
@@ -74,7 +75,19 @@ public class UIPerson extends UIContact {
 
 	@Override
 	public Contact toContact() {
-		return new Person(getId(), getName(), getType(), getPhoneNumbers(),
+		Person person = new Person(getId(), getName(), getType(), null,
 				getAddress(), getLastName1(), getLastName2());
+		
+		List<PhoneNumber> numbers = new ArrayList<PhoneNumber>();
+		
+		for (UIPhoneNumber phoneNumber : getPhoneNumbers()) {
+			PhoneNumber number = phoneNumber.toPhoneNumber();
+			number.setContact(person);
+			
+			numbers.add(number);
+		}
+		person.setPhoneNumbers(numbers);
+		
+		return person;
 	}
 }

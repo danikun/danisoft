@@ -6,10 +6,12 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 
 import org.danisoft.services.IContactsService;
 import org.danisoft.ui.model.UIContact;
 import org.danisoft.ui.model.UIPerson;
+import org.danisoft.ui.model.UIPhoneNumber;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -45,6 +47,7 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 	private final TextField lastName2Text = new TextField();
 	private final ImageView photo = new ImageView();
 	private final Button setPhoto = new Button("set...");
+	private final PhoneNumbersComponent  phoneNumbers = new PhoneNumbersComponent(new ArrayList<UIPhoneNumber>());
 	
 	// Contacts service
 	private IContactsService contactsService = null;
@@ -70,7 +73,9 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		this.add(lastName2Label, 0, 4);
 		this.add(lastName2Text, 1, 4);
 		
-		this.add(saveButton, 1, 5);
+		//this.add(phoneNumbers.getPhoneNumbersTable(), 0, 5);
+		this.add(phoneNumbers, 1, 5);
+		this.add(saveButton, 1, 6);
 		
 		ColumnConstraints column1 = new ColumnConstraints();
 		column1.setPercentWidth(30);
