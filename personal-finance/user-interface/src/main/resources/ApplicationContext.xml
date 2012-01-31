@@ -15,7 +15,9 @@
 	</bean>
 
 	<!-- DAO's -->
-	<bean name="contacDao" class="org.danisoft.dao.mock.ContactDaoMock">
+	<bean name="contacDao" class="org.danisoft.dao.impl.ContactDaoImpl">
+		<property name="contactMapper" ref="contactMapper"/>
+		<property name="personMapper" ref="personMapper"/>
 	</bean>
 
 	<!-- JCR -->
@@ -54,11 +56,17 @@
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+		<property name="configLocation" value="classpath:mybatis-config.xml"/>
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
+	<bean id="contactMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.danisoft.Mapper.ContactMapper"/>
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
 	<bean id="personMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.PersonMapper" />
+		<property name="mapperInterface" value="org.danisoft.Mapper.PersonMapper"/>
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
 
