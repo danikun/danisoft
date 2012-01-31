@@ -11,6 +11,13 @@
 		<result column="contact_address" property="address"/>
 		<result column="contact_type" property="type"/>
 		
+		<collection property="phoneNumbers" ofType="PhoneNumber">
+			<id column="phone_id" property="id"/>
+			<result column="phoneNumber" property="number"/>
+			<result column="phoneNumberType" property="type"/>
+			<association property="contact" column="contact" javaType="Contact"/>
+		</collection>
+		
 		<discriminator javaType="String" column="contact_type">
 			<case value="P" resultMap="personResultMap"/>
 		</discriminator>
@@ -28,29 +35,24 @@
 			ct.code AS contact_type,
 			c.address AS contact_address,
 			p.lastname1 AS person_lastname1,
-			p.lastname2 AS person_lastname2
+			p.lastname2 AS person_lastname2,
+			pn.id AS phone_id,
+			pn.phonenumber AS phoneNumber,
+			pnt.code AS phoneNumberType	
 		FROM 
 			Contact c  
 			LEFT JOIN Person p ON c.id = p.contact 
 			JOIN ContactType ct ON ct.id = c.contactType
+			LEFT JOIN PhoneNumber pn ON c.id = pn.contact
+			LEFT JOIN PhoneNumberType pnt ON pn.phonenumbertype = pnt.id
 	</sql>
 
 	<select id="getAll" resultMap="contactResultMap">
 		<include refid="contactSelect"/>
 	</select>
 
-	<select id="get" parameterType="int" resultType="Contact">
-		SELECT
-			c.id AS id,
-			c.name AS name,
-			ct.code AS type,
-			c.address AS address,
-			p.lastname1 AS lastName1,
-			p.lastname2 AS lastName2
-		FROM 
-			Contact c  
-			LEFT JOIN Person p ON c.id = p.contact 
-			JOIN ContactType ct ON ct.id = c.contactType
+	<select id="get" parameterType="int" resultMap="contactResultMap">
+		<include refid="contactSelect"/>
 		WHERE  
 			c.id = #{id}
 	</select>
