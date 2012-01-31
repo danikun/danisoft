@@ -19,6 +19,10 @@ public class Person extends Contact {
 	 */
 	private String lastName2;
 	
+	public Person() {
+		super();
+	}
+	
 	public Person(int id, String name, ContactType type,
 			List<PhoneNumber> phoneNumbers, String address, String lastName1,
 			String lastName2) {
