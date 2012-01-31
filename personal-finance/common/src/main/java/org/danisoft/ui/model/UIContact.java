@@ -1,6 +1,7 @@
 package org.danisoft.ui.model;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 
 import javafx.beans.property.IntegerProperty;
@@ -35,7 +36,7 @@ public class UIContact {
 	/**
 	 * Phone numbers
 	 */
-	private List<PhoneNumber> phoneNumbers;
+	private List<UIPhoneNumber> phoneNumbers;
 	/**
 	 * Contact address
 	 */
@@ -46,7 +47,7 @@ public class UIContact {
 	private File photo;
 
 	public UIContact(int id, String name, ContactType type,
-			List<PhoneNumber> phoneNumbers, String address) {
+			List<UIPhoneNumber> phoneNumbers, String address) {
 		super();
 		this.id = new SimpleIntegerProperty(id);
 		this.name = new SimpleStringProperty(name);
@@ -103,7 +104,7 @@ public class UIContact {
 	/**
 	 * @return the phoneNumbers
 	 */
-	public List<PhoneNumber> getPhoneNumbers() {
+	public List<UIPhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}
 
@@ -111,7 +112,7 @@ public class UIContact {
 	 * @param phoneNumbers
 	 *            the phoneNumbers to set
 	 */
-	public void setPhoneNumbers(List<PhoneNumber> phoneNumbers) {
+	public void setPhoneNumbers(List<UIPhoneNumber> phoneNumbers) {
 		this.phoneNumbers = phoneNumbers;
 	}
 
@@ -159,22 +160,40 @@ public class UIContact {
 	}
 
 	public Contact toContact() {
-		return new Contact(this.getId(), this.getName(), this.getType(),
-				this.getPhoneNumbers(), this.getAddress());
+		List<PhoneNumber> numbers = new ArrayList<PhoneNumber>();
+		
+		Contact contact = new Contact(this.getId(), this.getName(), this.getType(),
+				null, this.getAddress());
+		
+		for (UIPhoneNumber phoneNumber : phoneNumbers) {
+			PhoneNumber number = phoneNumber.toPhoneNumber();
+			number.setContact(contact);
+			
+			numbers.add(number);
+		}
+		contact.setPhoneNumbers(numbers);
+		
+		return contact;
 	}
 
 	public static UIContact fromContact(Contact contact) {
 
 		UIContact uiContact = null;
 		
+		List<UIPhoneNumber> phoneNumbers = new ArrayList<UIPhoneNumber>();
+		
+		for (PhoneNumber number : contact.getPhoneNumbers()) {
+			phoneNumbers.add(UIPhoneNumber.fromPhoneNumber(number));
+		}
+		
 		if (contact instanceof Person) {
 			Person person = (Person) contact;
 			uiContact = new UIPerson(person.getId(), person.getName(),
 					person.getLastName1(), person.getLastName2(),
-					person.getPhoneNumbers(), person.getAddress());
+					phoneNumbers, person.getAddress());
 		} else {
 			uiContact = new UIContact(contact.getId(), contact.getName(),
-					contact.getType(), contact.getPhoneNumbers(),
+					contact.getType(), phoneNumbers,
 					contact.getAddress()); 
 		}
 
