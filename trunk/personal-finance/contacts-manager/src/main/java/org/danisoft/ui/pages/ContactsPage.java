@@ -172,11 +172,9 @@ public class ContactsPage implements Page {
 		
 		MenuItem companyItem = new MenuItem("Company");
 		
-		newMenu.getItems().add(personItem);
 		menuBar.getMenus().add(fileMenu);
 		fileMenu.getItems().add(newMenu);
-		newMenu.getItems().add(personItem);
-		newMenu.getItems().add(companyItem);
+		newMenu.getItems().addAll(personItem, companyItem);
 		
 		layout.setTop(menuBar);
 
