@@ -15,7 +15,10 @@ public class PhoneNumber {
 	 * The actual phone number.
 	 */
 	private String number;
-	
+	/**
+	 * The contact owning this phone number.
+	 */
+	private Contact contact;	
 	
 	/**
 	 * @return the type
@@ -26,8 +29,8 @@ public class PhoneNumber {
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(PhoneNumberType type) {
-		this.type = type;
+	public void setType(String type) {
+		this.type = PhoneNumberType.fromCode(type);
 	}
 	/**
 	 * @return the number
@@ -40,5 +43,17 @@ public class PhoneNumber {
 	 */
 	public void setNumber(String number) {
 		this.number = number;
+	}
+	/**
+	 * @return the contact
+	 */
+	public Contact getContact() {
+		return contact;
+	}
+	/**
+	 * @param contact the contact to set
+	 */
+	public void setContact(Contact contact) {
+		this.contact = contact;
 	}
 }

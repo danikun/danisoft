@@ -8,14 +8,15 @@ package org.danisoft.model;
  */
 public enum PhoneNumberType {
 
-	Mobile("C", "Mobile"),
-	Home("H", "Home" ),
-	Company("E", "Company");
+	Mobile(1, "M", "Mobile"),
+	Home(2, "H", "Home" ),
+	Company(3, "C", "Company");
 	
+	private int id;
 	private String code;
 	private String displayName;
 	
-	private PhoneNumberType(String code, String displayName) {
+	private PhoneNumberType(int id, String code, String displayName) {
 		this.code = code;
 		this.displayName = displayName;
 	}
@@ -32,5 +33,25 @@ public enum PhoneNumberType {
 	 */
 	public String getDisplayName() {
 		return displayName;
+	}
+
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	public static PhoneNumberType fromCode(String type) {
+		switch (type) {
+		case "M":
+			return Mobile;
+		case "H":
+			return Home;
+		case "C":
+			return Company;
+		default:
+			return null;
+		}
 	}
 }
