@@ -17,6 +17,7 @@ import org.apache.ibatis.transaction.jdbc.JdbcTransactionFactory;
 import org.danisoft.model.Contact;
 import org.danisoft.model.ContactType;
 import org.danisoft.model.Person;
+import org.danisoft.model.PhoneNumber;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -40,6 +41,7 @@ public class PersonMapperTest {
 		Configuration configuration = new Configuration(environment);
 		configuration.getTypeAliasRegistry().registerAlias("Contact", Contact.class);
 		configuration.getTypeAliasRegistry().registerAlias("Person", Person.class);
+		configuration.getTypeAliasRegistry().registerAlias("PhoneNumber", PhoneNumber.class);
 		configuration.addMapper(ContactMapper.class);
 		configuration.addMapper(PersonMapper.class);
 		
