@@ -1,7 +1,7 @@
 package org.danisoft.Mapper;
 
-import org.danisoft.model.Person;
+import org.danisoft.model.Contact;
 
-public interface ContactMapper extends GenericMapper<Person> {
+public interface ContactMapper extends GenericMapper<Contact> {
 
 }

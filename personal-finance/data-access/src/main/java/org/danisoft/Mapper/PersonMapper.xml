@@ -2,26 +2,17 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-
-<mapper namespace="org.danisoft.Mapper.ContactMapper">
-
-	<resultMap type="Contact" id="contactResultMap">
+  
+<mapper namespace="org.danisoft.Mapper.PersonMapper">
+	<resultMap type="Person" id="personResultMap">
 		<id column="contact_id" property="id"/>
 		<result column="contact_name" property="name"/>
 		<result column="contact_address" property="address"/>
-		<result column="contact_type" property="type"/>
-		
-		<discriminator javaType="String" column="contact_type">
-			<case value="P" resultMap="personResultMap"/>
-		</discriminator>
-	</resultMap>
-	
-	<resultMap type="Person" id="personResultMap" extends="contactResultMap">
 		<result column="person_lastname1" property="lastName1"/>
 		<result column="person_lastname2" property="lastName2"/>
 	</resultMap>
-
-	<sql id="contactSelect">
+	
+	<sql id="personSelect">
 		SELECT
 			c.id AS contact_id,
 			c.name AS contact_name,
@@ -33,13 +24,15 @@
 			Contact c  
 			LEFT JOIN Person p ON c.id = p.contact 
 			JOIN ContactType ct ON ct.id = c.contactType
+		WHERE
+			ct.id = 1
 	</sql>
-
-	<select id="getAll" resultMap="contactResultMap">
-		<include refid="contactSelect"/>
+	
+	<select id="getAll" resultMap="personResultMap">
+		<include refid="personSelect"/>
 	</select>
 
-	<select id="get" parameterType="int" resultType="Contact">
+	<select id="get" parameterType="int" resultType="Person">
 		SELECT
 			c.id AS id,
 			c.name AS name,
@@ -51,29 +44,30 @@
 			Contact c  
 			LEFT JOIN Person p ON c.id = p.contact 
 			JOIN ContactType ct ON ct.id = c.contactType
-		WHERE  
-			c.id = #{id}
+		WHERE
+			ct.id = 1
+			AND c.id = #{id}
 	</select>
 	
-	<insert id="save" parameterType="Contact" flushCache="true" keyProperty="id" useGeneratedKeys="true">
-		INSERT INTO Contact (name, contacttype, address) values('${name}', ${typeId}, '${address}')
+	<insert id="save" parameterType="Person" flushCache="true">
+		INSERT INTO Person (contact, lastname1, lastname2) values(${id}, '${lastName1}', '${lastName2}')
 	</insert>
 	
-	<update id="update" parameterType="Contact" flushCache="true">
+	<update id="update" parameterType="Person" flushCache="true">
 		UPDATE 
-			Contact
+			Person
 		SET
-			 name = '${name}',
-			 contacttype = ${typeId},
-			 address = '${address}'
-		 WHERE
-		 	id = ${id}
+			 lastname1 = '${lastName1}',
+			 lastname2 = '${lastName2}'
+	 	WHERE
+		 	contact = ${id}
 	</update>
 	
-	<delete id="delete" parameterType="Contact" flushCache="true">
+	<delete id="delete" parameterType="Person" flushCache="true">
 		DELETE FROM
-			Contact
+			Person
 		WHERE
-			id = ${id}
+			contact = ${id}
 	</delete>
+	
 </mapper>
