@@ -13,7 +13,7 @@ INSERT INTO ContactType values(3, 'F', 'Family');
 
 CREATE TABLE Contact
 (
-  id integer NOT NULL PRIMARY KEY,
+  id integer NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   name varchar(255) NOT NULL,
   contactType integer NOT NULL,
   address varchar(255)
@@ -23,7 +23,7 @@ ALTER TABLE Contact ADD FOREIGN KEY (contactType) REFERENCES ContactType(id);
 
 CREATE TABLE Person
 (
-  id integer NOT NULL PRIMARY KEY,
+  id integer NOT NULL PRIMARY KEY GENERATED ALWAYS AS IDENTITY,
   contact integer NOT NULL,
   lastName1 VARCHAR(255),
   lastName2 VARCHAR(255)

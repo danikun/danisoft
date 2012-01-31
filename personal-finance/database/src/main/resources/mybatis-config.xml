@@ -6,6 +6,7 @@
 	<typeAliases>
  		<typeAlias type="org.danisoft.model.Contact" alias="Contact"/>
  		<typeAlias type="org.danisoft.model.Person" alias="Person"/>
+ 		<typeAlias type="org.danisoft.model.PhoneNumber" alias="PhoneNumber"/>
  		<!-- typeAlias type="org.danisoft.model.Company" alias="Company"/ -->
  	</typeAliases>
 </configuration>
