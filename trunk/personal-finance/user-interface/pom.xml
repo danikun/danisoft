@@ -78,5 +78,15 @@ It will provide the framework for the rest of the modules to work.</description>
 			<artifactId>mybatis-spring</artifactId>
 			<version>1.0.2</version>
 		</dependency>
+		<dependency>
+			<groupId>org.danisoft</groupId>
+			<artifactId>database</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.13</version>
+		</dependency>
 	</dependencies>
 </project>
