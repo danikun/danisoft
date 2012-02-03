@@ -56,4 +56,21 @@ public class Person extends Contact {
 		this.lastName2 = lastName2;
 	}
 	
+	@Override
+	public String toString() {
+		StringBuilder displayName = new StringBuilder();
+		
+		if (lastName1 != null && !lastName1.isEmpty()) {
+			displayName.append(lastName1);
+			
+			if (lastName2 != null && !lastName2.isEmpty()) {
+				displayName.append(" " + lastName2);
+			}
+			displayName.append(", ");
+		}
+		
+		displayName.append(name);
+				
+		return displayName.toString();
+	}
 }
