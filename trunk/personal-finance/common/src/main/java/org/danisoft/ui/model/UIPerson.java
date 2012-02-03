@@ -34,6 +34,8 @@ public class UIPerson extends UIContact {
 		super(id, name, ContactType.Person, phoneNumbers, address);
 		this.lastName1 = new SimpleStringProperty(lastName1);
 		this.lastName2 = new SimpleStringProperty(lastName2);
+		
+		updateDisplayName();
 	}
 
 	/**
@@ -49,6 +51,7 @@ public class UIPerson extends UIContact {
 	 */
 	public void setLastName1(String lastName1) {
 		this.lastName1.set(lastName1);
+		updateDisplayName();
 	}
 
 	/**
@@ -64,6 +67,7 @@ public class UIPerson extends UIContact {
 	 */
 	public void setLastName2(String lastName2) {
 		this.lastName2.set(lastName2);
+		updateDisplayName();
 	}
 
 	public StringProperty lastName1Property() {
@@ -90,5 +94,23 @@ public class UIPerson extends UIContact {
 		person.setPhoneNumbers(numbers);
 		
 		return person;
+	}
+	
+	@Override
+	protected void updateDisplayName() {
+		StringBuilder displayName = new StringBuilder();
+		
+		if (lastName1 != null && lastName1.isNotNull().get() && !lastName1.get().isEmpty()) {
+			displayName.append(lastName1.get());
+			
+			if (lastName2 != null && lastName2.isNotNull().get() && !lastName2.get().isEmpty()) {
+				displayName.append(" " + lastName2.get());
+			}
+			displayName.append(", ");
+		}
+		
+		displayName.append(name.get());
+		
+		this.displayName.set(displayName.toString());
 	}
 }
