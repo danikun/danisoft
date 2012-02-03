@@ -130,7 +130,7 @@ public class ContactsPage implements Page {
 				"Name");
 		nameColumn
 				.setCellValueFactory(new PropertyValueFactory<UIContact, String>(
-						"name"));
+						"displayName"));
 		nameColumn.prefWidthProperty().bind(
 				contactList.widthProperty().subtract(42));
 
