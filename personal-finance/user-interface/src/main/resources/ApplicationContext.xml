@@ -3,6 +3,11 @@
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:database.properties"/>
+	</bean>
+
 	<!-- Pages -->
 	<bean name="contactsPage" class="org.danisoft.ui.pages.ContactsPage">
 		<property name="contactsService" ref="contactsService" />
@@ -16,8 +21,9 @@
 
 	<!-- DAO's -->
 	<bean name="contacDao" class="org.danisoft.dao.impl.ContactDaoImpl">
-		<property name="contactMapper" ref="contactMapper"/>
-		<property name="personMapper" ref="personMapper"/>
+		<property name="contactMapper" ref="contactMapper" />
+		<property name="personMapper" ref="personMapper" />
+		<property name="phoneNumberMapper" ref="phoneNumberMapper" />
 	</bean>
 
 	<!-- JCR -->
@@ -50,23 +56,30 @@
 
 	<!-- MyBatis -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="org.apache.derby.jdbc.EmbeddedDriver" />
+		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:derby:directory:../personalFinanceDB;create=true" />
+			value="jdbc:mysql://www.freesql.org:3306/personalFinanceDB" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
 	</bean>
 
 	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="configLocation" value="classpath:mybatis-config.xml"/>
+		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<property name="dataSource" ref="dataSource" />
 	</bean>
 
 	<bean id="contactMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.ContactMapper"/>
+		<property name="mapperInterface" value="org.danisoft.Mapper.ContactMapper" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
 
 	<bean id="personMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.PersonMapper"/>
+		<property name="mapperInterface" value="org.danisoft.Mapper.PersonMapper" />
+		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
+	</bean>
+
+	<bean id="phoneNumberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
+		<property name="mapperInterface" value="org.danisoft.Mapper.PhoneNumberMapper" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
 	</bean>
 

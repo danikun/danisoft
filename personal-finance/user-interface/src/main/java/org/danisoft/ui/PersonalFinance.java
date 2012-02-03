@@ -12,6 +12,7 @@ import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.FlowPane;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 /**
@@ -35,7 +36,10 @@ public class PersonalFinance extends Application {
 		stage.getIcons().add(icon);
 		
 		// Border Pane Layout (top --> menu, center --> current page area)
-		scene = new Scene(new BorderPane(), 1024, 768);
+		double height = Screen.getPrimary().getVisualBounds().getHeight();
+		double width = Screen.getPrimary().getVisualBounds().getWidth();
+		scene = new Scene(new BorderPane(), width - 20, height - 50);
+		scene.getStylesheets().add("personalFinance.css");
 		
 		// Load the menu from an easily editable FXML file
 		FXMLLoader loader = new FXMLLoader();
