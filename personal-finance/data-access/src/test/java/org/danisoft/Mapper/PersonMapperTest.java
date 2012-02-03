@@ -1,5 +1,8 @@
 package org.danisoft.Mapper;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.sql.DataSource;
 
 import junit.framework.Assert;
@@ -28,6 +31,7 @@ public class PersonMapperTest {
 	Person person = new Person(0, "Dani", ContactType.Person, null, "address", "Garcia", "Pino");
 	PersonMapper personMapper = null;
 	ContactMapper contactMapper = null;
+	PhoneNumberMapper phoneNumberMapper;
 	Log log = LogFactory.getLog(this.getClass());
 	
 	@Before
@@ -44,17 +48,33 @@ public class PersonMapperTest {
 		configuration.getTypeAliasRegistry().registerAlias("PhoneNumber", PhoneNumber.class);
 		configuration.addMapper(ContactMapper.class);
 		configuration.addMapper(PersonMapper.class);
+		configuration.addMapper(PhoneNumberMapper.class);
 		
 		SqlSessionFactory sessionFactory = new SqlSessionFactoryBuilder().build(configuration);
 		session = sessionFactory.openSession();
 		
 		personMapper = session.getMapper(PersonMapper.class);
 		contactMapper = session.getMapper(ContactMapper.class);
+		phoneNumberMapper = session.getMapper(PhoneNumberMapper.class);
+		
+		List<PhoneNumber> phoneNumbers = new ArrayList<PhoneNumber>();
+		PhoneNumber number = new PhoneNumber();
+		number.setId(0);
+		number.setNumber("678909876");
+		number.setType("M");
+		number.setContact(person);
+		phoneNumbers.add(number);
+		
+		person.setPhoneNumbers(phoneNumbers);
 	}
 	
 	@Test
 	public void testMapperContact() {
 		contactMapper.save(person);
+		
+		for(PhoneNumber phoneNumber : person.getPhoneNumbers()) {
+			phoneNumberMapper.save(phoneNumber);
+		}
 		
 		Assert.assertTrue(person.getId() > 0);
 		personMapper.save(person);
