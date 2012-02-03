@@ -26,27 +26,31 @@ public class UIContact {
 	/**
 	 * Primary key.
 	 */
-	private IntegerProperty id;
+	protected IntegerProperty id;
 	/**
 	 * Base name.
 	 */
-	private StringProperty name;
+	protected StringProperty name;
 	/**
 	 * Contact type;
 	 */
-	private ContactType type;
+	protected ContactType type;
 	/**
 	 * Phone numbers
 	 */
-	private ObservableList<UIPhoneNumber> phoneNumbers;
+	protected ObservableList<UIPhoneNumber> phoneNumbers;
 	/**
 	 * Contact address
 	 */
-	private StringProperty address;
+	protected StringProperty address;
 	/**
 	 * JCR Path of the photo
 	 */
-	private File photo;
+	protected File photo;
+	/**
+	 * Display Name to show in the contacts list
+	 */
+	protected StringProperty displayName;
 
 	public UIContact(int id, String name, ContactType type,
 			ObservableList<UIPhoneNumber> phoneNumbers, String address) {
@@ -56,6 +60,9 @@ public class UIContact {
 		this.type = type;
 		this.phoneNumbers = phoneNumbers;
 		this.address = new SimpleStringProperty(address);
+		this.displayName = new SimpleStringProperty();
+		
+		updateDisplayName();
 	}
 
 	/**
@@ -86,6 +93,7 @@ public class UIContact {
 	 */
 	public void setName(String name) {
 		this.name.set(name);
+		updateDisplayName();
 	}
 
 	/**
@@ -201,4 +209,16 @@ public class UIContact {
 
 		return uiContact;
 	}
+
+	/**
+	 * @return the displayName
+	 */
+	public StringProperty displayNameProperty() {
+		return displayName;
+	}
+	
+	protected void updateDisplayName() {
+		displayName.set(name.get());
+	}
+	
 }
