@@ -21,6 +21,11 @@
 			<artifactId>mybatis</artifactId>
 			<version>3.0.6</version>
 		</dependency>
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<version>5.1.18</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -37,6 +42,11 @@
 						<groupId>org.apache.derby</groupId>
 						<artifactId>derby</artifactId>
 						<version>10.8.2.2</version>
+					</dependency>
+					<dependency>
+						<groupId>mysql</groupId>
+						<artifactId>mysql-connector-java</artifactId>
+						<version>5.1.18</version>
 					</dependency>
 				</dependencies>
 			</plugin>
