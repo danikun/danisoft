@@ -12,23 +12,23 @@ public class Contact {
 	/**
 	 * Primary key.
 	 */
-	private int id;
+	protected int id;
 	/**
 	 * Base name.
 	 */
-	private String name;
+	protected String name;
 	/**
 	 * Contact type;
 	 */
-	private ContactType type;
+	protected ContactType type;
 	/**
 	 * Phone numbers
 	 */
-	private List<PhoneNumber> phoneNumbers;
+	protected List<PhoneNumber> phoneNumbers;
 	/**
 	 * Contact address
 	 */
-	private String address;
+	protected String address;
 	
 	public Contact(int id, String name, ContactType type,
 			List<PhoneNumber> phoneNumbers, String address) {
