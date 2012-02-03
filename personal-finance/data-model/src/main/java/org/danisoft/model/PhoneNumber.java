@@ -8,6 +8,10 @@ package org.danisoft.model;
  */
 public class PhoneNumber {
 	/**
+	 * Id.
+	 */
+	private int id;
+	/**
 	 * Type of phone number.
 	 */
 	private PhoneNumberType type;
@@ -20,6 +24,12 @@ public class PhoneNumber {
 	 */
 	private Contact contact;	
 	
+	/**
+	 * @return the type Id
+	 */
+	public int getTypeId() {
+		return type.getId();
+	}
 	/**
 	 * @return the type
 	 */
@@ -45,6 +55,12 @@ public class PhoneNumber {
 		this.number = number;
 	}
 	/**
+	 * @return the contactid
+	 */
+	public int getContactId() {
+		return contact.getId();
+	}
+	/**
 	 * @return the contact
 	 */
 	public Contact getContact() {
@@ -55,5 +71,17 @@ public class PhoneNumber {
 	 */
 	public void setContact(Contact contact) {
 		this.contact = contact;
+	}
+	/**
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+	/**
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 }
