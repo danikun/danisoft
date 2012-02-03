@@ -5,6 +5,7 @@ import java.util.List;
 
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.ObservableList;
 
 import org.danisoft.model.Contact;
 import org.danisoft.model.ContactType;
@@ -29,7 +30,7 @@ public class UIPerson extends UIContact {
 	private StringProperty lastName2;
 
 	public UIPerson(int id, String name, String lastName1, String lastName2,
-			List<UIPhoneNumber> phoneNumbers, String address) {
+			ObservableList<UIPhoneNumber> phoneNumbers, String address) {
 		super(id, name, ContactType.Person, phoneNumbers, address);
 		this.lastName1 = new SimpleStringProperty(lastName1);
 		this.lastName2 = new SimpleStringProperty(lastName2);

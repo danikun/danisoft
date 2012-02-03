@@ -8,6 +8,8 @@ import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 
 import org.danisoft.model.Contact;
 import org.danisoft.model.ContactType;
@@ -36,7 +38,7 @@ public class UIContact {
 	/**
 	 * Phone numbers
 	 */
-	private List<UIPhoneNumber> phoneNumbers;
+	private ObservableList<UIPhoneNumber> phoneNumbers;
 	/**
 	 * Contact address
 	 */
@@ -47,7 +49,7 @@ public class UIContact {
 	private File photo;
 
 	public UIContact(int id, String name, ContactType type,
-			List<UIPhoneNumber> phoneNumbers, String address) {
+			ObservableList<UIPhoneNumber> phoneNumbers, String address) {
 		super();
 		this.id = new SimpleIntegerProperty(id);
 		this.name = new SimpleStringProperty(name);
@@ -104,7 +106,7 @@ public class UIContact {
 	/**
 	 * @return the phoneNumbers
 	 */
-	public List<UIPhoneNumber> getPhoneNumbers() {
+	public ObservableList<UIPhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}
 
@@ -112,7 +114,7 @@ public class UIContact {
 	 * @param phoneNumbers
 	 *            the phoneNumbers to set
 	 */
-	public void setPhoneNumbers(List<UIPhoneNumber> phoneNumbers) {
+	public void setPhoneNumbers(ObservableList<UIPhoneNumber> phoneNumbers) {
 		this.phoneNumbers = phoneNumbers;
 	}
 
@@ -180,7 +182,7 @@ public class UIContact {
 
 		UIContact uiContact = null;
 		
-		List<UIPhoneNumber> phoneNumbers = new ArrayList<UIPhoneNumber>();
+		ObservableList<UIPhoneNumber> phoneNumbers = FXCollections.observableArrayList();
 		
 		for (PhoneNumber number : contact.getPhoneNumbers()) {
 			phoneNumbers.add(UIPhoneNumber.fromPhoneNumber(number));
