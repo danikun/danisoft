@@ -6,18 +6,14 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
-import javafx.stage.Modality;
-import javafx.stage.Popup;
-import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 
 import org.danisoft.ui.model.UIPhoneNumber;
 
@@ -28,14 +24,12 @@ public class PhoneNumbersComponent extends HBox {
 	private Button addButton = new Button("Add");
 	private Button removeButton = new Button("Remove");
 	private Button editButton = new Button("Edit");
+	private ObservableList<UIPhoneNumber> items = FXCollections.observableArrayList();
 	
-	public PhoneNumbersComponent(List<UIPhoneNumber> phoneNumbers) {
+	public PhoneNumbersComponent() {
 		super();
 		
 		buttonsBox.getChildren().addAll(addButton, removeButton, editButton);
-		
-		ObservableList<UIPhoneNumber> items = FXCollections.observableArrayList(phoneNumbers);
-		phoneNumbersTable.setItems(items);
 		
 		TableColumn<UIPhoneNumber, String> numberColumn = new TableColumn<UIPhoneNumber, String>("Number");
 		numberColumn.setCellValueFactory(new PropertyValueFactory<UIPhoneNumber, String>("number"));
@@ -55,15 +49,36 @@ public class PhoneNumbersComponent extends HBox {
 			
 			@Override
 			public void handle(ActionEvent event) {
-				Stage stage = new Stage();
-				stage.setTitle("New Phone Number");
-				stage.initModality(Modality.WINDOW_MODAL);
-				
-				stage.setWidth(400);
-				stage.setHeight(200);
-				
-				stage.setScene(new Scene(new GridPane()));
-				stage.show();
+				final AddPhoneNumberComponent addPhoneNumberComponent = new AddPhoneNumberComponent();
+				addPhoneNumberComponent.show(null);
+				addPhoneNumberComponent.setOnHiding(new EventHandler<WindowEvent>() {
+					
+					@Override
+					public void handle(WindowEvent arg0) {
+						if (AddPhoneNumberComponent.ACTION_ADD.equals(addPhoneNumberComponent.getAction())) {
+							items.add(addPhoneNumberComponent.getPhoneNumber());
+						}
+					}
+				});
+			}
+		});
+		
+		editButton.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent event) {
+				if (phoneNumbersTable.getSelectionModel().getSelectedItem() != null) {
+					final AddPhoneNumberComponent addPhoneNumberComponent = new AddPhoneNumberComponent();
+					addPhoneNumberComponent.show(phoneNumbersTable.getSelectionModel().getSelectedItem());
+				}
+			}
+		});
+		
+		removeButton.setOnAction(new EventHandler<ActionEvent>() {
+			
+			@Override
+			public void handle(ActionEvent arg0) {
+				items.remove(phoneNumbersTable.getSelectionModel().getSelectedItem());
 			}
 		});
 	}
@@ -86,4 +101,21 @@ public class PhoneNumbersComponent extends HBox {
 	public VBox getButtonsBox() {
 		return buttonsBox;
 	}
+
+	/**
+	 * @return the items
+	 */
+	public ObservableList<UIPhoneNumber> getItems() {
+		return items;
+	}
+
+	/**
+	 * @param items the items to set
+	 */
+	public void setItems(ObservableList<UIPhoneNumber> items) {
+		this.items = items;
+		phoneNumbersTable.setItems(items);
+	}
+	
+	
 }
