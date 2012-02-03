@@ -50,17 +50,17 @@
 	</select>
 	
 	<insert id="save" parameterType="Person" flushCache="true">
-		INSERT INTO Person (contact, lastname1, lastname2) values(${id}, '${lastName1}', '${lastName2}')
+		INSERT INTO Person (contact, lastname1, lastname2) values(#{id}, #{lastName1}, #{lastName2})
 	</insert>
 	
 	<update id="update" parameterType="Person" flushCache="true">
 		UPDATE 
 			Person
 		SET
-			 lastname1 = '${lastName1}',
-			 lastname2 = '${lastName2}'
+			 lastname1 = #{lastName1},
+			 lastname2 = #{lastName2}
 	 	WHERE
-		 	contact = ${id}
+		 	contact = #{id}
 	</update>
 	
 	<delete id="delete" parameterType="Person" flushCache="true">
