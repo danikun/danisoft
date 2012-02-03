@@ -17,6 +17,7 @@ public enum PhoneNumberType {
 	private String displayName;
 	
 	private PhoneNumberType(int id, String code, String displayName) {
+		this.id = id;
 		this.code = code;
 		this.displayName = displayName;
 	}
