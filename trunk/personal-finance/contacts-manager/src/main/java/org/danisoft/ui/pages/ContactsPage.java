@@ -3,6 +3,7 @@ package org.danisoft.ui.pages;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -32,6 +33,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.util.Callback;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.danisoft.constants.StyleClass;
 import org.danisoft.model.Contact;
 import org.danisoft.services.IContactsService;
 import org.danisoft.ui.base.Page;
@@ -40,6 +44,7 @@ import org.danisoft.ui.custom.cells.ImageTableCell;
 import org.danisoft.ui.custom.event.ContactSaveEvent;
 import org.danisoft.ui.model.UIContact;
 import org.danisoft.ui.model.UIPerson;
+import org.danisoft.ui.model.UIPhoneNumber;
 
 /**
  * Main view of the contacts manager.
@@ -48,6 +53,9 @@ import org.danisoft.ui.model.UIPerson;
  * 
  */
 public class ContactsPage implements Page {
+	
+	// Log
+	Log log = LogFactory.getLog(getClass());
 
 	// Service
 	IContactsService contactsService = null;
@@ -157,8 +165,7 @@ public class ContactsPage implements Page {
 		actionButtons.setAlignment(Pos.CENTER_RIGHT);
 		actionButtons.setPadding(new Insets(10));
 		actionButtons.setSpacing(5);
-		actionButtons
-				.setStyle("-fx-border-style: solid; -fx-border-color: black");
+		actionButtons.getStyleClass().add(StyleClass.BORDER_PANE_CONTENT);
 		actionButtons.getChildren().add(deleteButton);
 
 		layout.setBottom(actionButtons);
@@ -197,9 +204,12 @@ public class ContactsPage implements Page {
 				detailsComponent.setSaveEventHandler(saveEventHandler);
 				detailsComponent.setContactsService(contactsService);
 				detailComponents.put(type, detailsComponent);
-			} catch (Exception e) {
-				//TODO: Log
-				System.out.print("Invalid class name");
+			} catch (ClassNotFoundException e) {
+				log.error("The class doesn't exist: " + detailsClass);
+			} catch (InstantiationException e) {
+				log.error("The class couldn't be instantiated: " + detailsClass, e);
+			} catch (IllegalAccessException e) {
+				log.error("The class can't be accessed: " + detailsClass);
 			}
 		}
 		
@@ -228,7 +238,7 @@ public class ContactsPage implements Page {
 			
 			switch (actionId) {
 			case NEW:
-				generateContactDataPane(new UIPerson(0, "", "", "", null, ""));
+				generateContactDataPane(new UIPerson(0, "", "", "", FXCollections.observableArrayList(new ArrayList<UIPhoneNumber>()), ""));
 				break;
 			case DELETE:
 				UIContact contact = contactList.getSelectionModel()
@@ -261,8 +271,7 @@ public class ContactsPage implements Page {
 					contacts.add(contact);
 				}
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				log.error("Couldn't find the file: " + contact.getPhoto());
 			}
 		}
 		

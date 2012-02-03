@@ -6,12 +6,6 @@ import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-
-import org.danisoft.services.IContactsService;
-import org.danisoft.ui.model.UIContact;
-import org.danisoft.ui.model.UIPerson;
-import org.danisoft.ui.model.UIPhoneNumber;
 
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,6 +20,13 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.Region;
 import javafx.stage.FileChooser;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
+import org.danisoft.constants.StyleClass;
+import org.danisoft.services.IContactsService;
+import org.danisoft.ui.model.UIContact;
+import org.danisoft.ui.model.UIPerson;
+
 /**
  * Component to show/edit the contact details of a person contact.
  * 
@@ -34,6 +35,9 @@ import javafx.stage.FileChooser;
  */
 public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 
+	// Log.
+	Log log = LogFactory.getLog(getClass());
+	
 	// Properties
 	private UIPerson person;
 		
@@ -45,9 +49,11 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 	private final TextField lastName1Text = new TextField();
 	private final Label lastName2Label = new Label("Last Name 2");
 	private final TextField lastName2Text = new TextField();
+	private final Label addressLabel = new Label("Address");
+	private final TextField addressText = new TextField();
 	private final ImageView photo = new ImageView();
 	private final Button setPhoto = new Button("set...");
-	private final PhoneNumbersComponent  phoneNumbers = new PhoneNumbersComponent(new ArrayList<UIPhoneNumber>());
+	private final PhoneNumbersComponent  phoneNumbers = new PhoneNumbersComponent();
 	
 	// Contacts service
 	private IContactsService contactsService = null;
@@ -73,9 +79,11 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		this.add(lastName2Label, 0, 4);
 		this.add(lastName2Text, 1, 4);
 		
-		//this.add(phoneNumbers.getPhoneNumbersTable(), 0, 5);
-		this.add(phoneNumbers, 1, 5);
-		this.add(saveButton, 1, 6);
+		this.add(addressLabel, 0, 5);
+		this.add(addressText, 1, 5);
+		
+		this.add(phoneNumbers, 1, 6);
+		this.add(saveButton, 1, 7);
 		
 		ColumnConstraints column1 = new ColumnConstraints();
 		column1.setPercentWidth(30);
@@ -87,12 +95,12 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		this.setMaxSize(Region.USE_COMPUTED_SIZE,
 				Region.USE_COMPUTED_SIZE);
 		
-		// Style of controls TODO: move to css
-		this.setStyle("-fx-hgap: 10; -fx-vgap: 10; -fx-padding: 20;");
-		firstNameLabel.setStyle("-fx-font-weight: bold;");
-		lastName1Label.setStyle("-fx-font-weight: bold;");
-		lastName2Label.setStyle("-fx-font-weight: bold;");
-		title.setStyle("-fx-font-weight: bold; -fx-font-size: 32;");
+		this.getStyleClass().add(StyleClass.CONTACT_DETAILS);
+		firstNameLabel.getStyleClass().add(StyleClass.FORM_FIELD);
+		lastName1Label.getStyleClass().add(StyleClass.FORM_FIELD);
+		lastName2Label.getStyleClass().add(StyleClass.FORM_FIELD);
+		addressLabel.getStyleClass().add(StyleClass.FORM_FIELD);
+		title.getStyleClass().add(StyleClass.CONTACT_DETAILS_TITLE);
 	}
 
 	@Override
@@ -102,6 +110,8 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		firstNameText.setText(person.getName());
 		lastName1Text.setText(person.getLastName1());
 		lastName2Text.setText(person.getLastName2());
+		addressText.setText(person.getAddress());
+		phoneNumbers.setItems(person.getPhoneNumbers());
 		
 		InputStream stream = contactsService.getContactImage(contact.getId());
 		
@@ -117,6 +127,7 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		person.setName(firstNameText.getText());
 		person.setLastName1(lastName1Text.getText());
 		person.setLastName2(lastName2Text.getText());
+		person.setAddress(addressText.getText());
 		
 		return person;
 	}
@@ -139,14 +150,11 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 				stream.close();
 				person.setPhoto(file);
 			} catch (FileNotFoundException e) {
-				//TODO: Log
-				System.out.println("File not found");
+				log.error("Couldn't find the file: " + file);
 			} catch (IOException e) {
-				// TODO LOG
-				e.printStackTrace();
+				log.error("Error accessing the file: " + file);
 			}
 		}
-		
 	}
 
 	/**
