@@ -11,11 +11,14 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
 
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.danisoft.repo.IJcrSessionFactory;
 import org.danisoft.repo.IJcrTemplate;
 
 public class JcrTemplateImpl implements IJcrTemplate {
 
+	private Log log = LogFactory.getLog(getClass());
 	private IJcrSessionFactory sessionFactory;
 	
 	public void addBinary(String name, String mimeType, String path,
@@ -44,6 +47,7 @@ public class JcrTemplateImpl implements IJcrTemplate {
 				session.save();
 			} catch (PathNotFoundException e) {
 				// Do nothing it is OK
+				log.info("The node doesn't exist, proceed adding the new node.");
 			}
 			
 			Node fileNode = dir.addNode(name, NodeType.NT_FILE);
@@ -57,11 +61,9 @@ public class JcrTemplateImpl implements IJcrTemplate {
 			System.out.println("hola");
 			
 		} catch (LoginException e) {
-			// TODO Log
-			e.printStackTrace();
+			log.error("Unable to log into the JCR", e);
 		} catch (RepositoryException e) {
-			// TODO Log
-			e.printStackTrace();
+			log.error("Error executing a JCR operation", e);
 		}
 	}
 
@@ -82,11 +84,9 @@ public class JcrTemplateImpl implements IJcrTemplate {
 			}
 			
 		} catch (LoginException e) {
-			// TODO Log
-			e.printStackTrace();
+			log.error("Unable to log into the JCR", e);
 		} catch (RepositoryException e) {
-			// TODO Log
-			e.printStackTrace();
+			log.error("Error executing a JCR operation", e);
 		}
 		
 		return stream;
@@ -114,11 +114,9 @@ public class JcrTemplateImpl implements IJcrTemplate {
 			node.remove();
 			session.save();
 		} catch (PathNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("The path to delete doesn't exist");
 		} catch (RepositoryException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Error executing a JCR operation", e);
 		}
 	}
 }
