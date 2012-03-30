@@ -1,0 +1,87 @@
+package org.danisoft.ui.custom
+
+import javafx.scene.layout.GridPane
+import javafx.geometry.Insets
+import javafx.scene.control.Label
+import javafx.scene.control.ChoiceBox
+import javafx.scene.control.TextField
+import javafx.scene.control.Button
+import javafx.scene.layout.HBox
+import javafx.scene.layout.ColumnConstraints
+import javafx.scene.layout.RowConstraints
+import org.danisoft.ui.custom.AddPhoneNumberController
+
+component AddPhoneNumber controlledby AddPhoneNumberController {
+	GridPane id layout {
+		hgap : 10,
+		vgap : 10,
+		padding : Insets {
+			top : 10,
+			bottom : 10,
+			left : 10,
+			right : 10
+		},
+		children : [
+			Label {
+				text : "Type",
+				styleClass : [ String("form-field") ],
+				call GridPane#rowIndex : 0,
+				call GridPane#columnIndex : 0
+			},
+			Label {
+				text : "Number",
+				styleClass : [ String("form-field") ],
+				call GridPane#rowIndex : 1,
+				call GridPane#columnIndex : 0
+			},
+			ChoiceBox<String> id choiceBox{
+				call GridPane#rowIndex : 0,
+				call GridPane#columnIndex : 1
+			},
+			TextField id textField {
+				call GridPane#rowIndex : 1,
+				call GridPane#columnIndex : 1
+			},
+			HBox {
+				alignment : "CENTER_RIGHT",
+				spacing : 10,
+				children : [
+					Button {
+						text : "Accept",
+						onAction : controllermethod handleAcceptButton
+					},
+					Button {
+						text : "Cancel",
+						onAction : controllermethod handleCancelButton
+					}
+				],
+				call GridPane#rowIndex : 2,
+				call GridPane#columnIndex : 0,
+				call GridPane#columnSpan : 2
+			}			
+		],
+		columnConstraints : [
+			ColumnConstraints {
+				percentWidth : 30,
+				halignment : "RIGHT"
+			},
+			ColumnConstraints {
+				percentWidth : 70
+			}
+		],
+		rowConstraints : [
+			RowConstraints {
+				percentHeight : 33,
+				valignment : "CENTER"
+			},
+			RowConstraints {
+				percentHeight : 33,
+				valignment : "CENTER"
+			},
+			RowConstraints {
+				percentHeight : 33,
+				valignment : "CENTER"
+			}
+		]
+	}
+}

@@ -52,8 +52,8 @@ import org.danisoft.ui.model.UIPhoneNumber;
  * @author Daniel Garcia
  * 
  */
-public class ContactsPage implements Page {
-	
+public class ContactsPage extends Page {
+
 	// Log
 	Log log = LogFactory.getLog(getClass());
 
@@ -85,6 +85,7 @@ public class ContactsPage implements Page {
 	// Detail components cache
 	Map<String, ContactDetailsAbstractComponent> detailComponents = null;
 
+	@Override
 	public Node load() {
 		contacts = FXCollections.observableArrayList();
 
@@ -104,17 +105,18 @@ public class ContactsPage implements Page {
 		contactList.setItems(contacts);
 
 		contactList.getSelectionModel().selectedItemProperty()
-				.addListener(new ChangeListener<UIContact>() {
+		.addListener(new ChangeListener<UIContact>() {
 
-					public void changed(
-							ObservableValue<? extends UIContact> observable,
-							UIContact prev, UIContact curr) {
+			@Override
+			public void changed(
+					ObservableValue<? extends UIContact> observable,
+					UIContact prev, UIContact curr) {
 
-						if (curr != null) {
-							generateContactDataPane(curr);
-						}
-					}
-				});
+				if (curr != null) {
+					generateContactDataPane(curr);
+				}
+			}
+		});
 
 		return layout;
 	}
@@ -129,32 +131,34 @@ public class ContactsPage implements Page {
 		TableColumn<UIContact, String> nameColumn = new TableColumn<UIContact, String>(
 				"Name");
 		nameColumn
-				.setCellValueFactory(new PropertyValueFactory<UIContact, String>(
-						"displayName"));
+		.setCellValueFactory(new PropertyValueFactory<UIContact, String>(
+				"displayName"));
 		nameColumn.prefWidthProperty().bind(
 				contactList.widthProperty().subtract(42));
 
 		TableColumn<UIContact, String> typeColumn = new TableColumn<UIContact, String>(
 				"");
 		typeColumn
-				.setCellFactory(new Callback<TableColumn<UIContact, String>, TableCell<UIContact, String>>() {
+		.setCellFactory(new Callback<TableColumn<UIContact, String>, TableCell<UIContact, String>>() {
 
-					public TableCell<UIContact, String> call(
-							TableColumn<UIContact, String> arg0) {
-						return new ImageTableCell();
-					}
-				});
+			@Override
+			public TableCell<UIContact, String> call(
+					TableColumn<UIContact, String> arg0) {
+				return new ImageTableCell();
+			}
+		});
 
 		typeColumn
-				.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UIContact, String>, ObservableValue<String>>() {
+		.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UIContact, String>, ObservableValue<String>>() {
 
-					public ObservableValue<String> call(
-							CellDataFeatures<UIContact, String> cellData) {
-						SimpleStringProperty value = new SimpleStringProperty(
-								cellData.getValue().getType().getDisplayName());
-						return value;
-					}
-				});
+			@Override
+			public ObservableValue<String> call(
+					CellDataFeatures<UIContact, String> cellData) {
+				SimpleStringProperty value = new SimpleStringProperty(
+						cellData.getValue().getType().getDisplayName());
+				return value;
+			}
+		});
 		typeColumn.setPrefWidth(40);
 		typeColumn.setMaxWidth(40);
 		typeColumn.setMinWidth(40);
@@ -176,19 +180,19 @@ public class ContactsPage implements Page {
 		personItem.setOnAction(buttonEventHandler);
 		personItem.setId(NEW);
 		personItem.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
-		
+
 		MenuItem companyItem = new MenuItem("Company");
-		
+
 		menuBar.getMenus().add(fileMenu);
 		fileMenu.getItems().add(newMenu);
 		newMenu.getItems().addAll(personItem, companyItem);
-		
+
 		layout.setTop(menuBar);
 
 		// Delete button
 		deleteButton.setOnAction(buttonEventHandler);
 		deleteButton.setId(DELETE);
-		
+
 	}
 
 	private void generateContactDataPane(UIContact contact) {
@@ -212,7 +216,7 @@ public class ContactsPage implements Page {
 				log.error("The class can't be accessed: " + detailsClass);
 			}
 		}
-		
+
 		if (detailsComponent != null) {
 			detailsComponent.setContact(contact);
 			detailsComponent.setEditable(true);
@@ -221,28 +225,30 @@ public class ContactsPage implements Page {
 		detailsComponent.setFocus();
 	}
 
+	@Override
 	public String getName() {
 		return "Contacts";
 	}
 
 	private class ButtonEventHandler implements EventHandler<ActionEvent> {
+		@Override
 		public void handle(ActionEvent event) {
 			String actionId = null;
-			
+
 			if (event.getTarget() instanceof MenuItem) {
 				actionId = ((MenuItem)event.getTarget()).getId();
 			} else {
 				Control node = (Control) event.getTarget();
 				actionId = node.getId();
 			}
-			
+
 			switch (actionId) {
 			case NEW:
 				generateContactDataPane(new UIPerson(0, "", "", "", FXCollections.observableArrayList(new ArrayList<UIPhoneNumber>()), ""));
 				break;
 			case DELETE:
 				UIContact contact = contactList.getSelectionModel()
-						.getSelectedItem();
+				.getSelectedItem();
 				contactsService.deleteContact(contact.toContact());
 
 				contacts.remove(contact);
@@ -251,13 +257,13 @@ public class ContactsPage implements Page {
 			}
 		}
 	}
-	
+
 	private class SaveEventHandler implements EventHandler<ContactSaveEvent> {
 
 		@Override
 		public void handle(ContactSaveEvent event) {
 			UIContact contact = event.getContact();
-			
+
 			int id;
 			try {
 				if (contact.getPhoto() != null) {
@@ -265,7 +271,7 @@ public class ContactsPage implements Page {
 				} else {
 					id = contactsService.saveContact(contact.toContact(), null);
 				}
-				
+
 				if (contact.getId() == 0) {
 					contact.setId(id);
 					contacts.add(contact);
@@ -274,7 +280,7 @@ public class ContactsPage implements Page {
 				log.error("Couldn't find the file: " + contact.getPhoto());
 			}
 		}
-		
+
 	}
 
 	/**

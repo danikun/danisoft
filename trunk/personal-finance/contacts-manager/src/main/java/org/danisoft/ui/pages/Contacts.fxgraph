@@ -1,0 +1,82 @@
+package org.danisoft.ui.pages
+
+import javafx.scene.layout.BorderPane
+import javafx.scene.control.TableView
+import org.danisoft.ui.model.*
+import javafx.collections.ObservableList
+import javafx.scene.control.TableColumn
+import org.danisoft.ui.custom.cells.*
+import javafx.scene.control.cell.PropertyValueFactory
+import javafx.scene.layout.HBox
+import javafx.scene.control.Button
+import javafx.scene.control.MenuBar
+import javafx.scene.control.Menu
+import javafx.scene.control.MenuItem
+import javafx.geometry.Insets
+import javafx.geometry.InsetsBuilder
+import org.danisoft.ui.pages.ContactsController
+import javafx.collections.FXCollections
+
+component Contacts controlledby ContactsController {
+	BorderPane id layout {
+		left : TableView<UIContact> id contactList {
+			columns : [
+				TableColumn<UIContact, String> {
+					text : "",
+					cellFactory : ImageTableCellFactory,
+					cellValueFactory : ImageTableCellValueFactory,
+					prefWidth : 40,
+					minWidth : 40,
+					maxWidth : 40
+				},
+				TableColumn<UIContact, String> id nameColumn {
+					text : "Name",
+					cellValueFactory : PropertyValueFactory<UIContact, String> {
+						property : "displayName"
+					}
+				}
+			],
+			prefWidth : 300
+		},
+		
+		bottom : HBox {
+			alignment : "CENTER_RIGHT",
+			padding : Insets {
+				bottom : 10,
+				top : 10,
+				right : 10,
+				left : 10
+			},
+			spacing : 5,
+			children : [
+				Button id deleteButton {
+					text : "Delete Contact",
+					onAction : controllermethod deleteContact
+				}
+			]
+		},
+		
+		top : MenuBar {
+			menus : [
+				Menu {
+					text : "File",
+					items : [
+						Menu {
+							text : "Add",
+							items : [
+								MenuItem id NEW {
+									text : "Person",
+									onAction : controllermethod newPerson
+								},
+								MenuItem {
+									text : "Company",
+									onAction : controllermethod newCompany
+								}
+							]
+						}
+					]
+				}
+			]
+		}
+	}
+}

@@ -1,0 +1,98 @@
+package org.danisoft.ui.custom
+
+import javafx.scene.layout.GridPane
+import javafx.scene.control.Label
+import javafx.scene.control.TextField
+import javafx.scene.image.ImageView
+import javafx.scene.control.Button
+import javafx.scene.layout.ColumnConstraints
+import org.danisoft.ui.custom.PersonDetailsController
+
+component PersonDetails controlledby PersonDetailsController {
+	GridPane id layout {
+		// CSS Style
+		styleClass : [String("contactDetails")],
+		// Column constraints
+		columnConstraints : [
+			ColumnConstraints {
+				percentWidth : 30
+			},
+			ColumnConstraints {
+				percentWidth : 70
+			}
+		],
+		
+		// Items
+		children : [
+			Label {
+				text : "Person Details",
+				call GridPane#columnIndex : 0,
+				call GridPane#rowIndex : 0,
+				call GridPane#columnSpan : 2,
+				styleClass : [String("contactDetailsTitle")]
+			},
+			ImageView id photo {
+				call GridPane#columnIndex : 0,
+				call GridPane#rowIndex : 1,
+				fitHeight : 64,
+				fitWidth : 64
+			},
+			Button {
+				text : "set...",
+				call GridPane#columnIndex : 1,
+				call GridPane#rowIndex : 1,
+				call GridPane#halignment : "LEFT",
+				onAction : controllermethod handleSetPhotoButtonAction,
+				maxWidth : 80
+			},
+			Label {
+				text : "First Name",
+				call GridPane#columnIndex : 0,
+				call GridPane#rowIndex : 2,
+				styleClass : [String("form-field")]
+			},
+			TextField id firstNameText {
+				call GridPane#columnIndex : 1,
+				call GridPane#rowIndex : 2
+			},
+			Label {
+				text : "Last Name 1",
+				call GridPane#columnIndex : 0,
+				call GridPane#rowIndex : 3,
+				styleClass : [String("form-field")]
+			},
+			TextField id lastName1Text {
+				call GridPane#columnIndex : 1,
+				call GridPane#rowIndex : 3
+			},
+			Label {
+				text : "Last Name 2",
+				call GridPane#columnIndex : 0,
+				call GridPane#rowIndex : 4,
+				styleClass : [String("form-field")]
+			},
+			TextField id lastName2Text {
+				call GridPane#columnIndex : 1,
+				call GridPane#rowIndex : 4
+			},
+			Label {
+				text : "Address",
+				call GridPane#columnIndex : 0,
+				call GridPane#rowIndex : 5,
+				styleClass : [String("form-field")]
+			},
+			TextField id addressText {
+				call GridPane#columnIndex : 1,
+				call GridPane#rowIndex : 5
+			},
+			Button {
+				text : "Save",
+				call GridPane#columnIndex : 1,
+				call GridPane#rowIndex : 7,
+				call GridPane#halignment : "RIGHT",
+				onAction : controllermethod handleSaveButtonAction,
+				maxWidth : 80
+			}
+		]
+	}
+}
