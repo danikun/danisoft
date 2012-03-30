@@ -13,40 +13,44 @@ import org.danisoft.model.PhoneNumber;
 /**
  * Actual implementation of the Contact DAO
  * 
- * @author Daniel García
+ * @author Daniel Garcï¿½a
  *
  */
 public class ContactDaoImpl implements IContactDao {
-	
+
 	private PersonMapper personMapper;
 	private ContactMapper contactMapper;
 	private PhoneNumberMapper phoneNumberMapper;
 
+	@Override
 	public Contact get(int id) {
 		return contactMapper.get(id);
 	}
 
+	@Override
 	public List<Contact> getAll() {
 		return contactMapper.getAll();
 	}
 
+	@Override
 	public int save(Contact object) {
 		contactMapper.save(object);
-		
+
 		for(PhoneNumber phoneNumber : object.getPhoneNumbers()) {
 			phoneNumberMapper.save(phoneNumber);
 		}
-		
+
 		if (object instanceof Person) {
 			personMapper.save((Person) object);
 		}
-		
+
 		return object.getId();
 	}
 
+	@Override
 	public void update(Contact object) {
 		contactMapper.update(object);
-		
+
 		for(PhoneNumber phoneNumber : object.getPhoneNumbers()) {
 			if (phoneNumber.getId() > 0) {
 				phoneNumberMapper.update(phoneNumber);
@@ -54,17 +58,23 @@ public class ContactDaoImpl implements IContactDao {
 				phoneNumberMapper.save(phoneNumber);
 			}
 		}
-		
+
 		if (object instanceof Person) {
 			personMapper.update((Person) object);
 		}
 	}
 
+	@Override
 	public void delete(Contact object) {
+
+		for (PhoneNumber phoneNumber : object.getPhoneNumbers()) {
+			phoneNumberMapper.delete(phoneNumber);
+		}
+
 		if (object instanceof Person) {
 			personMapper.delete((Person) object);
 		}
-		
+
 		contactMapper.delete(object);
 	}
 
@@ -74,7 +84,7 @@ public class ContactDaoImpl implements IContactDao {
 	public void setPersonMapper(PersonMapper personMapper) {
 		this.personMapper = personMapper;
 	}
-	
+
 	/**
 	 * @param contactMapper the contactMapper to set
 	 */

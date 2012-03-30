@@ -19,3 +19,7 @@
 	-fx-border-style: solid; 
 	-fx-border-color: gray;
 }
+
+.mainMenu {
+	-fx-padding: 20;
+}

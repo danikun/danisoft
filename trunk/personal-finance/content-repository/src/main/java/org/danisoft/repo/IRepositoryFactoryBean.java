@@ -9,9 +9,9 @@ import javax.jcr.Repository;
  *
  */
 public interface IRepositoryFactoryBean {
-	
+
 	/**
-	 * Creates a new JCR repository
+	 * Creates a new JCR repository.
 	 * 
 	 * @return the created repository
 	 */

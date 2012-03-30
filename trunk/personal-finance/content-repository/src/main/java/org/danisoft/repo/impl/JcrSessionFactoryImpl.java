@@ -19,7 +19,7 @@ import org.danisoft.repo.IRepositoryFactoryBean;
  */
 public class JcrSessionFactoryImpl implements IJcrSessionFactory {
 
-	private Log log = LogFactory.getLog(getClass());
+	private final Log log = LogFactory.getLog(getClass());
 	private IRepositoryFactoryBean repositoryFactory;
 	private Repository repository;
 	private Credentials credentials;
@@ -42,7 +42,7 @@ public class JcrSessionFactoryImpl implements IJcrSessionFactory {
 	/**
 	 * @param repositoryFactory the repositoryFactory to set
 	 */
-	public void setRepositoryFactory(IRepositoryFactoryBean repositoryFactory) {
+	public void setRepositoryFactory(final IRepositoryFactoryBean repositoryFactory) {
 		this.repositoryFactory = repositoryFactory;
 	}
 
@@ -56,7 +56,7 @@ public class JcrSessionFactoryImpl implements IJcrSessionFactory {
 	/**
 	 * @param credentials the credentials to set
 	 */
-	public void setCredentials(Credentials credentials) {
+	public void setCredentials(final Credentials credentials) {
 		this.credentials = credentials;
 	}
 
@@ -78,7 +78,8 @@ public class JcrSessionFactoryImpl implements IJcrSessionFactory {
 	 * Closes the current JCR session.
 	 */
 	public void closeSession() {
-		if (session != null)
+		if (session != null) {
 			session.logout();
+		}
 	}
 }

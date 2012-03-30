@@ -8,6 +8,7 @@
 <VBox 
 	xmlns:fx="http://javafx.com/fxml" fx:id="sideButtons" style="-fx-padding: 40 0 0 0;">
 	<children>
+		<!-- Contacts Button -->
 		<Button>
 			<graphic>
 				<ImageView fitWidth="48" fitHeight="48">

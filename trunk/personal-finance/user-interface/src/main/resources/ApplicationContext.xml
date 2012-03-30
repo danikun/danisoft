@@ -9,18 +9,35 @@
 	</bean>
 
 	<!-- Pages -->
-	<bean name="contactsPage" class="org.danisoft.ui.pages.ContactsPage">
-		<property name="contactsService" ref="contactsService" />
+	<bean name="contactsPage" class="org.danisoft.ui.base.Page">
+		<property name="name" value="Contacts"/>
+		<property name="path" value="/org/danisoft/ui/pages/Contacts.fxml"/>
+		<property name="params">
+			<map key-type="java.lang.String" value-type="Object">
+				<entry key="contactsService" value-ref="contactsService"/>
+				<entry key="personDetailsPage" value-ref="personDetailsPage"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean name="personDetailsPage" class="org.danisoft.ui.base.Page">
+		<property name="name" value="Person Details"/>
+		<property name="path" value="/org/danisoft/ui/custom/PersonDetails.fxml"/>
+		<property name="params">
+			<map key-type="java.lang.String" value-type="Object">
+				<entry key="contactsService" value-ref="contactsService"/>
+			</map>
+		</property>
 	</bean>
 
 	<!-- Services -->
 	<bean name="contactsService" class="org.danisoft.services.impl.ContactsServiceImpl">
-		<property name="contactDao" ref="contacDao" />
+		<property name="contactDao" ref="contactDao" />
 		<property name="jcrTemplate" ref="jcrTemplate" />
 	</bean>
 
 	<!-- DAO's -->
-	<bean name="contacDao" class="org.danisoft.dao.impl.ContactDaoImpl">
+	<bean name="contactDao" class="org.danisoft.dao.impl.ContactDaoImpl">
 		<property name="contactMapper" ref="contactMapper" />
 		<property name="personMapper" ref="personMapper" />
 		<property name="phoneNumberMapper" ref="phoneNumberMapper" />
@@ -58,7 +75,7 @@
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
 		<property name="url"
-			value="jdbc:mysql://www.freesql.org:3306/personalFinanceDB" />
+			value="jdbc:mysql://localhost:3306/personalFinanceDB" />
 		<property name="username" value="${database.username}" />
 		<property name="password" value="${database.password}" />
 	</bean>
