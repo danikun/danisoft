@@ -23,25 +23,35 @@ public class UIPerson extends UIContact {
 	/**
 	 * First surname.
 	 */
-	private StringProperty lastName1;
+	private final StringProperty lastName1;
 	/**
 	 * Second surname.
 	 */
-	private StringProperty lastName2;
+	private final StringProperty lastName2;
 
-	public UIPerson(int id, String name, String lastName1, String lastName2,
-			ObservableList<UIPhoneNumber> phoneNumbers, String address) {
+	/**
+	 * Constructor.
+	 * 
+	 * @param id an id
+	 * @param name a name
+	 * @param lastName1 a first lastname
+	 * @param lastName2 a second lastname
+	 * @param phoneNumbers a list of phone numbers
+	 * @param address an address
+	 */
+	public UIPerson(final int id, final String name, final String lastName1, final String lastName2,
+			final ObservableList<UIPhoneNumber> phoneNumbers, final String address) {
 		super(id, name, ContactType.Person, phoneNumbers, address);
 		this.lastName1 = new SimpleStringProperty(lastName1);
 		this.lastName2 = new SimpleStringProperty(lastName2);
-		
+
 		updateDisplayName();
 	}
 
 	/**
 	 * @return the lastName1
 	 */
-	public String getLastName1() {
+	public final String getLastName1() {
 		return lastName1.get();
 	}
 
@@ -49,7 +59,7 @@ public class UIPerson extends UIContact {
 	 * @param lastName1
 	 *            the lastName1 to set
 	 */
-	public void setLastName1(String lastName1) {
+	public final void setLastName1(final String lastName1) {
 		this.lastName1.set(lastName1);
 		updateDisplayName();
 	}
@@ -57,7 +67,7 @@ public class UIPerson extends UIContact {
 	/**
 	 * @return the lastName2
 	 */
-	public String getLastName2() {
+	public final String getLastName2() {
 		return lastName2.get();
 	}
 
@@ -65,52 +75,58 @@ public class UIPerson extends UIContact {
 	 * @param lastName2
 	 *            the lastName2 to set
 	 */
-	public void setLastName2(String lastName2) {
+	public final void setLastName2(final String lastName2) {
 		this.lastName2.set(lastName2);
 		updateDisplayName();
 	}
 
-	public StringProperty lastName1Property() {
+	/**
+	 * @return the Last name 1 property
+	 */
+	public final StringProperty lastName1Property() {
 		return lastName1;
 	}
 
-	public StringProperty lastName2Property() {
+	/**
+	 * @return the last name 2 property
+	 */
+	public final StringProperty lastName2Property() {
 		return lastName2;
 	}
 
 	@Override
-	public Contact toContact() {
+	public final Contact toContact() {
 		Person person = new Person(getId(), getName(), getType(), null,
 				getAddress(), getLastName1(), getLastName2());
-		
+
 		List<PhoneNumber> numbers = new ArrayList<PhoneNumber>();
-		
+
 		for (UIPhoneNumber phoneNumber : getPhoneNumbers()) {
 			PhoneNumber number = phoneNumber.toPhoneNumber();
 			number.setContact(person);
-			
+
 			numbers.add(number);
 		}
 		person.setPhoneNumbers(numbers);
-		
+
 		return person;
 	}
-	
+
 	@Override
-	protected void updateDisplayName() {
+	protected final void updateDisplayName() {
 		StringBuilder displayName = new StringBuilder();
-		
+
 		if (lastName1 != null && lastName1.isNotNull().get() && !lastName1.get().isEmpty()) {
 			displayName.append(lastName1.get());
-			
+
 			if (lastName2 != null && lastName2.isNotNull().get() && !lastName2.get().isEmpty()) {
 				displayName.append(" " + lastName2.get());
 			}
 			displayName.append(", ");
 		}
-		
-		displayName.append(name.get());
-		
-		this.displayName.set(displayName.toString());
+
+		displayName.append(getName());
+
+		displayNameProperty().set(displayName.toString());
 	}
 }

@@ -1,28 +1,48 @@
 package org.danisoft.ui.model;
 
-import org.danisoft.model.PhoneNumber;
-
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 
+import org.danisoft.model.PhoneNumber;
+
+/**
+ * Phone number UI representation.
+ * 
+ * @author Daniel Garcia
+ * 
+ */
 public class UIPhoneNumber {
 
-	private StringProperty number;
-	private StringProperty type;
-	private int id;
-	
 	/**
-	 * @param number
-	 * @param type
+	 * Number property.
 	 */
-	public UIPhoneNumber(String number, String type) {
+	private final StringProperty number;
+	/**
+	 * Type Property.
+	 */
+	private final StringProperty type;
+	/**
+	 * Entity id.
+	 */
+	private int id;
+
+	/**
+	 * @param number the number
+	 * @param type the type
+	 */
+	public UIPhoneNumber(final String number, final String type) {
 		super();
 		this.number = new SimpleStringProperty(number);
 		this.type = new SimpleStringProperty(type);
 		this.id = 0;
 	}
 
-	public UIPhoneNumber(int id, String number, String type) {
+	/**
+	 * @param id the id
+	 * @param number the number
+	 * @param type the type
+	 */
+	public UIPhoneNumber(final int id, final String number, final String type) {
 		super();
 		this.number = new SimpleStringProperty(number);
 		this.type = new SimpleStringProperty(type);
@@ -39,7 +59,7 @@ public class UIPhoneNumber {
 	/**
 	 * @param number the number to set
 	 */
-	public void setNumber(String number) {
+	public void setNumber(final String number) {
 		this.number.set(number);
 	}
 
@@ -53,7 +73,7 @@ public class UIPhoneNumber {
 	/**
 	 * @param type the type to set
 	 */
-	public void setType(String type) {
+	public void setType(final String type) {
 		this.type.set(type);
 	}
 
@@ -70,7 +90,7 @@ public class UIPhoneNumber {
 	public String getType() {
 		return type.get();
 	}
-	
+
 	/**
 	 * @return the id
 	 */
@@ -81,23 +101,34 @@ public class UIPhoneNumber {
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(final int id) {
 		this.id = id;
 	}
 
+	/**
+	 * Converts the object into a database phone number.
+	 * 
+	 * @return the converted object
+	 */
 	public PhoneNumber toPhoneNumber() {
 		PhoneNumber phoneNumber = new PhoneNumber();
-		
+
 		phoneNumber.setId(id);
 		phoneNumber.setNumber(getNumber());
-		phoneNumber.setType(getType().substring(0,1));
-		
+		phoneNumber.setType(getType().substring(0, 1));
+
 		return phoneNumber;
 	}
-	
-	public static UIPhoneNumber fromPhoneNumber(PhoneNumber phoneNumber) {
+
+	/**
+	 * Creates a UI phone number from a database phone number.
+	 * 
+	 * @param phoneNumber the database phone number
+	 * @return the UI phone number
+	 */
+	public static UIPhoneNumber fromPhoneNumber(final PhoneNumber phoneNumber) {
 		UIPhoneNumber uiPhoneNumber = new UIPhoneNumber(phoneNumber.getId(), phoneNumber.getNumber(), phoneNumber.getType().getDisplayName());
-		
+
 		return uiPhoneNumber;
 	}
 }
