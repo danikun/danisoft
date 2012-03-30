@@ -19,41 +19,51 @@ import org.danisoft.model.PhoneNumber;
 /**
  * Mapping of the Contact data object to the data model of the UI.
  * 
- * @author Daniel García
+ * @author Daniel Garcï¿½a
  * 
  */
 public class UIContact {
 	/**
 	 * Primary key.
 	 */
-	protected IntegerProperty id;
+	private final IntegerProperty id;
 	/**
 	 * Base name.
 	 */
-	protected StringProperty name;
+	private final StringProperty name;
 	/**
-	 * Contact type;
+	 * Contact type.
 	 */
-	protected ContactType type;
+	private ContactType type;
 	/**
-	 * Phone numbers
+	 * Phone numbers.
 	 */
-	protected ObservableList<UIPhoneNumber> phoneNumbers;
+	private ObservableList<UIPhoneNumber> phoneNumbers;
 	/**
-	 * Contact address
+	 * Contact address.
 	 */
-	protected StringProperty address;
+	private final StringProperty address;
 	/**
-	 * JCR Path of the photo
+	 * JCR Path of the photo.
 	 */
-	protected File photo;
+	private File photo;
 	/**
-	 * Display Name to show in the contacts list
+	 * Display Name to show in the contacts list.
 	 */
-	protected StringProperty displayName;
+	private final StringProperty displayName;
 
-	public UIContact(int id, String name, ContactType type,
-			ObservableList<UIPhoneNumber> phoneNumbers, String address) {
+	/**
+	 * Constructor.
+	 * 
+	 * @param id an id
+	 * @param name a name
+	 * @param type a type
+	 * @param phoneNumbers a list of phone numbers
+	 * @param address an address
+	 */
+	public UIContact(final int id, final String name, final ContactType type,
+			final ObservableList<UIPhoneNumber> phoneNumbers,
+			final String address) {
 		super();
 		this.id = new SimpleIntegerProperty(id);
 		this.name = new SimpleStringProperty(name);
@@ -61,37 +71,35 @@ public class UIContact {
 		this.phoneNumbers = phoneNumbers;
 		this.address = new SimpleStringProperty(address);
 		this.displayName = new SimpleStringProperty();
-		
+
 		updateDisplayName();
 	}
 
 	/**
 	 * @return the id
 	 */
-	public int getId() {
+	public final int getId() {
 		return id.get();
 	}
 
 	/**
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public final void setId(final int id) {
 		this.id.set(id);
 	}
 
 	/**
 	 * @return the name
 	 */
-	public String getName() {
+	public final String getName() {
 		return name.get();
 	}
 
 	/**
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
-	public void setName(String name) {
+	public final void setName(final String name) {
 		this.name.set(name);
 		updateDisplayName();
 	}
@@ -99,112 +107,129 @@ public class UIContact {
 	/**
 	 * @return the type
 	 */
-	public ContactType getType() {
+	public final ContactType getType() {
 		return type;
 	}
 
 	/**
-	 * @param type
-	 *            the type to set
+	 * @param type the type to set
 	 */
-	public void setType(ContactType type) {
+	public final void setType(final ContactType type) {
 		this.type = type;
 	}
 
 	/**
 	 * @return the phoneNumbers
 	 */
-	public ObservableList<UIPhoneNumber> getPhoneNumbers() {
+	public final ObservableList<UIPhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}
 
 	/**
-	 * @param phoneNumbers
-	 *            the phoneNumbers to set
+	 * @param phoneNumbers the phoneNumbers to set
 	 */
-	public void setPhoneNumbers(ObservableList<UIPhoneNumber> phoneNumbers) {
+	public final void setPhoneNumbers(final ObservableList<UIPhoneNumber> phoneNumbers) {
 		this.phoneNumbers = phoneNumbers;
 	}
 
 	/**
 	 * @return the address
 	 */
-	public String getAddress() {
+	public final String getAddress() {
 		return address.get();
 	}
-	
+
 	/**
-	 * @param photoPath the photoPath to set
+	 * @param file the file to set
 	 */
-	public void setPhoto(File file) {
+	public final void setPhoto(final File file) {
 		this.photo = file;
 	}
-	
-	public File getPhoto() {
+
+	/**
+	 * @return the photo
+	 */
+	public final File getPhoto() {
 		return this.photo;
 	}
 
 	/**
-	 * @param address
-	 *            the address to set
+	 * @param address the address to set
 	 */
-	public void setAddress(String address) {
+	public final void setAddress(final String address) {
 		this.address.set(address);
 	}
 
-	public IntegerProperty idProperty() {
+	/**
+	 * @return the idProperty
+	 */
+	public final IntegerProperty idProperty() {
 		return id;
 	}
 
-	public StringProperty nameProperty() {
+	/**
+	 * @return the nameProperty
+	 */
+	public final StringProperty nameProperty() {
 		return name;
 	}
 
-	public StringProperty addressProperty() {
+	/**
+	 * @return the addressProperty
+	 */
+	public final StringProperty addressProperty() {
 		return address;
 	}
-	
+
 	@Override
-	public String toString() {
+	public final String toString() {
 		return name.get();
 	}
 
+	/**
+	 * Transform this UI contact to a database contact.
+	 * 
+	 * @return the database contact
+	 */
 	public Contact toContact() {
 		List<PhoneNumber> numbers = new ArrayList<PhoneNumber>();
-		
-		Contact contact = new Contact(this.getId(), this.getName(), this.getType(),
-				null, this.getAddress());
-		
+
+		Contact contact = new Contact(this.getId(), this.getName(), this.getType(), null, this.getAddress());
+
 		for (UIPhoneNumber phoneNumber : phoneNumbers) {
 			PhoneNumber number = phoneNumber.toPhoneNumber();
 			number.setContact(contact);
-			
+
 			numbers.add(number);
 		}
 		contact.setPhoneNumbers(numbers);
-		
+
 		return contact;
 	}
 
-	public static UIContact fromContact(Contact contact) {
+	/**
+	 * Generates a UI Contact with the data of a database contact.
+	 * 
+	 * @param contact a database contact
+	 * @return the generated UI contact
+	 */
+	public static UIContact fromContact(final Contact contact) {
 
 		UIContact uiContact = null;
-		
+
 		ObservableList<UIPhoneNumber> phoneNumbers = FXCollections.observableArrayList();
-		
+
 		for (PhoneNumber number : contact.getPhoneNumbers()) {
 			phoneNumbers.add(UIPhoneNumber.fromPhoneNumber(number));
 		}
-		
+
 		if (contact instanceof Person) {
 			Person person = (Person) contact;
-			uiContact = new UIPerson(person.getId(), person.getName(),
-					person.getLastName1(), person.getLastName2(),
+			uiContact = new UIPerson(person.getId(), person.getName(), person.getLastName1(), person.getLastName2(),
 					phoneNumbers, person.getAddress());
 		} else {
-			uiContact = new UIContact(contact.getId(), contact.getName(),
-					contact.getType(), phoneNumbers,
-					contact.getAddress()); 
+			uiContact = new UIContact(contact.getId(), contact.getName(), contact.getType(), phoneNumbers,
+					contact.getAddress());
 		}
 
 		return uiContact;
@@ -213,12 +238,15 @@ public class UIContact {
 	/**
 	 * @return the displayName
 	 */
-	public StringProperty displayNameProperty() {
+	public final StringProperty displayNameProperty() {
 		return displayName;
 	}
-	
+
+	/**
+	 * Updates the display name.
+	 */
 	protected void updateDisplayName() {
 		displayName.set(name.get());
 	}
-	
+
 }

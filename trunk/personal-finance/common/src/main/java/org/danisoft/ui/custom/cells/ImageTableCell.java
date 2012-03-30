@@ -7,23 +7,42 @@ import javafx.scene.image.ImageView;
 
 import org.danisoft.ui.model.UIContact;
 
+/**
+ * Custom cell to include an image inside a table cell.
+ * 
+ * @author Daniel Garcia
+ */
 public class ImageTableCell extends TableCell<UIContact, String> {
+	/**
+	 * Width of the images to include in the table cell.
+	 */
+	private static final Integer IMAGE_WIDTH = 32;
+	/**
+	 * Height of the images to include in the table cell.
+	 */
+	private static final Integer IMAGE_HEIGTH = 32;
 
-	public ImageTableCell() {}
-	
-	@Override protected void updateItem(String item, boolean empty) {
+	/**
+	 * Default constructor.
+	 */
+	public ImageTableCell() {
+		super();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	protected final void updateItem(final String item, final boolean empty) {
 		super.updateItem(item, empty);
 		setText("");
-		
+
 		if (item != null) {
-			Image image = 
-					new Image(
-							getClass().getResourceAsStream(
-									"/org/danisoft/ui/images/" + item + ".png"));
+			Image image = new Image(getClass().getResourceAsStream("/org/danisoft/ui/images/" + item + ".png"));
 			ImageView imageView = new ImageView(image);
-			imageView.setFitWidth(32);
-			imageView.setFitHeight(32);
-			
+			imageView.setFitWidth(IMAGE_WIDTH);
+			imageView.setFitHeight(IMAGE_HEIGTH);
+
 			setGraphic(imageView);
 			setAlignment(Pos.CENTER);
 		}
