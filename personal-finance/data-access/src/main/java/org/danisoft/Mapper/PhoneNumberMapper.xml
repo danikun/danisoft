@@ -21,4 +21,11 @@
 			id = ${id}
   	</update>
   	
+  	<delete id="delete" flushCache="true" parameterType="PhoneNumber">
+  		DELETE FROM
+  			PhoneNumber
+		WHERE
+			id = ${id}
+  	</delete>
+  	
   </mapper>
