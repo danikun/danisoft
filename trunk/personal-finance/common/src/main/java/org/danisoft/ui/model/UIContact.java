@@ -13,6 +13,7 @@ import javafx.collections.ObservableList;
 
 import org.danisoft.model.Contact;
 import org.danisoft.model.ContactType;
+import org.danisoft.model.Family;
 import org.danisoft.model.Person;
 import org.danisoft.model.PhoneNumber;
 
@@ -227,6 +228,14 @@ public class UIContact {
 			Person person = (Person) contact;
 			uiContact = new UIPerson(person.getId(), person.getName(), person.getLastName1(), person.getLastName2(),
 					phoneNumbers, person.getAddress());
+		} else if (contact instanceof Family) {
+			Family family = (Family) contact;
+			ObservableList<UIPerson> members = FXCollections.observableArrayList();
+
+			for (Person person : family.getPersons()) {
+				members.add((UIPerson) UIContact.fromContact(person));
+			}
+			uiContact = new UIFamily(family.getId(), family.getName(), phoneNumbers, family.getAddress(), members);
 		} else {
 			uiContact = new UIContact(contact.getId(), contact.getName(), contact.getType(), phoneNumbers,
 					contact.getAddress());
