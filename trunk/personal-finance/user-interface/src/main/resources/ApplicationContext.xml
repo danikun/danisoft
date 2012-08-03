@@ -15,7 +15,12 @@
 		<property name="params">
 			<map key-type="java.lang.String" value-type="Object">
 				<entry key="contactsService" value-ref="contactsService"/>
-				<entry key="personDetailsPage" value-ref="personDetailsPage"/>
+				<entry key="detailPages">
+					<map key-type="java.lang.String" value-type="org.danisoft.ui.base.Page">
+						<entry key="Person" value-ref="personDetailsPage"/>
+						<entry key="Family" value-ref="familyDetailsPage"/>
+					</map>
+				</entry>
 			</map>
 		</property>
 	</bean>
@@ -26,6 +31,37 @@
 		<property name="params">
 			<map key-type="java.lang.String" value-type="Object">
 				<entry key="contactsService" value-ref="contactsService"/>
+				<entry key="phoneNumbers" value-ref="phoneNumbers"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean name="familyDetailsPage" class="org.danisoft.ui.base.Page">
+		<property name="name" value="Family Details"/>
+		<property name="path" value="/org/danisoft/ui/custom/FamilyDetails.fxml"/>
+		<property name="params">
+			<map key-type="java.lang.String" value-type="Object">
+				<entry key="contactsService" value-ref="contactsService"/>
+				<entry key="phoneNumbers" value-ref="phoneNumbers"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean name="phoneNumbers" class="org.danisoft.ui.base.Page">
+		<property name="name" value="Phone Numbers Component"/>
+		<property name="path" value="/org/danisoft/ui/custom/PhoneNumbers.fxml"/>
+		<property name="params">
+			<map key-type="java.lang.String" value-type="java.lang.Object">
+				<entry key="addPhoneNumber" value-ref="addPhoneNumber"/>
+			</map>
+		</property>
+	</bean>
+	
+	<bean name="addPhoneNumber" class="org.danisoft.ui.base.Page">
+		<property name="name" value="Add phone number"/>
+		<property name="path" value="/org/danisoft/ui/custom/AddPhoneNumber.fxml"/>
+		<property name="params">
+			<map key-type="java.lang.String" value-type="Object">
 			</map>
 		</property>
 	</bean>
