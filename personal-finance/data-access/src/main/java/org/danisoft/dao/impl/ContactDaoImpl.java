@@ -11,19 +11,28 @@ import org.danisoft.model.Person;
 import org.danisoft.model.PhoneNumber;
 
 /**
- * Actual implementation of the Contact DAO
+ * Actual implementation of the Contact DAO.
  * 
  * @author Daniel Garc�a
- *
+ * 
  */
 public class ContactDaoImpl implements IContactDao {
 
+	/**
+	 * MyBatis mapper for person objects.
+	 */
 	private PersonMapper personMapper;
+	/**
+	 * MyBatis mapper for contact objects.
+	 */
 	private ContactMapper contactMapper;
+	/**
+	 * MyBatis mapper for phone number objects.
+	 */
 	private PhoneNumberMapper phoneNumberMapper;
 
 	@Override
-	public Contact get(int id) {
+	public Contact get(final int id) {
 		return contactMapper.get(id);
 	}
 
@@ -33,10 +42,10 @@ public class ContactDaoImpl implements IContactDao {
 	}
 
 	@Override
-	public int save(Contact object) {
+	public int save(final Contact object) {
 		contactMapper.save(object);
 
-		for(PhoneNumber phoneNumber : object.getPhoneNumbers()) {
+		for (PhoneNumber phoneNumber : object.getPhoneNumbers()) {
 			phoneNumberMapper.save(phoneNumber);
 		}
 
@@ -48,10 +57,10 @@ public class ContactDaoImpl implements IContactDao {
 	}
 
 	@Override
-	public void update(Contact object) {
+	public void update(final Contact object) {
 		contactMapper.update(object);
 
-		for(PhoneNumber phoneNumber : object.getPhoneNumbers()) {
+		for (PhoneNumber phoneNumber : object.getPhoneNumbers()) {
 			if (phoneNumber.getId() > 0) {
 				phoneNumberMapper.update(phoneNumber);
 			} else {
@@ -65,7 +74,7 @@ public class ContactDaoImpl implements IContactDao {
 	}
 
 	@Override
-	public void delete(Contact object) {
+	public void delete(final Contact object) {
 
 		for (PhoneNumber phoneNumber : object.getPhoneNumbers()) {
 			phoneNumberMapper.delete(phoneNumber);
@@ -81,21 +90,21 @@ public class ContactDaoImpl implements IContactDao {
 	/**
 	 * @param personMapper the personMapper to set
 	 */
-	public void setPersonMapper(PersonMapper personMapper) {
+	public void setPersonMapper(final PersonMapper personMapper) {
 		this.personMapper = personMapper;
 	}
 
 	/**
 	 * @param contactMapper the contactMapper to set
 	 */
-	public void setContactMapper(ContactMapper contactMapper) {
+	public void setContactMapper(final ContactMapper contactMapper) {
 		this.contactMapper = contactMapper;
 	}
 
 	/**
 	 * @param phoneNumberMapper the phoneNumberMapper to set
 	 */
-	public void setPhoneNumberMapper(PhoneNumberMapper phoneNumberMapper) {
+	public void setPhoneNumberMapper(final PhoneNumberMapper phoneNumberMapper) {
 		this.phoneNumberMapper = phoneNumberMapper;
 	}
 }
