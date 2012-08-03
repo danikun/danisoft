@@ -15,44 +15,47 @@ import org.danisoft.services.IContactsService;
  *
  */
 public class ContactsServiceImpl implements IContactsService {
-	
+
 	private IContactDao contactDao = null;
 	private IJcrTemplate jcrTemplate = null;
 
+	@Override
 	public List<Contact> getAllContacts() {
 		return contactDao.getAll();
 	}
 
+	@Override
 	public List<Contact> searchContacts(String keyword) {
 		return null;
 	}
 
+	@Override
 	public int saveContact(Contact contact, InputStream stream) {
 		int id = 0;
-		
+
 		if (contact.getId() > 0) {
 			contactDao.update(contact);
 			id = contact.getId();
 		} else {
-			id = contactDao.save(contact); 
+			id = contactDao.save(contact);
 		}
-		
+
 		if (stream != null) {
 			jcrTemplate.addBinary("image.png", "image/png", "contacts/" + id + "/", stream);
 		}
-		
+
 		return id;
 	}
 
 	/**
 	 * @param contactDao the contactDao to set
 	 */
-	public void setContactDao(IContactDao contactDao) {
+	public void setContactDao(final IContactDao contactDao) {
 		this.contactDao = contactDao;
 	}
 
 	@Override
-	public void deleteContact(Contact contact) {
+	public void deleteContact(final Contact contact) {
 		contactDao.delete(contact);
 		jcrTemplate.deleteNode("/contacts/" + contact.getId());
 	}
@@ -60,7 +63,7 @@ public class ContactsServiceImpl implements IContactsService {
 	/**
 	 * @param jcrTemplate the jcrTemplate to set
 	 */
-	public void setJcrTemplate(IJcrTemplate jcrTemplate) {
+	public void setJcrTemplate(final IJcrTemplate jcrTemplate) {
 		this.jcrTemplate = jcrTemplate;
 	}
 
