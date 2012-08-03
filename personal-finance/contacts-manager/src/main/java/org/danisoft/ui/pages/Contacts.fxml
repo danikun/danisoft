@@ -55,8 +55,9 @@
 					<items>
 						<Menu text="Add"> 
 							<items>
-								<MenuItem fx:id="NEW" text="Person" onAction="#newPerson"/> 
-								<MenuItem text="Company" onAction="#newCompany"/> 
+								<MenuItem text="Person" onAction="#newContact"/> 
+								<MenuItem text="Family" onAction="#newContact"/> 
+								<MenuItem text="Company" onAction="#newContact"/> 
 							</items>
 						</Menu>
 					</items>

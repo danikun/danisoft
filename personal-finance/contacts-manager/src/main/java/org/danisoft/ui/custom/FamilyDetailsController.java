@@ -25,16 +25,16 @@ import org.danisoft.services.IContactsService;
 import org.danisoft.ui.base.Controller;
 import org.danisoft.ui.base.Page;
 import org.danisoft.ui.model.UIContact;
-import org.danisoft.ui.model.UIPerson;
+import org.danisoft.ui.model.UIFamily;
 import org.danisoft.ui.model.UIPhoneNumber;
 
 /**
- * Controller of the person details screen.
+ * Controller for the family details page.
  * 
- * @author Daniel García
+ * @author Daniel Garcia
  * 
  */
-public class PersonDetailsController implements Controller {
+public class FamilyDetailsController implements Controller {
 	/**
 	 * Log.
 	 */
@@ -42,43 +42,33 @@ public class PersonDetailsController implements Controller {
 
 	// Private properties
 	/**
-	 * The person to show/edit the details.
+	 * Family contact.
 	 */
-	private UIPerson contact;
+	private UIFamily family;
 	/**
 	 * List of contacts.
 	 */
 	private ObservableList<UIContact> contacts;
 	/**
+	 * Phone numbers component.
+	 */
+	private Page phoneNumbers;
+	/**
 	 * Contacts service.
 	 */
 	private IContactsService contactsService;
-	/**
-	 * Phone numbers page.
-	 */
-	private Page phoneNumbers;
 
-	// UI elements
+	// UI components
 	/**
 	 * Parent layout of the view.
 	 */
 	@FXML
 	private GridPane layout;
 	/**
-	 * First name text field.
+	 * Name text field.
 	 */
 	@FXML
-	private TextField firstNameText;
-	/**
-	 * Last name 1 text field.
-	 */
-	@FXML
-	private TextField lastName1Text;
-	/**
-	 * Last name 2 text field.
-	 */
-	@FXML
-	private TextField lastName2Text;
+	private TextField nameText;
 	/**
 	 * Address text field.
 	 */
@@ -93,41 +83,33 @@ public class PersonDetailsController implements Controller {
 	@SuppressWarnings("unchecked")
 	@Override
 	public void init(final Map<String, Object> params) {
-		// Private properties
-		contactsService = (IContactsService) params.get("contactsService");
-		contacts = (ObservableList<UIContact>) params.get("contacts");
+		// Set private properties
 		phoneNumbers = (Page) params.get("phoneNumbers");
+		contacts = (ObservableList<UIContact>) params.get("contacts");
+		contactsService = (IContactsService) params.get("contactsService");
 
-		// Load contact
-		setContact((UIPerson) params.get("contact"));
+		// Set the contact
+		setContact((UIFamily) params.get("contact"));
 
 		// Page setup
 		// TODO: firstNameText.requestFocus();
-		layout.setPrefSize(300, Double.MAX_VALUE);
 		layout.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 
 		// Add phone numbers component
-		phoneNumbers.getParams().put("items", contact.getPhoneNumbers());
+		phoneNumbers.getParams().put("items", family.getPhoneNumbers());
 		layout.add(phoneNumbers.load(), 1, 6);
 	}
 
 	/**
-	 * Sets the person data into the form.
+	 * Set the contact to show the details.
 	 * 
-	 * @param person the person to set
+	 * @param contact the contact to set
 	 */
-	private void setContact(final UIPerson person) {
+	private void setContact(final UIFamily contact) {
+		this.family = contact;
 
-		if (person == null) {
-			contact = new UIPerson(0, "", "", "", null, "");
-		} else {
-			contact = person;
-		}
-
-		firstNameText.setText(contact.getName());
-		lastName1Text.setText(contact.getLastName1());
-		lastName2Text.setText(contact.getLastName2());
-		addressText.setText(contact.getAddress());
+		nameText.setText(family.getName());
+		addressText.setText(family.getAddress());
 
 		// Phone numbers
 		if (contact.getPhoneNumbers() == null) {
@@ -150,13 +132,11 @@ public class PersonDetailsController implements Controller {
 	 * 
 	 * @return the person
 	 */
-	private UIPerson getContact() {
-		contact.setName(firstNameText.getText());
-		contact.setLastName1(lastName1Text.getText());
-		contact.setLastName2(lastName2Text.getText());
-		contact.setAddress(addressText.getText());
+	private UIFamily getContact() {
+		family.setName(nameText.getText());
+		family.setAddress(addressText.getText());
 
-		return contact;
+		return family;
 	}
 
 	// Event handlers
@@ -172,19 +152,19 @@ public class PersonDetailsController implements Controller {
 		if (contactsService != null) {
 			int id;
 			try {
-				if (contact.getPhoto() != null) {
-					InputStream photoStream = new BufferedInputStream(new FileInputStream(contact.getPhoto()));
-					id = contactsService.saveContact(contact.toContact(), photoStream);
+				if (family.getPhoto() != null) {
+					InputStream photoStream = new BufferedInputStream(new FileInputStream(family.getPhoto()));
+					id = contactsService.saveContact(family.toContact(), photoStream);
 				} else {
-					id = contactsService.saveContact(contact.toContact(), null);
+					id = contactsService.saveContact(family.toContact(), null);
 				}
 
-				if (contact.getId() == 0) {
-					contact.setId(id);
-					contacts.add(contact);
+				if (family.getId() == 0) {
+					family.setId(id);
+					contacts.add(family);
 				}
 			} catch (FileNotFoundException e) {
-				log.error("Couldn't find the file: " + contact.getPhoto());
+				log.error("Couldn't find the file: " + family.getPhoto());
 			}
 		}
 	}
@@ -202,7 +182,7 @@ public class PersonDetailsController implements Controller {
 			InputStream stream = new BufferedInputStream(new FileInputStream(file));
 			photo.setImage(new Image(stream));
 			stream.close();
-			contact.setPhoto(file);
+			family.setPhoto(file);
 		} catch (FileNotFoundException e) {
 			log.error("Couldn't find the file: " + file);
 		} catch (IOException e) {

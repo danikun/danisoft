@@ -33,12 +33,12 @@ component PhoneNumbers controlledby PhoneNumbersController {
 						onAction : controllermethod handleAddButton,
 						maxWidth : 80
 					},
-					Button {
+					Button id removeButton {
 						text : "Remove",
 						onAction : controllermethod handleRemoveButton,
 						maxWidth : 80
 					},
-					Button {
+					Button id editButton {
 						text : "Edit",
 						onAction : controllermethod handleEditButton,
 						maxWidth : 80						

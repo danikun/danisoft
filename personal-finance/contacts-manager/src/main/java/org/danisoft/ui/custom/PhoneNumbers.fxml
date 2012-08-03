@@ -26,8 +26,8 @@
 		<VBox fx:id="buttonsBox" spacing="10" alignment="BOTTOM_RIGHT"> 
 			<children>
 				<Button text="Add" onAction="#handleAddButton" maxWidth="80"/> 
-				<Button text="Remove" onAction="#handleRemoveButton" maxWidth="80"/> 
-				<Button text="Edit" onAction="#handleEditButton" maxWidth="80"/> 
+				<Button fx:id="removeButton" text="Remove" onAction="#handleRemoveButton" maxWidth="80"/> 
+				<Button fx:id="editButton" text="Edit" onAction="#handleEditButton" maxWidth="80"/> 
 			</children>
 		</VBox>
 	</children>
