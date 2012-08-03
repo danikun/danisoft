@@ -64,13 +64,17 @@ component Contacts controlledby ContactsController {
 						Menu {
 							text : "Add",
 							items : [
-								MenuItem id NEW {
+								MenuItem {
 									text : "Person",
-									onAction : controllermethod newPerson
+									onAction : controllermethod newContact
+								},
+								MenuItem {
+									text : "Family",
+									onAction : controllermethod newContact
 								},
 								MenuItem {
 									text : "Company",
-									onAction : controllermethod newCompany
+									onAction : controllermethod newContact
 								}
 							]
 						}

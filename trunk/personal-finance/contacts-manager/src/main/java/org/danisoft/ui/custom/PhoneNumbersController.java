@@ -1,12 +1,12 @@
 package org.danisoft.ui.custom;
 
-import java.util.HashMap;
 import java.util.Map;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.scene.control.Button;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.HBox;
@@ -30,6 +30,10 @@ public class PhoneNumbersController implements Controller {
 	 * Phone list.
 	 */
 	private ObservableList<UIPhoneNumber> items = FXCollections.observableArrayList();
+	/**
+	 * Add phone number component.
+	 */
+	private Page addPhoneNumber;
 
 	// UI elements
 	/**
@@ -52,6 +56,16 @@ public class PhoneNumbersController implements Controller {
 	 */
 	@FXML
 	private VBox buttonsBox;
+	/**
+	 * Edit button.
+	 */
+	@FXML
+	private Button editButton;
+	/**
+	 * Remove button.
+	 */
+	@FXML
+	private Button removeButton;
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -60,12 +74,15 @@ public class PhoneNumbersController implements Controller {
 		if (params.get("items") != null) {
 			items = (ObservableList<UIPhoneNumber>) params.get("items");
 		}
+		addPhoneNumber = (Page) params.get("addPhoneNumber");
 
 		// Set bindings
 		numberColumn.prefWidthProperty().bind(phoneNumbersTable.widthProperty());
 		phoneNumbersTable.setMaxSize(Region.USE_COMPUTED_SIZE, Region.USE_COMPUTED_SIZE);
 		phoneNumbersTable.prefWidthProperty().bind(layout.widthProperty().multiply(0.9));
 		buttonsBox.prefWidthProperty().bind(layout.widthProperty().multiply(0.1));
+		editButton.disableProperty().bind(phoneNumbersTable.getSelectionModel().selectedItemProperty().isNull());
+		removeButton.disableProperty().bind(phoneNumbersTable.getSelectionModel().selectedItemProperty().isNull());
 
 		phoneNumbersTable.setItems(items);
 	}
@@ -77,16 +94,9 @@ public class PhoneNumbersController implements Controller {
 	 */
 	@FXML
 	public void handleAddButton(final ActionEvent event) {
-		// TODO: add page to application context
-		Page addPhoneNumberComponent = new Page();
-		addPhoneNumberComponent.setName("Add phone number");
-		addPhoneNumberComponent.setPath("/org/danisoft/ui/custom/AddPhoneNumber.fxml");
-
-		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("phoneNumbers", items);
-
-		addPhoneNumberComponent.setParams(params);
-		addPhoneNumberComponent.load();
+		addPhoneNumber.getParams().put("phoneNumbers", items);
+		addPhoneNumber.getParams().remove("phoneNumber");
+		addPhoneNumber.load();
 	}
 
 	/**
@@ -97,16 +107,9 @@ public class PhoneNumbersController implements Controller {
 	@FXML
 	public void handleEditButton(final ActionEvent event) {
 		if (phoneNumbersTable.getSelectionModel().getSelectedItem() != null) {
-			Page addPhoneNumberComponent = new Page();
-			addPhoneNumberComponent.setName("Add phone number");
-			addPhoneNumberComponent.setPath("/org/danisoft/ui/custom/AddPhoneNumber.fxml");
-
-			Map<String, Object> params = new HashMap<String, Object>();
-			params.put("phoneNumbers", items);
-			params.put("phoneNumber", phoneNumbersTable.getSelectionModel().getSelectedItem());
-
-			addPhoneNumberComponent.setParams(params);
-			addPhoneNumberComponent.load();
+			addPhoneNumber.getParams().put("phoneNumbers", items);
+			addPhoneNumber.getParams().put("phoneNumber", phoneNumbersTable.getSelectionModel().getSelectedItem());
+			addPhoneNumber.load();
 		}
 	}
 

@@ -9,9 +9,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.layout.BorderPane;
@@ -31,6 +30,15 @@ import org.danisoft.ui.model.UIContact;
  * 
  */
 public class ContactsController implements Controller {
+	// Constants
+	/**
+	 * Type column width.
+	 */
+	private static final double TYPE_COLUMN_WIDTH = 42;
+	/**
+	 * Contacts table percentage width.
+	 */
+	private static final double CONTACTS_PERCENTAGE_WIDTH = 0.2;
 
 	/**
 	 * Log.
@@ -41,22 +49,31 @@ public class ContactsController implements Controller {
 	/**
 	 * Person Details Page.
 	 */
-	private Page personDetailsPage;
+	private Map<String, Page> detailPages;
 	/**
 	 * Contacts Service.
 	 */
 	private IContactsService contactsService;
 
 	// UI elements.
+	/**
+	 * Contact list component.
+	 */
 	@FXML
 	private TableView<UIContact> contactList;
-
+	/**
+	 * Main layout of the page.
+	 */
 	@FXML
 	private BorderPane layout;
-
+	/**
+	 * Delete contact button.
+	 */
 	@FXML
 	private Button deleteButton;
-
+	/**
+	 * Name column of the contacts table.
+	 */
 	@FXML
 	private TableColumn<UIContact, String> nameColumn;
 
@@ -71,26 +88,18 @@ public class ContactsController implements Controller {
 	 * @param event an action event
 	 */
 	@FXML
-	protected void newPerson(final ActionEvent event) {
-		FXMLLoader loader = new FXMLLoader();
-		loader.setBuilderFactory(new JavaFXBuilderFactory(false));
-		loader.setLocation(getClass().getResource(""));
-		personDetailsPage.getParams().remove("contact");
-		personDetailsPage.getParams().put("contacts", contacts);
+	protected void newContact(final ActionEvent event) {
+		MenuItem target = (MenuItem) event.getTarget();
 
-		GridPane center = (GridPane) personDetailsPage.load();
-		layout.setCenter(center);
-		contactList.getSelectionModel().clearSelection();
-	}
+		Page detailsPage = detailPages.get(target.getText());
 
-	/**
-	 * Creates a new company.
-	 * 
-	 * @param event an action event
-	 */
-	@FXML
-	protected void newCompany(final ActionEvent event) {
-		// TODO
+		if (detailsPage != null) {
+			detailsPage.getParams().remove("contact");
+			detailsPage.getParams().put("contacts", contacts);
+
+			layout.setCenter(detailsPage.load());
+			contactList.getSelectionModel().clearSelection();
+		}
 	}
 
 	/**
@@ -108,14 +117,14 @@ public class ContactsController implements Controller {
 		contactsService.deleteContact(contact.toContact());
 	}
 
+	@SuppressWarnings("unchecked")
 	@Override
 	public void init(final Map<String, Object> params) {
 		// init private properties
-		personDetailsPage = (Page) params.get("personDetailsPage");
+		detailPages = (Map<String, Page>) params.get("detailPages");
 		contactsService = (IContactsService) params.get("contactsService");
 
 		// Initialise contacts list
-		// TODO: obtain list from database
 		contacts = FXCollections.observableArrayList();
 
 		List<Contact> dbContacts = contactsService.getAllContacts();
@@ -128,8 +137,8 @@ public class ContactsController implements Controller {
 
 		// Bindings
 		deleteButton.disableProperty().bind(contactList.getSelectionModel().selectedItemProperty().isNull());
-		contactList.prefWidthProperty().bind(layout.widthProperty().multiply(0.2));
-		nameColumn.prefWidthProperty().bind(contactList.widthProperty().subtract(42));
+		contactList.prefWidthProperty().bind(layout.widthProperty().multiply(CONTACTS_PERCENTAGE_WIDTH));
+		nameColumn.prefWidthProperty().bind(contactList.widthProperty().subtract(TYPE_COLUMN_WIDTH));
 
 		// Event handling
 		contactList.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<UIContact>() {
@@ -139,11 +148,11 @@ public class ContactsController implements Controller {
 					final UIContact curr) {
 
 				if (curr != null) {
-					personDetailsPage.getParams().put("contact", curr);
-					personDetailsPage.getParams().put("contacts", contacts);
-					GridPane center = (GridPane) personDetailsPage.load();
+					Page detailsPage = detailPages.get(curr.getType().getDisplayName());
+					detailsPage.getParams().put("contact", curr);
+					detailsPage.getParams().put("contacts", contacts);
+					GridPane center = (GridPane) detailsPage.load();
 					layout.setCenter(center);
-					center.prefWidthProperty().bind(layout.getScene().widthProperty().multiply(0.3));
 				}
 			}
 		});
