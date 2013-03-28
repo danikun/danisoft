@@ -9,4 +9,11 @@
   <artifactId>data-model</artifactId>
   <name>Data Model</name>
   <description>Set of data entities.</description>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.hibernate</groupId>
+  		<artifactId>hibernate-core</artifactId>
+  		<version>4.2.0.Final</version>
+  	</dependency>
+  </dependencies>
 </project>

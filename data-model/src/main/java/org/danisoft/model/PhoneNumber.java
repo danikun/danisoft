@@ -1,15 +1,25 @@
 package org.danisoft.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+
+import org.hibernate.annotations.GenericGenerator;
+
 /**
  * Data object to represent a phone number.
  * 
  * @author Daniel García
  *
  */
+@Entity
 public class PhoneNumber {
 	/**
 	 * Id.
 	 */
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy = "increment")
 	private int id;
 	/**
 	 * Type of phone number.
