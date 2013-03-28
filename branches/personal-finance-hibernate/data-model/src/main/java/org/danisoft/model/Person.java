@@ -2,12 +2,17 @@ package org.danisoft.model;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+
 /**
  * Data object to represent a person data.
  * 
  * @author Daniel García
  *
  */
+@Entity
+@PrimaryKeyJoinColumn(name = "ContactId")
 public class Person extends Contact {
 
 	/**

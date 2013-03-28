@@ -2,12 +2,23 @@ package org.danisoft.model;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.Inheritance;
+import javax.persistence.InheritanceType;
+import javax.persistence.OneToMany;
+
+import org.hibernate.annotations.GenericGenerator;
+
 /**
  * Parent class for all the entities suitable of being a contact.
  * 
  * @author Daniel García
  *
  */
+@Entity
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Contact {
 	/**
 	 * Primary key.
@@ -46,6 +57,9 @@ public class Contact {
 	/**
 	 * @return the id
 	 */
+	@Id
+	@GeneratedValue(generator="increment")
+	@GenericGenerator(name="increment", strategy = "increment")
 	public int getId() {
 		return id;
 	}
@@ -87,6 +101,7 @@ public class Contact {
 	/**
 	 * @return the phoneNumbers
 	 */
+	@OneToMany(mappedBy = "contact")
 	public List<PhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}
