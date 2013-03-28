@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="org.danisoft.Mapper.ContactMapper">
+
+	<resultMap type="Contact" id="contactResultMap">
+		<id column="contact_id" property="id"/>
+		<result column="contact_name" property="name"/>
+		<result column="contact_address" property="address"/>
+		<result column="contact_type" property="type"/>
+		
+		<collection property="phoneNumbers" ofType="PhoneNumber">
+			<id column="phone_id" property="id"/>
+			<result column="phoneNumber" property="number"/>
+			<result column="phoneNumberType" property="type"/>
+			<association property="contact" column="contact" javaType="Contact"/>
+		</collection>
+		
+		<discriminator javaType="String" column="contact_type">
+			<case value="P" resultMap="personResultMap"/>
+		</discriminator>
+	</resultMap>
+	
+	<resultMap type="Person" id="personResultMap" extends="contactResultMap">
+		<result column="person_lastname1" property="lastName1"/>
+		<result column="person_lastname2" property="lastName2"/>
+	</resultMap>
+
+	<sql id="contactSelect">
+		SELECT
+			c.id AS contact_id,
+			c.name AS contact_name,
+			ct.code AS contact_type,
+			c.address AS contact_address,
+			p.lastname1 AS person_lastname1,
+			p.lastname2 AS person_lastname2,
+			pn.id AS phone_id,
+			pn.phonenumber AS phoneNumber,
+			pnt.code AS phoneNumberType	
+		FROM 
+			Contact c  
+			LEFT JOIN Person p ON c.id = p.contact 
+			JOIN ContactType ct ON ct.id = c.contactType
+			LEFT JOIN PhoneNumber pn ON c.id = pn.contact
+			LEFT JOIN PhoneNumberType pnt ON pn.phonenumbertype = pnt.id
+	</sql>
+
+	<select id="getAll" resultMap="contactResultMap">
+		<include refid="contactSelect"/>
+	</select>
+
+	<select id="get" parameterType="int" resultMap="contactResultMap">
+		<include refid="contactSelect"/>
+		WHERE  
+			c.id = #{id}
+	</select>
+	
+	<insert id="save" parameterType="Contact" flushCache="true" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO Contact (name, contacttype, address) values('${name}', ${typeId}, '${address}')
+	</insert>
+	
+	<update id="update" parameterType="Contact" flushCache="true">
+		UPDATE 
+			Contact
+		SET
+			 name = '${name}',
+			 contacttype = ${typeId},
+			 address = '${address}'
+		 WHERE
+		 	id = ${id}
+	</update>
+	
+	<delete id="delete" parameterType="Contact" flushCache="true">
+		DELETE FROM
+			Contact
+		WHERE
+			id = ${id}
+	</delete>
+</mapper>

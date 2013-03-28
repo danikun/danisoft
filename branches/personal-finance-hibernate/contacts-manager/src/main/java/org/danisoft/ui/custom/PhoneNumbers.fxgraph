@@ -1,0 +1,52 @@
+package org.danisoft.ui.custom
+
+import javafx.scene.layout.HBox
+import javafx.scene.control.TableView
+import javafx.scene.control.TableColumn
+import org.danisoft.ui.model.UIPhoneNumber
+import javafx.scene.control.cell.PropertyValueFactory
+import javafx.scene.layout.VBox
+import javafx.scene.control.Button
+import javafx.scene.layout.Region
+import org.danisoft.ui.custom.PhoneNumbersController
+
+component PhoneNumbers controlledby PhoneNumbersController {
+	HBox id layout {
+		spacing : 10,
+		children : [
+			TableView<UIPhoneNumber> id phoneNumbersTable {
+				columns : [
+					TableColumn<UIPhoneNumber, String> id numberColumn {
+						text : "Number",
+						cellValueFactory : PropertyValueFactory<UIPhoneNumber, String> {
+							property : "number"
+						}
+					}
+				],
+				prefWidth : 100,
+				prefHeight : 300
+			},
+			VBox id buttonsBox {
+				children : [
+					Button {
+						text : "Add",
+						onAction : controllermethod handleAddButton,
+						maxWidth : 80
+					},
+					Button id removeButton {
+						text : "Remove",
+						onAction : controllermethod handleRemoveButton,
+						maxWidth : 80
+					},
+					Button id editButton {
+						text : "Edit",
+						onAction : controllermethod handleEditButton,
+						maxWidth : 80						
+					}
+				],
+				spacing : 10,
+				alignment : "BOTTOM_RIGHT"
+			}			
+		]
+	}
+}
