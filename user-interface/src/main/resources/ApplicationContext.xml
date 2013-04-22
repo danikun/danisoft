@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd">
 
 	<bean id="placeholderConfig"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
@@ -73,10 +79,8 @@
 	</bean>
 
 	<!-- DAO's -->
-	<bean name="contactDao" class="org.danisoft.dao.impl.ContactDaoImpl">
-		<property name="contactMapper" ref="contactMapper" />
-		<property name="personMapper" ref="personMapper" />
-		<property name="phoneNumberMapper" ref="phoneNumberMapper" />
+	<bean name="contactDao" class="org.danisoft.dao.impl.ContactDaoHibernateImpl">
+		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
 	<!-- JCR -->
@@ -109,14 +113,35 @@
 
 	<!-- MyBatis -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url"
-			value="jdbc:mysql://localhost:3306/personalFinanceDB" />
+		<property name="driverClassName" value="${database.driver}" />
+		<property name="url" value="${database.url}" />
 		<property name="username" value="${database.username}" />
 		<property name="password" value="${database.password}" />
 	</bean>
+	
+	<bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource"/>
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+        		<prop key="hibernate.show_sql">false</prop>
+        		<prop key="hibernate.hbm2ddl.auto">update</prop>
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>org.danisoft.model</value>
+			</list>
+		</property>
+	</bean>
+	
+	<bean id="transactionManager" 
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager" 
+		p:sessionFactory-ref="sessionFactory" />
+		
+	<tx:annotation-driven/>
 
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+	<!-- bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
 		<property name="configLocation" value="classpath:mybatis-config.xml" />
 		<property name="dataSource" ref="dataSource" />
 	</bean>
@@ -134,6 +159,5 @@
 	<bean id="phoneNumberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
 		<property name="mapperInterface" value="org.danisoft.Mapper.PhoneNumberMapper" />
 		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean>
-
+	</bean -->
 </beans>

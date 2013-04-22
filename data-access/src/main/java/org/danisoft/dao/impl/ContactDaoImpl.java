@@ -32,7 +32,7 @@ public class ContactDaoImpl implements IContactDao {
 	private PhoneNumberMapper phoneNumberMapper;
 
 	@Override
-	public Contact get(final int id) {
+	public Contact get(Integer id) {
 		return contactMapper.get(id);
 	}
 
@@ -42,7 +42,7 @@ public class ContactDaoImpl implements IContactDao {
 	}
 
 	@Override
-	public int save(final Contact object) {
+	public Integer save(final Contact object) {
 		contactMapper.save(object);
 
 		for (PhoneNumber phoneNumber : object.getPhoneNumbers()) {
