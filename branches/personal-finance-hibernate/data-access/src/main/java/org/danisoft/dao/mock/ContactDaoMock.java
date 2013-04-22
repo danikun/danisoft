@@ -13,7 +13,7 @@ public class ContactDaoMock  implements IContactDao {
 	private Map<Integer, Contact> data = new HashMap<Integer, Contact>();
 	private int idSequence = 0;
 
-	public Contact get(int id) {
+	public Contact get(Integer id) {
 		return data.get(id);
 	}
 
@@ -21,7 +21,7 @@ public class ContactDaoMock  implements IContactDao {
 		return new ArrayList<Contact>(data.values());
 	}
 
-	public int save(Contact object) {
+	public Integer save(Contact object) {
 		idSequence++;
 		object.setId(idSequence);
 		data.put(idSequence, object);

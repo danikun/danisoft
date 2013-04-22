@@ -35,6 +35,10 @@ public class Family extends Contact {
 		super(id, name, type, phoneNumbers, address);
 		this.persons = persons;
 	}
+	
+	public Family() {
+		super();
+	}
 
 	/**
 	 * @return the persons

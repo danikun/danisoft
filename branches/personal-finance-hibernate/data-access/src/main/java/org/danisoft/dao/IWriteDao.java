@@ -7,7 +7,7 @@ package org.danisoft.dao;
  *
  * @param <T> the type of objects to write
  */
-public interface IWriteDao<T> {
+public interface IWriteDao<K,T> {
 
 	/**
 	 * Saves a new data object.
@@ -15,7 +15,7 @@ public interface IWriteDao<T> {
 	 * @param object the object to save
 	 * @return the id of the newly persisted object
 	 */
-	int save(T object);
+	K save(T object);
 	
 	/**
 	 * Updates an already persisted object.

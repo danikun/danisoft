@@ -7,6 +7,7 @@ import org.danisoft.dao.IContactDao;
 import org.danisoft.model.Contact;
 import org.danisoft.repo.IJcrTemplate;
 import org.danisoft.services.IContactsService;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Contacts service implementation
@@ -25,11 +26,13 @@ public class ContactsServiceImpl implements IContactsService {
 	}
 
 	@Override
+	@Transactional
 	public List<Contact> searchContacts(String keyword) {
 		return null;
 	}
 
 	@Override
+	@Transactional
 	public int saveContact(Contact contact, InputStream stream) {
 		int id = 0;
 
@@ -55,6 +58,7 @@ public class ContactsServiceImpl implements IContactsService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteContact(final Contact contact) {
 		contactDao.delete(contact);
 		jcrTemplate.deleteNode("/contacts/" + contact.getId());

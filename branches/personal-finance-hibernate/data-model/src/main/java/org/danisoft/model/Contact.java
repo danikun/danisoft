@@ -1,14 +1,19 @@
 package org.danisoft.model;
 
+import java.io.Serializable;
 import java.util.List;
 
+import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -19,7 +24,11 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 @Inheritance(strategy = InheritanceType.JOINED)
-public class Contact {
+public class Contact implements Serializable {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 7142048697158184604L;
 	/**
 	 * Primary key.
 	 */
@@ -60,6 +69,7 @@ public class Contact {
 	@Id
 	@GeneratedValue(generator="increment")
 	@GenericGenerator(name="increment", strategy = "increment")
+	@Column(name = "contact_id")
 	public int getId() {
 		return id;
 	}
@@ -84,12 +94,8 @@ public class Contact {
 	/**
 	 * @return the type
 	 */
-	public ContactType getType() {
-		return type;
-	}
-	
-	public int getTypeId() {
-		return type.getId();
+	public String getType() {
+		return type.getCode();
 	}
 	
 	/**
@@ -101,7 +107,7 @@ public class Contact {
 	/**
 	 * @return the phoneNumbers
 	 */
-	@OneToMany(mappedBy = "contact")
+	@OneToMany(mappedBy = "contact", fetch=FetchType.EAGER, cascade= {CascadeType.ALL})	
 	public List<PhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}

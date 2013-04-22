@@ -20,7 +20,7 @@ import org.danisoft.model.PhoneNumber;
 /**
  * Mapping of the Contact data object to the data model of the UI.
  * 
- * @author Daniel Garc�a
+ * @author Daniel Garcia
  * 
  */
 public class UIContact {
@@ -237,7 +237,7 @@ public class UIContact {
 			}
 			uiContact = new UIFamily(family.getId(), family.getName(), phoneNumbers, family.getAddress(), members);
 		} else {
-			uiContact = new UIContact(contact.getId(), contact.getName(), contact.getType(), phoneNumbers,
+			uiContact = new UIContact(contact.getId(), contact.getName(), ContactType.contactTypeByCode(contact.getType()), phoneNumbers,
 					contact.getAddress());
 		}
 

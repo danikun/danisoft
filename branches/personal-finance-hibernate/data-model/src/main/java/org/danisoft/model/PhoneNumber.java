@@ -3,6 +3,8 @@ package org.danisoft.model;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 import org.hibernate.annotations.GenericGenerator;
 
@@ -14,6 +16,19 @@ import org.hibernate.annotations.GenericGenerator;
  */
 @Entity
 public class PhoneNumber {
+	
+	/**
+	 * Default Constructor.
+	 */
+	public PhoneNumber() {
+	}
+	
+	public PhoneNumber(PhoneNumberType type, String number) {
+		super();
+		this.type = type;
+		this.number = number;
+	}
+
 	/**
 	 * Id.
 	 */
@@ -32,6 +47,8 @@ public class PhoneNumber {
 	/**
 	 * The contact owning this phone number.
 	 */
+	@ManyToOne
+	@JoinColumn(name = "contact_id")
 	private Contact contact;	
 	
 	/**
@@ -93,5 +110,10 @@ public class PhoneNumber {
 	 */
 	public void setId(int id) {
 		this.id = id;
+	}
+	
+	@Override
+	public String toString() {
+		return String.format("[Type: {0} Number: {1}]", this.type, this.number);
 	}
 }
