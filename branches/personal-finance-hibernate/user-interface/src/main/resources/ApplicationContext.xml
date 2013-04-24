@@ -19,7 +19,7 @@
 	<bean id="serviceLocator" class="org.danisoft.spring.ServiceLocator"/>
 	
 	<!-- Pages -->
-	<bean name="contactsPage" class="org.danisoft.ui.base.Page">
+	<!-- bean name="contactsPage" class="org.danisoft.ui.base.Page">
 		<property name="name" value="Contacts"/>
 		<property name="path" value="/org/danisoft/ui/pages/Contacts.fxml"/>
 		<property name="params">
@@ -33,7 +33,7 @@
 				</entry>
 			</map>
 		</property>
-	</bean>
+	</bean -->
 	
 	<bean name="personDetailsPage" class="org.danisoft.ui.base.Page">
 		<property name="name" value="Person Details"/>
