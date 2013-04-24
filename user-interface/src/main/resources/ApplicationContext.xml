@@ -14,6 +14,10 @@
 		<property name="location" value="classpath:database.properties"/>
 	</bean>
 
+	<import resource="classpath:ContactsManagerContext.xml"/>
+	
+	<bean id="serviceLocator" class="org.danisoft.spring.ServiceLocator"/>
+	
 	<!-- Pages -->
 	<bean name="contactsPage" class="org.danisoft.ui.base.Page">
 		<property name="name" value="Contacts"/>
