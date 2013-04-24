@@ -36,7 +36,7 @@ public class Page {
 	public Node load() {
 
 		FXMLLoader loader = new FXMLLoader();
-		loader.setBuilderFactory(new JavaFXBuilderFactory(false));
+		loader.setBuilderFactory(new JavaFXBuilderFactory());
 		loader.setLocation(getClass().getResource(""));
 		Node page = null;
 		try {
