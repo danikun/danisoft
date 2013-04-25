@@ -1,13 +1,13 @@
 package org.danisoft.ui.command;
 
-import org.danisoft.spring.ServiceLocator;
-
 import javafx.collections.ObservableList;
-import javafx.scene.Parent;
+import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-public class LoadTabCommand<T extends Parent> implements ICommand {
+import org.danisoft.spring.ServiceLocator;
+
+public class LoadTabCommand<T extends Node> implements ICommand {
 
 	private TabPane tabPane;
 	private String tabName;

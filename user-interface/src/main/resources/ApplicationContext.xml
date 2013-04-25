@@ -18,23 +18,7 @@
 	
 	<bean id="serviceLocator" class="org.danisoft.spring.ServiceLocator"/>
 	
-	<!-- Pages -->
-	<!-- bean name="contactsPage" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Contacts"/>
-		<property name="path" value="/org/danisoft/ui/pages/Contacts.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="Object">
-				<entry key="contactsService" value-ref="contactsService"/>
-				<entry key="detailPages">
-					<map key-type="java.lang.String" value-type="org.danisoft.ui.base.Page">
-						<entry key="Person" value-ref="personDetailsPage"/>
-						<entry key="Family" value-ref="familyDetailsPage"/>
-					</map>
-				</entry>
-			</map>
-		</property>
-	</bean -->
-	
+	<!-- Pages -->	
 	<bean name="personDetailsPage" class="org.danisoft.ui.base.Page">
 		<property name="name" value="Person Details"/>
 		<property name="path" value="/org/danisoft/ui/custom/PersonDetails.fxml"/>
