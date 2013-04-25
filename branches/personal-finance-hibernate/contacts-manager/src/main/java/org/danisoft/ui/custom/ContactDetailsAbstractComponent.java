@@ -83,5 +83,7 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 	public abstract void setFocus();
 	
 	public abstract void setContactsService(IContactsService contactsService);
+
+	public abstract void clear();
 		
 }

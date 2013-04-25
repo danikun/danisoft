@@ -4,5 +4,6 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
 
 	<bean id="contactsPage" class="org.danisoft.ui.pages.ContactsPage" scope="prototype">
+		<constructor-arg name="_contactsService" ref="contactsService"/>
 	</bean>
 </beans>
