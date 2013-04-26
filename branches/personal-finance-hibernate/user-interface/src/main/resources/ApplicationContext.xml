@@ -17,48 +17,6 @@
 	<import resource="classpath:ContactsManagerContext.xml"/>
 	
 	<bean id="serviceLocator" class="org.danisoft.spring.ServiceLocator"/>
-	
-	<!-- Pages -->	
-	<bean name="personDetailsPage" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Person Details"/>
-		<property name="path" value="/org/danisoft/ui/custom/PersonDetails.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="Object">
-				<entry key="contactsService" value-ref="contactsService"/>
-				<entry key="phoneNumbers" value-ref="phoneNumbers"/>
-			</map>
-		</property>
-	</bean>
-	
-	<bean name="familyDetailsPage" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Family Details"/>
-		<property name="path" value="/org/danisoft/ui/custom/FamilyDetails.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="Object">
-				<entry key="contactsService" value-ref="contactsService"/>
-				<entry key="phoneNumbers" value-ref="phoneNumbers"/>
-			</map>
-		</property>
-	</bean>
-	
-	<bean name="phoneNumbers" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Phone Numbers Component"/>
-		<property name="path" value="/org/danisoft/ui/custom/PhoneNumbers.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="java.lang.Object">
-				<entry key="addPhoneNumber" value-ref="addPhoneNumber"/>
-			</map>
-		</property>
-	</bean>
-	
-	<bean name="addPhoneNumber" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Add phone number"/>
-		<property name="path" value="/org/danisoft/ui/custom/AddPhoneNumber.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="Object">
-			</map>
-		</property>
-	</bean>
 
 	<!-- Services -->
 	<bean name="contactsService" class="org.danisoft.services.impl.ContactsServiceImpl">
@@ -67,7 +25,7 @@
 	</bean>
 
 	<!-- DAO's -->
-	<bean name="contactDao" class="org.danisoft.dao.impl.ContactDaoHibernateImpl">
+	<bean name="contactDao" class="org.danisoft.dao.impl.ContactDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory" />
 	</bean>
 
@@ -99,7 +57,7 @@
 		<property name="sessionFactory" ref="jcrSessionFactory" />
 	</bean>
 
-	<!-- MyBatis -->
+	<!-- Hibernate -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${database.driver}" />
 		<property name="url" value="${database.url}" />
@@ -128,24 +86,4 @@
 		p:sessionFactory-ref="sessionFactory" />
 		
 	<tx:annotation-driven/>
-
-	<!-- bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="configLocation" value="classpath:mybatis-config.xml" />
-		<property name="dataSource" ref="dataSource" />
-	</bean>
-
-	<bean id="contactMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.ContactMapper" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean>
-
-	<bean id="personMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.PersonMapper" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean>
-
-	<bean id="phoneNumberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.PhoneNumberMapper" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean -->
 </beans>
