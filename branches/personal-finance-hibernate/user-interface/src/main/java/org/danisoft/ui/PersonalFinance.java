@@ -36,12 +36,12 @@ public class PersonalFinance extends Application {
 		// Border Pane Layout (top --> menu, center --> current page area)
 		double height = Screen.getPrimary().getVisualBounds().getHeight();
 		double width = Screen.getPrimary().getVisualBounds().getWidth();
-		scene = new Scene(new BorderPane(), width - 20, height - 50);
+		BorderPane mainLayout = new BorderPane();
+		scene = new Scene(mainLayout, width - 20, height - 50);
 		scene.getStylesheets().add("personalFinance.css");
 
-		// Load the menu from an easily editable FXML file
-		TopMenuComponent topMenuComponent = new TopMenuComponent();
-		((BorderPane) scene.getRoot()).setCenter(topMenuComponent);
+		// Load the top menu
+		mainLayout.setCenter(context.getBean(TopMenuComponent.class));
 
 		// Final lines
 		stage.setScene(scene);
