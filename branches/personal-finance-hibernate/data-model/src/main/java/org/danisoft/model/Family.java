@@ -18,6 +18,10 @@ import javax.persistence.PrimaryKeyJoinColumn;
 @PrimaryKeyJoinColumn(name = "ContactId")
 public class Family extends Contact {
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 929300636252602001L;
+	/**
 	 * List of family members.
 	 */
 	private List<Person> persons;
