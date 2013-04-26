@@ -16,6 +16,10 @@ import javax.persistence.PrimaryKeyJoinColumn;
 public class Person extends Contact {
 
 	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3941791824743960357L;
+	/**
 	 * First surname.
 	 */
 	private String lastName1;
