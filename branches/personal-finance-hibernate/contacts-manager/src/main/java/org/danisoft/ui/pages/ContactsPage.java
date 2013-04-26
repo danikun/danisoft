@@ -13,7 +13,6 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.ProgressBar;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
@@ -95,6 +94,7 @@ public class ContactsPage extends BorderPane {
 
 		if (detailsPage != null) {
 			detailsPage.setContact(null);
+			detailsPage.setContacts(contacts);
 			layout.setCenter(detailsPage);
 			contactList.getSelectionModel().clearSelection();
 		}
@@ -122,6 +122,7 @@ public class ContactsPage extends BorderPane {
 		if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2 && contact != null){
 			ContactDetailsAbstractComponent detailsPage = detailComponents.get(contact.getType().getDisplayName());
 			detailsPage.setContact(contact);
+			detailsPage.setContacts(contacts);
 			layout.setCenter(detailsPage);
         }
 	}
@@ -169,11 +170,6 @@ public class ContactsPage extends BorderPane {
 		Thread th = new Thread(task);
 		th.setDaemon(true);
 		th.start();
-		
-		ProgressBar progressBar = new ProgressBar();
-		progressBar.progressProperty().bind(task.progressProperty());
-		
-		this.setBottom(progressBar);
 		
 		// Bindings
 		deleteButton.disableProperty().bind(contactList.getSelectionModel().selectedItemProperty().isNull());
