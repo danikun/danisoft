@@ -57,7 +57,7 @@
 		<property name="sessionFactory" ref="jcrSessionFactory" />
 	</bean>
 
-	<!-- Hibernate -->
+	<!-- Database -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
 		<property name="driverClassName" value="${database.driver}" />
 		<property name="url" value="${database.url}" />
@@ -86,4 +86,8 @@
 		p:sessionFactory-ref="sessionFactory" />
 		
 	<tx:annotation-driven/>
+	
+	<!-- GUI Related -->
+	<bean id="topMenuComponent" class="org.danisoft.ui.TopMenuComponent">
+	</bean>
 </beans>
