@@ -60,6 +60,11 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 	 */
 	@FXML
 	private ImageView photo;
+	/**
+	 * Phone Numbers.
+	 */
+	@FXML
+	private PhoneNumbersComponent phoneNumbers;
 	
 	public PersonDetailsComponent() {
 		super();
@@ -88,6 +93,7 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 			ObservableList<UIPhoneNumber> numbers = FXCollections.observableArrayList();
 			this.contact.setPhoneNumbers(numbers);
 		}
+		phoneNumbers.setPhoneNumbers(this.contact.getPhoneNumbers());
 
 		// Photo
 		InputStream stream = contactsService.getContactImage(this.contact.getId());
@@ -105,6 +111,7 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		contact.setLastName1(lastName1Text.getText());
 		contact.setLastName2(lastName2Text.getText());
 		contact.setAddress(addressText.getText());
+		contact.setPhoneNumbers(phoneNumbers.getPhoneNumbers());
 
 		return contact;
 	}

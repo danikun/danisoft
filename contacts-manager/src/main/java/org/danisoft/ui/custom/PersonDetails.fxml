@@ -10,6 +10,7 @@
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
+<?import org.danisoft.ui.custom.PhoneNumbersComponent?>
 
 <fx:root type="javafx.scene.layout.GridPane" xmlns:fx="http://javafx.com/fxml" fx:id="layout">
 
@@ -82,6 +83,10 @@
 			<GridPane.columnIndex>1</GridPane.columnIndex>
 			<GridPane.rowIndex>5</GridPane.rowIndex>
 		</TextField>
+		<PhoneNumbersComponent fx:id="phoneNumbers">
+			<GridPane.columnIndex>1</GridPane.columnIndex>
+			<GridPane.rowIndex>6</GridPane.rowIndex>
+		</PhoneNumbersComponent>
 		<Button text="Save" onAction="#handleSaveButtonAction" maxWidth="80"> 
 			<GridPane.columnIndex>1</GridPane.columnIndex>
 			<GridPane.rowIndex>7</GridPane.rowIndex>

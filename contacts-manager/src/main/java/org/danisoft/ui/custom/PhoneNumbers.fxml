@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<HBox xmlns:fx="http://javafx.com/fxml" fx:id="layout" fx:controller="org.danisoft.ui.custom.PhoneNumbersController" spacing="10">
+<fx:root type="javafx.scene.layout.HBox" xmlns:fx="http://javafx.com/fxml" fx:id="layout" spacing="10">
 
 	<children>
 		<TableView fx:id="phoneNumbersTable" prefWidth="100" prefHeight="300"> 
@@ -32,4 +32,4 @@
 		</VBox>
 	</children>
 
-</HBox>
+</fx:root>

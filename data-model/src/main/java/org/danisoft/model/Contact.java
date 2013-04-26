@@ -13,7 +13,6 @@ import javax.persistence.Inheritance;
 import javax.persistence.InheritanceType;
 import javax.persistence.OneToMany;
 
-import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.GenericGenerator;
 
 /**
@@ -107,7 +106,7 @@ public class Contact implements Serializable {
 	/**
 	 * @return the phoneNumbers
 	 */
-	@OneToMany(mappedBy = "contact", fetch=FetchType.EAGER, cascade= {CascadeType.ALL})	
+	@OneToMany(mappedBy = "contact", fetch=FetchType.LAZY, cascade= {CascadeType.ALL})	
 	public List<PhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}
