@@ -1,7 +1,10 @@
 package org.danisoft.ui.custom;
 
+import java.io.IOException;
+
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
@@ -32,6 +35,17 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 	public ContactDetailsAbstractComponent() {
 		super();
 		
+		//Load FXML
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(getFxmlPath()));
+		loader.setController(this);
+		loader.setRoot(this);
+		
+		try {
+			loader.load();
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
+		
 		// Save button eventHandler
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			
@@ -46,6 +60,8 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 		});
 	}
 	
+	protected abstract String getFxmlPath();
+
 	/**
 	 * Setter for the contact represented in this details page.
 	 * 

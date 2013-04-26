@@ -6,4 +6,8 @@
 	<bean id="contactsPage" class="org.danisoft.ui.pages.ContactsPage" scope="prototype">
 		<constructor-arg name="_contactsService" ref="contactsService"/>
 	</bean>
+	
+	<bean id="personDetailsComponent" class="org.danisoft.ui.custom.PersonDetailsComponent" scope="prototype">
+		<property name="contactsService" ref="contactsService"/>
+	</bean>
 </beans>

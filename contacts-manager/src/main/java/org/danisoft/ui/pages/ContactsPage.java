@@ -1,6 +1,7 @@
 package org.danisoft.ui.pages;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -10,7 +11,6 @@ import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ProgressBar;
@@ -19,15 +19,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.GridPane;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.danisoft.model.Contact;
+import org.danisoft.model.ContactType;
 import org.danisoft.services.IContactsService;
-import org.danisoft.services.impl.ContactsServiceImpl;
 import org.danisoft.spring.ServiceLocator;
-import org.danisoft.ui.base.Page;
 import org.danisoft.ui.custom.ContactDetailsAbstractComponent;
 import org.danisoft.ui.custom.PersonDetailsComponent;
 import org.danisoft.ui.model.UIContact;
@@ -96,7 +94,7 @@ public class ContactsPage extends BorderPane {
 		ContactDetailsAbstractComponent detailsPage = detailComponents.get(target.getText());
 
 		if (detailsPage != null) {
-			detailsPage.clear();
+			detailsPage.setContact(null);
 			layout.setCenter(detailsPage);
 			contactList.getSelectionModel().clearSelection();
 		}
@@ -183,6 +181,7 @@ public class ContactsPage extends BorderPane {
 		nameColumn.prefWidthProperty().bind(contactList.widthProperty().subtract(TYPE_COLUMN_WIDTH));
 		
 		//Register Detail Components.
-		detailComponents.put("Person", ServiceLocator.getSingle(PersonDetailsComponent.class));
+		detailComponents = new HashMap<String, ContactDetailsAbstractComponent>();
+		detailComponents.put(ContactType.Person.getDisplayName(), ServiceLocator.getSingle(PersonDetailsComponent.class));
 	}
 }
