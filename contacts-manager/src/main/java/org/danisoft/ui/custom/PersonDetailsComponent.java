@@ -19,7 +19,6 @@ import javafx.stage.FileChooser;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.danisoft.services.IContactsService;
 import org.danisoft.ui.model.UIContact;
 import org.danisoft.ui.model.UIPerson;
 import org.danisoft.ui.model.UIPhoneNumber;
@@ -29,20 +28,6 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 	 * Log.
 	 */
 	private final Log log = LogFactory.getLog(getClass());
-
-	// Private properties
-	/**
-	 * The person to show/edit the details.
-	 */
-	private UIPerson contact;
-	/**
-	 * List of contacts.
-	 */
-	private ObservableList<UIContact> contacts;
-	/**
-	 * Contacts service.
-	 */
-	private IContactsService contactsService;
 
 	// UI elements
 	/**
@@ -126,17 +111,6 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 
 	@Override
 	public void setFocus() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void setContactsService(IContactsService contactsService) {
-		this.contactsService = contactsService;		
-	}
-
-	@Override
-	public void clear() {
 		// TODO Auto-generated method stub
 		
 	}
