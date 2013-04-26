@@ -14,6 +14,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 
+import org.danisoft.ui.dialog.DialogProvider;
 import org.danisoft.ui.model.UIPhoneNumber;
 
 public class PhoneNumbersComponent extends HBox {
@@ -78,7 +79,9 @@ public class PhoneNumbersComponent extends HBox {
 	 */
 	@FXML
 	public void handleAddButton(final ActionEvent event) {
-		AddPhoneNumberComponent addPhoneNumber = new AddPhoneNumberComponent(null, items);
+		AddPhoneNumberComponent addPhoneNumber = new AddPhoneNumberComponent();
+		addPhoneNumber.setPhoneNumbers(items);
+		DialogProvider.showModal(addPhoneNumber, "New Phone Number", 300, 150);
 	}
 
 	/**
@@ -89,7 +92,10 @@ public class PhoneNumbersComponent extends HBox {
 	@FXML
 	public void handleEditButton(final ActionEvent event) {
 		if (phoneNumbersTable.getSelectionModel().getSelectedItem() != null) {
-			AddPhoneNumberComponent addPhoneNumber = new AddPhoneNumberComponent(phoneNumbersTable.getSelectionModel().getSelectedItem(), items);
+			AddPhoneNumberComponent addPhoneNumber = new AddPhoneNumberComponent();
+			addPhoneNumber.setPhoneNumber(phoneNumbersTable.getSelectionModel().getSelectedItem());
+			addPhoneNumber.setPhoneNumbers(items);
+			addPhoneNumber.setStage(DialogProvider.showModal(addPhoneNumber, "Edit Phone Number", 300, 150));
 		}
 	}
 
