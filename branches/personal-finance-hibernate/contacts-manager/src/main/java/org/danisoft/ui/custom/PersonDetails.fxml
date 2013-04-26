@@ -11,7 +11,7 @@
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 
-<GridPane xmlns:fx="http://javafx.com/fxml" fx:id="layout" fx:controller="org.danisoft.ui.custom.PersonDetailsController">
+<fx:root type="javafx.scene.layout.GridPane" xmlns:fx="http://javafx.com/fxml" fx:id="layout">
 
 	<styleClass>
 		<String fx:value="contactDetails"/> 
@@ -89,4 +89,4 @@
 		</Button>
 	</children>
 
-</GridPane>
+</fx:root>
