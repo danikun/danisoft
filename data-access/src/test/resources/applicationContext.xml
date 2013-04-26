@@ -34,7 +34,7 @@
 		</property>
 	</bean>
 	
-	<bean id="contactDao" class="org.danisoft.dao.impl.ContactDaoHibernateImpl">
+	<bean id="contactDao" class="org.danisoft.dao.impl.ContactDaoImpl">
 		<property name="sessionFactory" ref="sessionFactory"/>
 	</bean>
 	

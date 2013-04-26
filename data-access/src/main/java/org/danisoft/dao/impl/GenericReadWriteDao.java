@@ -7,12 +7,12 @@ import org.danisoft.dao.IReadDao;
 import org.danisoft.dao.IWriteDao;
 import org.hibernate.SessionFactory;
 
-public class GenericDaoHibernateImpl<K extends Serializable,T> implements IReadDao<K,T>, IWriteDao<K,T>{
+public class GenericReadWriteDao<K extends Serializable,T> implements IReadDao<K,T>, IWriteDao<K,T>{
 
 	private Class<T> clazz;
 	private SessionFactory sessionFactory;
 	
-	protected GenericDaoHibernateImpl(Class<T> clazz) {
+	protected GenericReadWriteDao(Class<T> clazz) {
 		super();
 		this.clazz = clazz;
 	}

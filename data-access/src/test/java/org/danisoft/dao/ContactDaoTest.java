@@ -1,11 +1,11 @@
-package org.danisoft.Mapper;
+package org.danisoft.dao;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import junit.framework.Assert;
 
-import org.danisoft.dao.impl.ContactDaoHibernateImpl;
+import org.danisoft.dao.impl.ContactDaoImpl;
 import org.danisoft.model.Contact;
 import org.danisoft.model.ContactType;
 import org.danisoft.model.Person;
@@ -22,7 +22,7 @@ import org.springframework.test.context.transaction.TransactionConfiguration;
 public class ContactDaoTest extends AbstractTransactionalJUnit4SpringContextTests {
 	
 	@Autowired
-	protected ContactDaoHibernateImpl contactDao;
+	protected ContactDaoImpl contactDao;
 	
 	@Test
 	public void TestGetSingle() {
