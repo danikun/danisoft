@@ -106,7 +106,7 @@ public class Contact implements Serializable {
 	/**
 	 * @return the phoneNumbers
 	 */
-	@OneToMany(mappedBy = "contact", fetch=FetchType.LAZY, cascade= {CascadeType.ALL})	
+	@OneToMany(mappedBy = "contact", fetch=FetchType.EAGER, cascade= {CascadeType.ALL})	
 	public List<PhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}

@@ -6,6 +6,7 @@ import java.util.List;
 import org.danisoft.dao.IReadDao;
 import org.danisoft.dao.IWriteDao;
 import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 
 public class GenericReadWriteDao<K extends Serializable,T> implements IReadDao<K,T>, IWriteDao<K,T>{
 
@@ -39,16 +40,17 @@ public class GenericReadWriteDao<K extends Serializable,T> implements IReadDao<K
 		return (T) sessionFactory.getCurrentSession().get(clazz, id);
 	}
 
-	@SuppressWarnings("unchecked")
+	@SuppressWarnings("unchecked") 
 	@Override
 	public List<T> getAll() {
-		return sessionFactory.openSession().createCriteria(clazz).list();
+		return sessionFactory.getCurrentSession().createCriteria(clazz).list();
 	}
 
 	public SessionFactory getSessionFactory() {
 		return sessionFactory;
 	}
 
+	@Autowired
 	public void setSessionFactory(SessionFactory sessionFactory) {
 		this.sessionFactory = sessionFactory;
 	}

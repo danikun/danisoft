@@ -96,7 +96,7 @@ public class UIPerson extends UIContact {
 
 	@Override
 	public final Contact toContact() {
-		Person person = new Person(getId(), getName(), getType(), null,
+		Person person = new Person(getId(), getName(), null,
 				getAddress(), getLastName1(), getLastName2());
 
 		List<PhoneNumber> numbers = new ArrayList<PhoneNumber>();

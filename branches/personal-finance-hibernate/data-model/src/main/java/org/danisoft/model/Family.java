@@ -2,6 +2,7 @@ package org.danisoft.model;
 
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.JoinColumn;
 import javax.persistence.JoinTable;
@@ -34,9 +35,9 @@ public class Family extends Contact {
 	 * @param address the address
 	 * @param persons list of member of the family
 	 */
-	public Family(final int id, final String name, final ContactType type, final List<PhoneNumber> phoneNumbers,
+	public Family(final int id, final String name, final List<PhoneNumber> phoneNumbers,
 			final String address, final List<Person> persons) {
-		super(id, name, type, phoneNumbers, address);
+		super(id, name, ContactType.Family, phoneNumbers, address);
 		this.persons = persons;
 	}
 	
@@ -47,7 +48,7 @@ public class Family extends Contact {
 	/**
 	 * @return the persons
 	 */
-	@OneToMany
+	@OneToMany (cascade = CascadeType.ALL)
 	@JoinTable(
 			name = "FamilyPersons",
 			joinColumns = @JoinColumn(name = "FamilyId"),
