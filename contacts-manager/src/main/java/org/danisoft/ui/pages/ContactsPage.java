@@ -13,14 +13,13 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.danisoft.model.Contact;
 import org.danisoft.model.ContactType;
 import org.danisoft.services.IContactsService;
@@ -28,7 +27,12 @@ import org.danisoft.spring.ServiceLocator;
 import org.danisoft.ui.custom.ContactDetailsAbstractComponent;
 import org.danisoft.ui.custom.PersonDetailsComponent;
 import org.danisoft.ui.model.UIContact;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
+@Controller
+@Scope("prototype")
 public class ContactsPage extends BorderPane {
 	// Constants
 	/**
@@ -40,11 +44,6 @@ public class ContactsPage extends BorderPane {
 	 */
 	private static final double CONTACTS_PERCENTAGE_WIDTH = 0.2;
 
-	/**
-	 * Log.
-	 */
-	private final Log log = LogFactory.getLog(getClass());
-
 	// Properties
 	/**
 	 * Person Details Page.
@@ -53,6 +52,7 @@ public class ContactsPage extends BorderPane {
 	/**
 	 * Contacts Service.
 	 */
+	@Autowired
 	private IContactsService contactsService;
 
 	// UI elements.
@@ -76,6 +76,9 @@ public class ContactsPage extends BorderPane {
 	 */
 	@FXML
 	private TableColumn<UIContact, String> nameColumn;
+	
+	@FXML
+	private ProgressIndicator progressIndicator;
 
 	/**
 	 * List of contacts.
@@ -119,7 +122,7 @@ public class ContactsPage extends BorderPane {
 	protected void onMouseClicked(final MouseEvent event) {
 		UIContact contact = contactList.getSelectionModel().getSelectedItem();
 		
-		if(event.getButton().equals(MouseButton.PRIMARY) && event.getClickCount() == 2 && contact != null){
+		if(event.getButton().equals(MouseButton.PRIMARY) && contact != null){
 			ContactDetailsAbstractComponent detailsPage = detailComponents.get(contact.getType().getDisplayName());
 			detailsPage.setContact(contact);
 			detailsPage.setContacts(contacts);
@@ -130,6 +133,7 @@ public class ContactsPage extends BorderPane {
 	/**
 	 * Constructor.
 	 */
+	@Autowired
 	public ContactsPage(IContactsService _contactsService) {
 		this.contactsService = _contactsService;
 		
@@ -159,25 +163,27 @@ public class ContactsPage extends BorderPane {
 				
 				int i = 1;
 				for (Contact contact : dbContacts) {
-					updateProgress(i, dbContacts.size());
 					contacts.add(UIContact.fromContact(contact));
+					updateProgress(i, dbContacts.size());
 					i++;
 				}
+				this.updateProgress(i, i);
 				return null;
 			}
 		};
-		
-		Thread th = new Thread(task);
-		th.setDaemon(true);
-		th.start();
-		
+				
 		// Bindings
 		deleteButton.disableProperty().bind(contactList.getSelectionModel().selectedItemProperty().isNull());
 		contactList.prefWidthProperty().bind(layout.widthProperty().multiply(CONTACTS_PERCENTAGE_WIDTH));
 		nameColumn.prefWidthProperty().bind(contactList.widthProperty().subtract(TYPE_COLUMN_WIDTH));
+		progressIndicator.progressProperty().bind(task.progressProperty());
 		
 		//Register Detail Components.
 		detailComponents = new HashMap<String, ContactDetailsAbstractComponent>();
 		detailComponents.put(ContactType.Person.getDisplayName(), ServiceLocator.getSingle(PersonDetailsComponent.class));
+		
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 	}
 }

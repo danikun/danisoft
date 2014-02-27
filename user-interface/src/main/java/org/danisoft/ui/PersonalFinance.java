@@ -42,10 +42,13 @@ public class PersonalFinance extends Application {
 
 		// Load the top menu
 		mainLayout.setCenter(context.getBean(TopMenuComponent.class));
+		mainLayout.setTop(context.getBean(TitleComponent.class));
 
 		// Final lines
 		stage.setScene(scene);
 		stage.show();
+		stage.setMinWidth(640);
+		stage.setMinHeight(480);
 	}
 
 	/**

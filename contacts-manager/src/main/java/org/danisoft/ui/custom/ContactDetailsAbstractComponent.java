@@ -13,6 +13,7 @@ import org.danisoft.services.IContactsService;
 import org.danisoft.ui.custom.event.ContactSaveEvent;
 import org.danisoft.ui.model.UIContact;
 import org.danisoft.ui.model.UIPerson;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract base class to create contact detail pages.
@@ -34,6 +35,7 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 	/**
 	 * Contacts service.
 	 */
+	@Autowired
 	protected IContactsService contactsService;
 	
 	// UI elements

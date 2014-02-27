@@ -23,3 +23,7 @@
 .mainMenu {
 	-fx-padding: 20;
 }
+
+.mainTitle {
+	-fx-font-size: 48;
+}

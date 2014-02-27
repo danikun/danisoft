@@ -22,7 +22,11 @@ import org.apache.commons.logging.LogFactory;
 import org.danisoft.ui.model.UIContact;
 import org.danisoft.ui.model.UIPerson;
 import org.danisoft.ui.model.UIPhoneNumber;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
+@Controller
+@Scope("prototype")
 public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 	/**
 	 * Log.

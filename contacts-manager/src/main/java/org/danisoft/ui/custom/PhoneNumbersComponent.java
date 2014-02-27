@@ -81,7 +81,7 @@ public class PhoneNumbersComponent extends HBox {
 	public void handleAddButton(final ActionEvent event) {
 		AddPhoneNumberComponent addPhoneNumber = new AddPhoneNumberComponent();
 		addPhoneNumber.setPhoneNumbers(items);
-		DialogProvider.showModal(addPhoneNumber, "New Phone Number", 300, 150);
+		addPhoneNumber.setStage(DialogProvider.showModal(addPhoneNumber, "New Phone Number", 300, 150));
 	}
 
 	/**

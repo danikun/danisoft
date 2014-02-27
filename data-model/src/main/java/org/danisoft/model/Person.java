@@ -32,10 +32,9 @@ public class Person extends Contact {
 		super();
 	}
 	
-	public Person(int id, String name, ContactType type,
-			List<PhoneNumber> phoneNumbers, String address, String lastName1,
-			String lastName2) {
-		super(id, name, type, phoneNumbers, address);
+	public Person(int id, String name, List<PhoneNumber> phoneNumbers, 
+			String address, String lastName1, String lastName2) {
+		super(id, name, ContactType.Person, phoneNumbers, address);
 		this.lastName1 = lastName1;
 		this.lastName2 = lastName2;
 	}
