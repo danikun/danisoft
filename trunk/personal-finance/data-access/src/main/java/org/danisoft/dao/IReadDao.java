@@ -9,7 +9,7 @@ import java.util.List;
  *
  * @param <T> the type of data object that the implementation can read
  */
-public interface IReadDao<T> {
+public interface IReadDao<K,T> {
 	
 	/**
 	 * Retrieve a single object given its id.
@@ -17,7 +17,7 @@ public interface IReadDao<T> {
 	 * @param id the id of the object to retrieve
 	 * @return the requested object
 	 */
-	T get(int id);
+	T get(K id);
 	
 	/**
 	 * Retrieve all the data objects of the type <T>

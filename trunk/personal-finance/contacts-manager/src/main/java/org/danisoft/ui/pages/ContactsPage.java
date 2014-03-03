@@ -1,293 +1,189 @@
 package org.danisoft.ui.pages;
 
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.util.ArrayList;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
-import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.Node;
+import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
-import javafx.scene.control.Control;
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TableCell;
+import javafx.scene.control.ProgressIndicator;
 import javafx.scene.control.TableColumn;
-import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
-import javafx.scene.control.cell.PropertyValueFactory;
-import javafx.scene.input.KeyCombination;
+import javafx.scene.input.MouseButton;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.util.Callback;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
-import org.danisoft.constants.StyleClass;
 import org.danisoft.model.Contact;
+import org.danisoft.model.ContactType;
 import org.danisoft.services.IContactsService;
-import org.danisoft.ui.base.Page;
+import org.danisoft.spring.ServiceLocator;
 import org.danisoft.ui.custom.ContactDetailsAbstractComponent;
-import org.danisoft.ui.custom.cells.ImageTableCell;
-import org.danisoft.ui.custom.event.ContactSaveEvent;
+import org.danisoft.ui.custom.PersonDetailsComponent;
 import org.danisoft.ui.model.UIContact;
-import org.danisoft.ui.model.UIPerson;
-import org.danisoft.ui.model.UIPhoneNumber;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Scope;
+import org.springframework.stereotype.Controller;
 
-/**
- * Main view of the contacts manager.
- * 
- * @author Daniel Garcia
- * 
- */
-public class ContactsPage extends Page {
+@Controller
+@Scope("prototype")
+public class ContactsPage extends BorderPane {
+	// Constants
+	/**
+	 * Type column width.
+	 */
+	private static final double TYPE_COLUMN_WIDTH = 42;
+	/**
+	 * Contacts table percentage width.
+	 */
+	private static final double CONTACTS_PERCENTAGE_WIDTH = 0.2;
 
-	// Log
-	Log log = LogFactory.getLog(getClass());
+	// Properties
+	/**
+	 * Person Details Page.
+	 */
+	private Map<String, ContactDetailsAbstractComponent> detailComponents;
+	/**
+	 * Contacts Service.
+	 */
+	@Autowired
+	private IContactsService contactsService;
 
-	// Service
-	IContactsService contactsService = null;
+	// UI elements.
+	/**
+	 * Contact list component.
+	 */
+	@FXML
+	private TableView<UIContact> contactList;
+	/**
+	 * Main layout of the page.
+	 */
+	@FXML
+	private BorderPane layout;
+	/**
+	 * Delete contact button.
+	 */
+	@FXML
+	private Button deleteButton;
+	/**
+	 * Name column of the contacts table.
+	 */
+	@FXML
+	private TableColumn<UIContact, String> nameColumn;
+	
+	@FXML
+	private ProgressIndicator progressIndicator;
 
-	// Action Constants
-	public static final String NEW = "new";
-	public static final String DELETE = "delete";
-	public static final String SAVE = "save";
-	public static final String UPDATE = "update";
+	/**
+	 * List of contacts.
+	 */
+	private ObservableList<UIContact> contacts;
 
-	// UI elements of the view
-	private final TableView<UIContact> contactList = new TableView<UIContact>();
-	private final BorderPane layout = new BorderPane();
-	private final HBox actionButtons = new HBox();
-	private final MenuBar menuBar = new MenuBar();
-	private final Menu fileMenu = new Menu("File");
-	private final Button deleteButton = new Button("Delete Contact");
+	/**
+	 * Creates a new person.
+	 * 
+	 * @param event an action event
+	 */
+	@FXML
+	protected void newContact(final ActionEvent event) {
+		MenuItem target = (MenuItem) event.getTarget();
+		ContactDetailsAbstractComponent detailsPage = detailComponents.get(target.getText());
 
-	// Event handlers
-	private final ButtonEventHandler buttonEventHandler = new ButtonEventHandler();
-	private final SaveEventHandler saveEventHandler = new SaveEventHandler();
-
-	// Contacts list
-	private ObservableList<UIContact> contacts = null;
-	private Boolean initialised = false;
-
-	// Detail components cache
-	Map<String, ContactDetailsAbstractComponent> detailComponents = null;
-
-	@Override
-	public Node load() {
-		contacts = FXCollections.observableArrayList();
-
-		List<Contact> dbContacts = contactsService.getAllContacts();
-
-		for (Contact contact : dbContacts) {
-			contacts.add(UIContact.fromContact(contact));
+		if (detailsPage != null) {
+			detailsPage.setContact(null);
+			detailsPage.setContacts(contacts);
+			layout.setCenter(detailsPage);
+			contactList.getSelectionModel().clearSelection();
 		}
-
-		if (!initialised) {
-			init();
-			initialised = true;
-		} else {
-			layout.setLeft(null);
-		}
-
-		contactList.setItems(contacts);
-
-		contactList.getSelectionModel().selectedItemProperty()
-		.addListener(new ChangeListener<UIContact>() {
-
-			@Override
-			public void changed(
-					ObservableValue<? extends UIContact> observable,
-					UIContact prev, UIContact curr) {
-
-				if (curr != null) {
-					generateContactDataPane(curr);
-				}
-			}
-		});
-
-		return layout;
-	}
-
-	@SuppressWarnings("unchecked")
-	private void init() {
-		detailComponents = new HashMap<String, ContactDetailsAbstractComponent>();
-
-		// List of Contacts (Center)
-		layout.setCenter(contactList);
-
-		TableColumn<UIContact, String> nameColumn = new TableColumn<UIContact, String>(
-				"Name");
-		nameColumn
-		.setCellValueFactory(new PropertyValueFactory<UIContact, String>(
-				"displayName"));
-		nameColumn.prefWidthProperty().bind(
-				contactList.widthProperty().subtract(42));
-
-		TableColumn<UIContact, String> typeColumn = new TableColumn<UIContact, String>(
-				"");
-		typeColumn
-		.setCellFactory(new Callback<TableColumn<UIContact, String>, TableCell<UIContact, String>>() {
-
-			@Override
-			public TableCell<UIContact, String> call(
-					TableColumn<UIContact, String> arg0) {
-				return new ImageTableCell();
-			}
-		});
-
-		typeColumn
-		.setCellValueFactory(new Callback<TableColumn.CellDataFeatures<UIContact, String>, ObservableValue<String>>() {
-
-			@Override
-			public ObservableValue<String> call(
-					CellDataFeatures<UIContact, String> cellData) {
-				SimpleStringProperty value = new SimpleStringProperty(
-						cellData.getValue().getType().getDisplayName());
-				return value;
-			}
-		});
-		typeColumn.setPrefWidth(40);
-		typeColumn.setMaxWidth(40);
-		typeColumn.setMinWidth(40);
-
-		contactList.getColumns().addAll(typeColumn, nameColumn);
-
-		// Action buttons (Down)
-		actionButtons.setAlignment(Pos.CENTER_RIGHT);
-		actionButtons.setPadding(new Insets(10));
-		actionButtons.setSpacing(5);
-		actionButtons.getStyleClass().add(StyleClass.BORDER_PANE_CONTENT);
-		actionButtons.getChildren().add(deleteButton);
-
-		layout.setBottom(actionButtons);
-
-		// Menu Bar
-		Menu newMenu = new Menu("New");
-		MenuItem personItem = new MenuItem("Person");
-		personItem.setOnAction(buttonEventHandler);
-		personItem.setId(NEW);
-		personItem.setAccelerator(KeyCombination.keyCombination("Ctrl+N"));
-
-		MenuItem companyItem = new MenuItem("Company");
-
-		menuBar.getMenus().add(fileMenu);
-		fileMenu.getItems().add(newMenu);
-		newMenu.getItems().addAll(personItem, companyItem);
-
-		layout.setTop(menuBar);
-
-		// Delete button
-		deleteButton.setOnAction(buttonEventHandler);
-		deleteButton.setId(DELETE);
-
-	}
-
-	private void generateContactDataPane(UIContact contact) {
-		String type = contact.getType().getDisplayName();
-		ContactDetailsAbstractComponent detailsComponent = detailComponents
-				.get(type);
-
-		if (detailsComponent == null) {
-			String detailsClass = "org.danisoft.ui.custom." + type + "DetailsComponent";
-
-			try {
-				detailsComponent = (ContactDetailsAbstractComponent) Class.forName(detailsClass).newInstance();
-				detailsComponent.setSaveEventHandler(saveEventHandler);
-				detailsComponent.setContactsService(contactsService);
-				detailComponents.put(type, detailsComponent);
-			} catch (ClassNotFoundException e) {
-				log.error("The class doesn't exist: " + detailsClass);
-			} catch (InstantiationException e) {
-				log.error("The class couldn't be instantiated: " + detailsClass, e);
-			} catch (IllegalAccessException e) {
-				log.error("The class can't be accessed: " + detailsClass);
-			}
-		}
-
-		if (detailsComponent != null) {
-			detailsComponent.setContact(contact);
-			detailsComponent.setEditable(true);
-		}
-		layout.setLeft(detailsComponent);
-		detailsComponent.setFocus();
-	}
-
-	@Override
-	public String getName() {
-		return "Contacts";
-	}
-
-	private class ButtonEventHandler implements EventHandler<ActionEvent> {
-		@Override
-		public void handle(ActionEvent event) {
-			String actionId = null;
-
-			if (event.getTarget() instanceof MenuItem) {
-				actionId = ((MenuItem)event.getTarget()).getId();
-			} else {
-				Control node = (Control) event.getTarget();
-				actionId = node.getId();
-			}
-
-			switch (actionId) {
-			case NEW:
-				generateContactDataPane(new UIPerson(0, "", "", "", FXCollections.observableArrayList(new ArrayList<UIPhoneNumber>()), ""));
-				break;
-			case DELETE:
-				UIContact contact = contactList.getSelectionModel()
-				.getSelectedItem();
-				contactsService.deleteContact(contact.toContact());
-
-				contacts.remove(contact);
-				layout.setLeft(null);
-				break;
-			}
-		}
-	}
-
-	private class SaveEventHandler implements EventHandler<ContactSaveEvent> {
-
-		@Override
-		public void handle(ContactSaveEvent event) {
-			UIContact contact = event.getContact();
-
-			int id;
-			try {
-				if (contact.getPhoto() != null) {
-					id = contactsService.saveContact(contact.toContact(), new BufferedInputStream(new FileInputStream(contact.getPhoto())));
-				} else {
-					id = contactsService.saveContact(contact.toContact(), null);
-				}
-
-				if (contact.getId() == 0) {
-					contact.setId(id);
-					contacts.add(contact);
-				}
-			} catch (FileNotFoundException e) {
-				log.error("Couldn't find the file: " + contact.getPhoto());
-			}
-		}
-
 	}
 
 	/**
-	 * @param contactsService
-	 *            the contactsService to set
+	 * Deletes a contact from the system.
+	 * 
+	 * @param event an action event
 	 */
-	public void setContactsService(IContactsService contactsService) {
-		this.contactsService = contactsService;
+	@FXML
+	protected void deleteContact(final ActionEvent event) {
+		UIContact contact = contactList.getSelectionModel().getSelectedItem();
+		contacts.remove(contact);
+		contactList.getSelectionModel().clearSelection();
+		layout.setCenter(null);
+
+		contactsService.deleteContact(contact.toContact());
+	}
+	
+	@FXML
+	protected void onMouseClicked(final MouseEvent event) {
+		UIContact contact = contactList.getSelectionModel().getSelectedItem();
+		
+		if(event.getButton().equals(MouseButton.PRIMARY) && contact != null){
+			ContactDetailsAbstractComponent detailsPage = detailComponents.get(contact.getType().getDisplayName());
+			detailsPage.setContact(contact);
+			detailsPage.setContacts(contacts);
+			layout.setCenter(detailsPage);
+        }
+	}
+
+	/**
+	 * Constructor.
+	 */
+	@Autowired
+	public ContactsPage(IContactsService _contactsService) {
+		this.contactsService = _contactsService;
+		
+		//Load FXML
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/danisoft/ui/pages/Contacts.fxml"));
+		loader.setController(this);
+		loader.setRoot(this);
+		
+		try {
+			loader.load();
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
+		
+		// Initialise contacts list
+		contacts = FXCollections.observableArrayList();
+		contactList.setItems(contacts);
+		
+		Task<Void> task = new Task<Void>() {
+			
+			@Override
+			protected Void call() throws Exception {
+				
+				while(contactsService == null) {}
+				
+				List<Contact> dbContacts = contactsService.getAllContacts();
+				
+				int i = 1;
+				for (Contact contact : dbContacts) {
+					contacts.add(UIContact.fromContact(contact));
+					updateProgress(i, dbContacts.size());
+					i++;
+				}
+				this.updateProgress(i, i);
+				return null;
+			}
+		};
+				
+		// Bindings
+		deleteButton.disableProperty().bind(contactList.getSelectionModel().selectedItemProperty().isNull());
+		contactList.prefWidthProperty().bind(layout.widthProperty().multiply(CONTACTS_PERCENTAGE_WIDTH));
+		nameColumn.prefWidthProperty().bind(contactList.widthProperty().subtract(TYPE_COLUMN_WIDTH));
+		progressIndicator.progressProperty().bind(task.progressProperty());
+		
+		//Register Detail Components.
+		detailComponents = new HashMap<String, ContactDetailsAbstractComponent>();
+		detailComponents.put(ContactType.Person.getDisplayName(), ServiceLocator.getSingle(PersonDetailsComponent.class));
+		
+		Thread th = new Thread(task);
+		th.setDaemon(true);
+		th.start();
 	}
 }

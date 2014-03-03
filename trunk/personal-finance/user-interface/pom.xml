@@ -34,8 +34,8 @@ It will provide the framework for the rest of the modules to work.</description>
 		<dependency>
 			<groupId>com.oracle</groupId>
 			<artifactId>javafx</artifactId>
-			<version>2.0</version>
-			<systemPath>C:\Archivos de programa\Oracle\JavaFX 2.0 SDK\rt\lib\jfxrt.jar</systemPath>
+			<version>2.2</version>
+			<systemPath>${java.home}/lib/jfxrt.jar</systemPath>
 			<scope>system</scope>
 		</dependency>
 		<dependency>

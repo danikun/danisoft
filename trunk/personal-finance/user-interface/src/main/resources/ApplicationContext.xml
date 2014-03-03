@@ -1,82 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
 
+	<context:component-scan base-package="org.danisoft"/>
+
+	<!-- Configuration files -->
 	<bean id="placeholderConfig"
 		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
-		<property name="location" value="classpath:database.properties"/>
-	</bean>
-
-	<!-- Pages -->
-	<bean name="contactsPage" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Contacts"/>
-		<property name="path" value="/org/danisoft/ui/pages/Contacts.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="Object">
-				<entry key="contactsService" value-ref="contactsService"/>
-				<entry key="detailPages">
-					<map key-type="java.lang.String" value-type="org.danisoft.ui.base.Page">
-						<entry key="Person" value-ref="personDetailsPage"/>
-						<entry key="Family" value-ref="familyDetailsPage"/>
-					</map>
-				</entry>
-			</map>
-		</property>
-	</bean>
-	
-	<bean name="personDetailsPage" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Person Details"/>
-		<property name="path" value="/org/danisoft/ui/custom/PersonDetails.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="Object">
-				<entry key="contactsService" value-ref="contactsService"/>
-				<entry key="phoneNumbers" value-ref="phoneNumbers"/>
-			</map>
-		</property>
-	</bean>
-	
-	<bean name="familyDetailsPage" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Family Details"/>
-		<property name="path" value="/org/danisoft/ui/custom/FamilyDetails.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="Object">
-				<entry key="contactsService" value-ref="contactsService"/>
-				<entry key="phoneNumbers" value-ref="phoneNumbers"/>
-			</map>
-		</property>
-	</bean>
-	
-	<bean name="phoneNumbers" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Phone Numbers Component"/>
-		<property name="path" value="/org/danisoft/ui/custom/PhoneNumbers.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="java.lang.Object">
-				<entry key="addPhoneNumber" value-ref="addPhoneNumber"/>
-			</map>
-		</property>
-	</bean>
-	
-	<bean name="addPhoneNumber" class="org.danisoft.ui.base.Page">
-		<property name="name" value="Add phone number"/>
-		<property name="path" value="/org/danisoft/ui/custom/AddPhoneNumber.fxml"/>
-		<property name="params">
-			<map key-type="java.lang.String" value-type="Object">
-			</map>
-		</property>
-	</bean>
-
-	<!-- Services -->
-	<bean name="contactsService" class="org.danisoft.services.impl.ContactsServiceImpl">
-		<property name="contactDao" ref="contactDao" />
-		<property name="jcrTemplate" ref="jcrTemplate" />
-	</bean>
-
-	<!-- DAO's -->
-	<bean name="contactDao" class="org.danisoft.dao.impl.ContactDaoImpl">
-		<property name="contactMapper" ref="contactMapper" />
-		<property name="personMapper" ref="personMapper" />
-		<property name="phoneNumberMapper" ref="phoneNumberMapper" />
+		<property name="location" value="classpath:database.properties" />
 	</bean>
 
 	<!-- JCR -->
@@ -107,33 +47,43 @@
 		<property name="sessionFactory" ref="jcrSessionFactory" />
 	</bean>
 
-	<!-- MyBatis -->
+	<!-- Database -->
 	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
-		<property name="driverClassName" value="com.mysql.jdbc.Driver" />
-		<property name="url"
-			value="jdbc:mysql://localhost:3306/personalFinanceDB" />
+		<property name="driverClassName" value="${database.driver}" />
+		<property name="url" value="${database.url}" />
 		<property name="username" value="${database.username}" />
 		<property name="password" value="${database.password}" />
 	</bean>
 
-	<bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
-		<property name="configLocation" value="classpath:mybatis-config.xml" />
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
 		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.ejb.event.post-insert">org.hibernate.ejb.event.EJB3PostInsertEventListener,org.hibernate.envers.event.AuditEventListener
+				</prop>
+				<prop key="hibernate.ejb.event.post-update">org.hibernate.ejb.event.EJB3PostUpdateEventListener,org.hibernate.envers.event.AuditEventListener
+				</prop>
+				<prop key="hibernate.ejb.event.post-delete">org.hibernate.ejb.event.EJB3PostDeleteEventListener,org.hibernate.envers.event.AuditEventListener
+				</prop>
+				<prop key="hibernate.ejb.event.pre-collection-update">org.hibernate.envers.event.AuditEventListener</prop>
+				<prop key="hibernate.ejb.event.pre-collection-remove">org.hibernate.envers.event.AuditEventListener</prop>
+				<prop key="hibernate.ejb.event.post-collection-recreate">org.hibernate.envers.event.AuditEventListener</prop>
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>org.danisoft.model</value>
+			</list>
+		</property>
 	</bean>
 
-	<bean id="contactMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.ContactMapper" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean>
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory" />
 
-	<bean id="personMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.PersonMapper" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean>
-
-	<bean id="phoneNumberMapper" class="org.mybatis.spring.mapper.MapperFactoryBean">
-		<property name="mapperInterface" value="org.danisoft.Mapper.PhoneNumberMapper" />
-		<property name="sqlSessionFactory" ref="sqlSessionFactory" />
-	</bean>
-
+	<tx:annotation-driven />
 </beans>

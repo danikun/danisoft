@@ -7,6 +7,9 @@ import org.danisoft.dao.IContactDao;
 import org.danisoft.model.Contact;
 import org.danisoft.repo.IJcrTemplate;
 import org.danisoft.services.IContactsService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Contacts service implementation
@@ -14,22 +17,28 @@ import org.danisoft.services.IContactsService;
  * @author Daniel Garcia
  *
  */
+@Service("contactsService")
 public class ContactsServiceImpl implements IContactsService {
 
+	@Autowired
 	private IContactDao contactDao = null;
+	@Autowired
 	private IJcrTemplate jcrTemplate = null;
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<Contact> getAllContacts() {
 		return contactDao.getAll();
 	}
 
 	@Override
+	@Transactional(readOnly=true)
 	public List<Contact> searchContacts(String keyword) {
 		return null;
 	}
 
 	@Override
+	@Transactional
 	public int saveContact(Contact contact, InputStream stream) {
 		int id = 0;
 
@@ -55,6 +64,7 @@ public class ContactsServiceImpl implements IContactsService {
 	}
 
 	@Override
+	@Transactional
 	public void deleteContact(final Contact contact) {
 		contactDao.delete(contact);
 		jcrTemplate.deleteNode("/contacts/" + contact.getId());
