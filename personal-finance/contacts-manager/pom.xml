@@ -11,6 +11,13 @@
   <name>Contacts Manager</name>
   <dependencies>
   	<dependency>
+		<groupId>com.oracle</groupId>
+		<artifactId>javafx</artifactId>
+		<version>2.0</version>
+		<systemPath>C:\Program files\Oracle\JavaFX 2.2 SDK\rt\lib\jfxrt.jar</systemPath>
+		<scope>system</scope>
+	</dependency>
+  	<dependency>
   		<groupId>org.danisoft</groupId>
   		<artifactId>common</artifactId>
   		<version>0.0.1-SNAPSHOT</version>

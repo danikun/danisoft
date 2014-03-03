@@ -2,14 +2,23 @@ package org.danisoft.model;
 
 import java.util.List;
 
+import javax.persistence.Entity;
+import javax.persistence.PrimaryKeyJoinColumn;
+
 /**
  * Data object to represent a person data.
  * 
  * @author Daniel García
  *
  */
+@Entity
+@PrimaryKeyJoinColumn(name = "ContactId")
 public class Person extends Contact {
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 3941791824743960357L;
 	/**
 	 * First surname.
 	 */
@@ -23,10 +32,9 @@ public class Person extends Contact {
 		super();
 	}
 	
-	public Person(int id, String name, ContactType type,
-			List<PhoneNumber> phoneNumbers, String address, String lastName1,
-			String lastName2) {
-		super(id, name, type, phoneNumbers, address);
+	public Person(int id, String name, List<PhoneNumber> phoneNumbers, 
+			String address, String lastName1, String lastName2) {
+		super(id, name, ContactType.Person, phoneNumbers, address);
 		this.lastName1 = lastName1;
 		this.lastName2 = lastName2;
 	}

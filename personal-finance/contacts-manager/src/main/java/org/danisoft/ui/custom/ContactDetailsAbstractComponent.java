@@ -1,13 +1,19 @@
 package org.danisoft.ui.custom;
 
+import java.io.IOException;
+
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Button;
 import javafx.scene.layout.GridPane;
 
 import org.danisoft.services.IContactsService;
 import org.danisoft.ui.custom.event.ContactSaveEvent;
 import org.danisoft.ui.model.UIContact;
+import org.danisoft.ui.model.UIPerson;
+import org.springframework.beans.factory.annotation.Autowired;
 
 /**
  * Abstract base class to create contact detail pages.
@@ -16,6 +22,21 @@ import org.danisoft.ui.model.UIContact;
  *
  */
 public abstract class ContactDetailsAbstractComponent extends GridPane {
+	
+	/**
+	 * The person to show/edit the details.
+	 */
+	protected UIPerson contact;
+	
+	/**
+	 * List of contacts.
+	 */
+	protected ObservableList<UIContact> contacts;
+	/**
+	 * Contacts service.
+	 */
+	@Autowired
+	protected IContactsService contactsService;
 	
 	// UI elements
 	protected final Button saveButton = new Button("Save");
@@ -32,6 +53,17 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 	public ContactDetailsAbstractComponent() {
 		super();
 		
+		//Load FXML
+		FXMLLoader loader = new FXMLLoader(getClass().getResource(getFxmlPath()));
+		loader.setController(this);
+		loader.setRoot(this);
+		
+		try {
+			loader.load();
+		} catch(IOException e) {
+			throw new RuntimeException(e);
+		}
+		
 		// Save button eventHandler
 		saveButton.setOnAction(new EventHandler<ActionEvent>() {
 			
@@ -46,6 +78,8 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 		});
 	}
 	
+	protected abstract String getFxmlPath();
+
 	/**
 	 * Setter for the contact represented in this details page.
 	 * 
@@ -82,6 +116,21 @@ public abstract class ContactDetailsAbstractComponent extends GridPane {
 	
 	public abstract void setFocus();
 	
-	public abstract void setContactsService(IContactsService contactsService);
-		
+	/**
+	 * Setter for contacts service.
+	 * 
+	 * @param contactsService a Contacts service
+	 */
+	public void setContactsService(IContactsService contactsService) {
+		this.contactsService = contactsService;		
+	}	
+	
+	/**
+	 * Setter for contacts list.
+	 * 
+	 * @param contactsService a Contacts list
+	 */
+	public void setContacts(ObservableList<UIContact> contacts) {
+		this.contacts = contacts;		
+	}	
 }

@@ -3,7 +3,7 @@ package org.danisoft.model;
 /**
  * Enumerator to define the available contact types.
  * 
- * @author dgarcia
+ * @author Daniel Garcia
  * 
  */
 public enum ContactType {
