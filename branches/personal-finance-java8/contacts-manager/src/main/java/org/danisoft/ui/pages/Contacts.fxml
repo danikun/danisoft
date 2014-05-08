@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.cell.PropertyValueFactory?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import org.danisoft.ui.custom.cells.ImageTableCellFactory?>
+<?import org.danisoft.ui.custom.cells.ImageTableCellValueFactory?>
+<?import javafx.scene.control.ProgressIndicator?>
+
+<fx:root type="javafx.scene.layout.BorderPane" xmlns:fx="http://javafx.com/fxml" fx:id="layout">
+
+	<left>
+		<TableView fx:id="contactList" prefWidth="300" onMouseClicked="#onMouseClicked"> 
+			<columns>
+				<TableColumn text="" prefWidth="40" minWidth="40" maxWidth="40"> 
+					<cellFactory>
+						<ImageTableCellFactory/> 
+					</cellFactory>
+					<cellValueFactory>
+						<ImageTableCellValueFactory/> 
+					</cellValueFactory>
+				</TableColumn>
+				<TableColumn fx:id="nameColumn" text="Name"> 
+					<cellValueFactory>
+						<PropertyValueFactory property="displayName"/> 
+					</cellValueFactory>
+				</TableColumn>
+			</columns>
+		</TableView>
+	</left>
+	<bottom>
+		<HBox alignment="CENTER_RIGHT" spacing="5"> 
+			<padding>
+				<Insets bottom="10" top="10" right="10" left="10"/> 
+			</padding>
+			<children>
+				<ProgressIndicator fx:id="progressIndicator"/>
+				<Button fx:id="deleteButton" text="Delete Contact" onAction="#deleteContact"/> 
+			</children>
+		</HBox>
+	</bottom>
+	<top>
+		<MenuBar> 
+			<menus>
+				<Menu text="File"> 
+					<items>
+						<Menu text="Add"> 
+							<items>
+								<MenuItem text="Person" onAction="#newContact"/> 
+								<MenuItem text="Family" onAction="#newContact"/> 
+								<MenuItem text="Company" onAction="#newContact"/> 
+							</items>
+						</Menu>
+					</items>
+				</Menu>
+			</menus>
+		</MenuBar>
+	</top>
+
+</fx:root>
