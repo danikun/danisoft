@@ -11,6 +11,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import com.google.common.collect.Lists;
+
 /**
  * Contacts service implementation
  * 
@@ -28,7 +30,7 @@ public class ContactsServiceImpl implements IContactsService {
 	@Override
 	@Transactional(readOnly=true)
 	public List<Contact> getAllContacts() {
-		return contactDao.getAll();
+		return Lists.newArrayList(contactDao.findAll());
 	}
 
 	@Override
@@ -40,19 +42,10 @@ public class ContactsServiceImpl implements IContactsService {
 	@Override
 	@Transactional
 	public int saveContact(Contact contact, InputStream stream) {
-		int id = 0;
-
-		if (contact.getId() > 0) {
-			contactDao.update(contact);
-			id = contact.getId();
-		} else {
-			id = contactDao.save(contact);
-		}
-
+		int id = contactDao.save(contact).getId();
 		if (stream != null) {
 			jcrTemplate.addBinary("image.png", "image/png", "contacts/" + id + "/", stream);
 		}
-
 		return id;
 	}
 
