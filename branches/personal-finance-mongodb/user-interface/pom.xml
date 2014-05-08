@@ -93,5 +93,10 @@ It will provide the framework for the rest of the modules to work.</description>
 			<artifactId>slf4j-log4j12</artifactId>
 			<version>1.6.4</version>
 		</dependency>
+		<dependency>
+			<groupId>org.danisoft</groupId>
+			<artifactId>accounts-manager</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
 	</dependencies>
 </project>

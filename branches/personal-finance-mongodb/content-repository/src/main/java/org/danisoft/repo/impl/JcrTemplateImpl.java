@@ -15,10 +15,15 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.danisoft.repo.IJcrSessionFactory;
 import org.danisoft.repo.IJcrTemplate;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 
+@Repository
 public class JcrTemplateImpl implements IJcrTemplate {
 
 	private Log log = LogFactory.getLog(getClass());
+	
+	@Autowired
 	private IJcrSessionFactory sessionFactory;
 	
 	public void addBinary(String name, String mimeType, String path,

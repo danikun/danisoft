@@ -5,7 +5,6 @@ import java.util.List;
 
 import junit.framework.Assert;
 
-import org.danisoft.dao.impl.ContactDaoImpl;
 import org.danisoft.model.Company;
 import org.danisoft.model.Contact;
 import org.danisoft.model.Family;
@@ -20,17 +19,19 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-@ContextConfiguration(locations="classpath:/applicationContext.xml")
+import com.google.common.collect.Lists;
+
+@ContextConfiguration(classes = TestConfiguration.class)
 @TransactionConfiguration
 public class ContactDaoIT extends AbstractTransactionalJUnit4SpringContextTests {
 	
 	@Autowired
-	protected ContactDaoImpl contactDao;
+	protected IContactDao contactDao;
 	
 	// Variables to check test data.
-	private int personId;
-	private int companyId;
-	private int familyId;
+	private Person person;
+	private Company company;
+	private Family family;
 	
 	@Before
 	@Transactional
@@ -40,49 +41,49 @@ public class ContactDaoIT extends AbstractTransactionalJUnit4SpringContextTests 
 		numbers.add(new PhoneNumber(PhoneNumberType.Home, "11111111"));
 		
 		//Setup a person.
-		personId = contactDao.save(new Person(0, "Daniel", numbers, "an address", "Garcia", "Pino"));
+		person = contactDao.save(new Person(0, "Daniel", numbers, "an address", "Garcia", "Pino"));
 		//Setup a company.
-		companyId = contactDao.save(new Company(0, "Company", null, "address"));
+		company = contactDao.save(new Company(0, "Company", null, "address"));
 		//Setup a family
 		List<Person> persons = new ArrayList<Person>();
 		persons.add(new Person(0, "name", null, "address", "lastName1", "lastName2"));
 		
-		familyId = contactDao.save(new Family(0, "Garcia", null, "an address", persons));
+		family = contactDao.save(new Family(0, "Garcia", null, "an address", persons));
 	}
 	
 	@Test
 	public void testGetPerson() {
-		Contact contact = contactDao.get(personId);
+		Contact contact = contactDao.findOne(person.getId());
 		Assert.assertTrue(contact instanceof Person);
 	}
 	
 	@Test
 	public void testGetFamily() {
-		Contact contact = contactDao.get(familyId);
+		Contact contact = contactDao.findOne(family.getId());
 		Assert.assertTrue(contact instanceof Family);
 	}
 	
 	@Test
 	public void testFamilyPersonsMapping() {
-		Family family = (Family)contactDao.get(familyId);
-		Assert.assertEquals(1, family.getPersons().size());
+		Family family2 = (Family)contactDao.findOne(family.getId());
+		Assert.assertEquals(1, family2.getPersons().size());
 	}
 	
 	@Test
 	public void testPhoneNumbersMapping() {
-		Contact contact = contactDao.get(personId);
+		Contact contact = contactDao.findOne(person.getId());
 		Assert.assertEquals(2, contact.getPhoneNumbers().size());
 	}
 	
 	@Test
 	public void testGetCompany() {
-		Contact contact = contactDao.get(companyId);
+		Contact contact = contactDao.findOne(company.getId());
 		Assert.assertTrue(contact instanceof Company);
 	}
 	
 	@Test
 	public void TestGetAll() {
-		List<Contact> result = contactDao.getAll();
+		List<Contact> result = Lists.newArrayList(contactDao.findAll());
 		Assert.assertEquals(4, result.size());
 	}
 }

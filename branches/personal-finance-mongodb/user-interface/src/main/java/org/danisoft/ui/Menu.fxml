@@ -20,6 +20,15 @@
 						</ImageView>
 					</graphic>
 				</Button>
+				<Button fx:id="accounts" onAction="#handleButtonAction"> 
+					<graphic>
+						<ImageView> 
+							<image>
+								<Image url="@images/contacts.png"/> 
+							</image>
+						</ImageView>
+					</graphic>
+				</Button>
 			</children>
 		</FlowPane>
       </content>

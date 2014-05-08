@@ -8,7 +8,7 @@ import javafx.stage.Screen;
 import javafx.stage.Stage;
 
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.support.ClassPathXmlApplicationContext;
+import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 
 /**
  * Main application class for the UI. It includes a menu bar and a tab Panel.
@@ -26,7 +26,8 @@ public class PersonalFinance extends Application {
 	@Override
 	public void start(final Stage stage) throws Exception {
 		// Spring application Context
-		ApplicationContext context = new ClassPathXmlApplicationContext("ApplicationContext.xml");
+		ApplicationContext context = new AnnotationConfigApplicationContext("org.danisoft"); 
+				//new ClassPathXmlApplicationContext("ApplicationContext.xml");
 
 		// Window title
 		stage.setTitle("Personal finance");

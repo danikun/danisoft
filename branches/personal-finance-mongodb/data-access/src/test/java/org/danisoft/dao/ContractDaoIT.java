@@ -17,7 +17,9 @@ import org.springframework.test.context.junit4.AbstractTransactionalJUnit4Spring
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 
-@ContextConfiguration(locations = "classpath:/applicationContext.xml")
+import com.google.common.collect.Lists;
+
+@ContextConfiguration(classes = TestConfiguration.class)
 @TransactionConfiguration
 public class ContractDaoIT extends
 		AbstractTransactionalJUnit4SpringContextTests {
@@ -27,26 +29,26 @@ public class ContractDaoIT extends
 	@Autowired
 	private IAccountDao accountDao;
 	
-	private int id;
+	private Contract persisted;
 	
 	@Before
 	@Transactional
 	public void Setup() {
 		Account account = new Account(0, "number", 100, "description", null);
-		account.setId(accountDao.save(account));
+		account.setId(accountDao.save(account).getId());
 		
-		id = contractDao.save(new Contract(0, "Concept", new Date(), Period.MONTHLY, true, 100, account));
+		persisted = contractDao.save(new Contract(0, "Concept", new Date(), Period.MONTHLY, true, 100, account));
 	}
 	
 	@Test
 	public void testGetSingle() {
-		Contract contract = contractDao.get(id);
+		Contract contract = contractDao.findOne(persisted.getId());
 		Assert.assertNotNull(contract);
 	}
 	
 	@Test
 	public void testAccountMapping() {
-		Contract contract = contractDao.get(id);
+		Contract contract = contractDao.findOne(persisted.getId());
 		Assert.assertNotNull(contract.getAccount());
 	}
 	
@@ -57,7 +59,7 @@ public class ContractDaoIT extends
 	
 	@Test
 	public void testGetAll() {
-		List<Contract> contracts = contractDao.getAll();
+		List<Contract> contracts = Lists.newArrayList(contractDao.findAll());
 		Assert.assertFalse(contracts.isEmpty());
 	}
 }
