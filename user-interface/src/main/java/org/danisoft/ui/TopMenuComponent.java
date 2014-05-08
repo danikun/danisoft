@@ -13,7 +13,6 @@ import javafx.scene.layout.FlowPane;
 
 import org.danisoft.ui.command.ICommand;
 import org.danisoft.ui.command.LoadTabCommand;
-import org.danisoft.ui.pages.AccountsPage;
 import org.danisoft.ui.pages.ContactsPage;
 import org.springframework.stereotype.Controller;
 
@@ -46,7 +45,6 @@ public class TopMenuComponent extends TabPane {
 		
 		buttonCommands = new HashMap<String, ICommand>();
 		buttonCommands.put("contacts", new LoadTabCommand<ContactsPage>(this, "Contacts", ContactsPage.class));
-		buttonCommands.put("accounts", new LoadTabCommand<>(this, "Accounts", AccountsPage.class));
 	}
 
 	/**
