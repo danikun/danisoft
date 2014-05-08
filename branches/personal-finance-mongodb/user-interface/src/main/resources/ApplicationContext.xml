@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:p="http://www.springframework.org/schema/p" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/tx
+        http://www.springframework.org/schema/tx/spring-tx.xsd
+        http://www.springframework.org/schema/context
+        http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<context:component-scan base-package="org.danisoft"/>
+
+	<!-- Configuration files -->
+	<bean id="placeholderConfig"
+		class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="location" value="classpath:database.properties" />
+	</bean>
+
+	<!-- JCR -->
+	<bean id="repositoryFactory" class="org.danisoft.repo.impl.RepositoryFactoryBeanImpl">
+		<!-- normal factory beans params -->
+		<property name="xml" value="classpath:repository.xml" />
+		<property name="path" value="./jackrabbit" />
+	</bean>
+
+	<bean id="jcrSessionFactory" class="org.danisoft.repo.impl.JcrSessionFactoryImpl"
+		init-method="openSession" destroy-method="closeSession">
+		<property name="repositoryFactory" ref="repositoryFactory" />
+		<property name="credentials">
+			<bean class="javax.jcr.SimpleCredentials">
+				<constructor-arg index="0" name="userID" value="admin" />
+				<constructor-arg index="1" name="password">
+					<bean factory-bean="password" factory-method="toCharArray" />
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+
+	<bean id="password" class="java.lang.String">
+		<constructor-arg index="0" value="admin" />
+	</bean>
+
+	<bean id="jcrTemplate" class="org.danisoft.repo.impl.JcrTemplateImpl">
+		<property name="sessionFactory" ref="jcrSessionFactory" />
+	</bean>
+
+	<!-- Database -->
+	<bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource">
+		<property name="driverClassName" value="${database.driver}" />
+		<property name="url" value="${database.url}" />
+		<property name="username" value="${database.username}" />
+		<property name="password" value="${database.password}" />
+	</bean>
+
+	<bean id="sessionFactory"
+		class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+		<property name="dataSource" ref="dataSource" />
+		<property name="hibernateProperties">
+			<props>
+				<prop key="hibernate.dialect">org.hibernate.dialect.HSQLDialect</prop>
+				<prop key="hibernate.show_sql">false</prop>
+				<prop key="hibernate.hbm2ddl.auto">update</prop>
+				<prop key="hibernate.ejb.event.post-insert">org.hibernate.ejb.event.EJB3PostInsertEventListener,org.hibernate.envers.event.AuditEventListener
+				</prop>
+				<prop key="hibernate.ejb.event.post-update">org.hibernate.ejb.event.EJB3PostUpdateEventListener,org.hibernate.envers.event.AuditEventListener
+				</prop>
+				<prop key="hibernate.ejb.event.post-delete">org.hibernate.ejb.event.EJB3PostDeleteEventListener,org.hibernate.envers.event.AuditEventListener
+				</prop>
+				<prop key="hibernate.ejb.event.pre-collection-update">org.hibernate.envers.event.AuditEventListener</prop>
+				<prop key="hibernate.ejb.event.pre-collection-remove">org.hibernate.envers.event.AuditEventListener</prop>
+				<prop key="hibernate.ejb.event.post-collection-recreate">org.hibernate.envers.event.AuditEventListener</prop>
+			</props>
+		</property>
+		<property name="packagesToScan">
+			<list>
+				<value>org.danisoft.model</value>
+			</list>
+		</property>
+	</bean>
+
+	<bean id="transactionManager"
+		class="org.springframework.orm.hibernate4.HibernateTransactionManager"
+		p:sessionFactory-ref="sessionFactory" />
+
+	<tx:annotation-driven />
+</beans>
