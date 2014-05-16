@@ -3,7 +3,7 @@ package org.danisoft.dao;
 import java.util.Date;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.danisoft.model.Account;
 import org.danisoft.model.Contract;

@@ -3,7 +3,7 @@ package org.danisoft.dao;
 import java.util.ArrayList;
 import java.util.List;
 
-import junit.framework.Assert;
+import org.junit.Assert;
 
 import org.danisoft.model.Company;
 import org.danisoft.model.Contact;
