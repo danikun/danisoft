@@ -1,5 +1,7 @@
 package org.danisoft.ui.command;
 
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
@@ -12,12 +14,13 @@ public class LoadTabCommand<T extends Node> implements ICommand {
 	private TabPane tabPane;
 	private String tabName;
 	private Class<T> clazz; 
-	
+	private BooleanProperty canExecute;
 	
 	public LoadTabCommand(TabPane tabPane, String tabName, Class<T> clazz) {
 		this.tabPane = tabPane;
 		this.tabName = tabName;
 		this.clazz = clazz;
+		canExecute = new SimpleBooleanProperty(true);
 	}
 	
 	public void execute() {
@@ -42,8 +45,8 @@ public class LoadTabCommand<T extends Node> implements ICommand {
 		tabPane.getSelectionModel().select(tab);
 	}
 
-	public boolean canExecute() {
-		return true;
+	public BooleanProperty canExecute() {
+		return canExecute;
 	}
 
 }
