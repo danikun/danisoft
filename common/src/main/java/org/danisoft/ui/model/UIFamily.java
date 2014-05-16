@@ -23,7 +23,7 @@ public class UIFamily extends UIContact {
 	 * @param address the address
 	 * @param members the list of members
 	 */
-	public UIFamily(final int id, final String name, final ObservableList<UIPhoneNumber> phoneNumbers,
+	public UIFamily(final String id, final String name, final ObservableList<UIPhoneNumber> phoneNumbers,
 			final String address, final ObservableList<UIPerson> members) {
 		super(id, name, ContactType.Family, phoneNumbers, address);
 		this.members = members;

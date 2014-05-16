@@ -40,7 +40,7 @@ public class AddPhoneNumberComponent extends GridPane {
 	/**
 	 * Phone list.
 	 */
-	private ObservableList<UIPhoneNumber> items;
+	private ObservableList<UIPhoneNumber> items; 
 
 	public AddPhoneNumberComponent() {
 		//Load FXML

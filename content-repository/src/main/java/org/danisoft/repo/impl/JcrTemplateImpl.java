@@ -79,20 +79,18 @@ public class JcrTemplateImpl implements IJcrTemplate {
 		
 		try {
 			session = sessionFactory.getSession();
-			try {
-				Node node = session.getNode(path);
-				Node content = node.getNode(Property.JCR_CONTENT);
-				Binary data = content.getProperty(Property.JCR_DATA).getBinary();
-				stream = data.getStream();
-			} catch (PathNotFoundException e) {
-				return null;
-			}
-			
+			Node node = session.getNode(path);
+			Node content = node.getNode(Property.JCR_CONTENT);
+			Binary data = content.getProperty(Property.JCR_DATA).getBinary();
+			stream = data.getStream();
 		} catch (LoginException e) {
 			log.error("Unable to log into the JCR", e);
+		} catch (PathNotFoundException e) {
+			log.info("Specified path not found.");
+			return null;
 		} catch (RepositoryException e) {
 			log.error("Error executing a JCR operation", e);
-		}
+		} 
 		
 		return stream;
 	}

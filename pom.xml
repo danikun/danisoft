@@ -7,6 +7,17 @@
   <name>Personal Finance</name>
   <description>Personal Finance (Working name) intends to be a manager of the personal or familiar economy.</description>
   <packaging>pom</packaging>
+  
+  <properties>
+  	<spring.version>4.0.4.RELEASE</spring.version>
+  </properties>
+  
+  <parent>
+    <groupId>org.springframework.boot</groupId>
+    <artifactId>spring-boot-starter-parent</artifactId>
+    <version>1.0.2.RELEASE</version>
+  </parent>
+  
   <modules>
   	<module>data-model</module>
   	<module>data-access</module>
@@ -16,6 +27,42 @@
   	<module>services</module>
   	<module>content-repository</module>
   	<module>database</module>
-    <module>accounts-manager</module>
   </modules>
+  <build>
+  	<pluginManagement>
+  		<plugins>
+  			<!--This plugin's configuration is used to store Eclipse m2e settings only. It has no influence on the Maven build itself.-->
+  			<plugin>
+  				<groupId>org.eclipse.m2e</groupId>
+  				<artifactId>lifecycle-mapping</artifactId>
+  				<version>1.0.0</version>
+  				<configuration>
+  					<lifecycleMappingMetadata>
+  						<pluginExecutions>
+  							<pluginExecution>
+  								<pluginExecutionFilter>
+  									<groupId>
+  										org.apache.maven.plugins
+  									</groupId>
+  									<artifactId>
+  										maven-compiler-plugin
+  									</artifactId>
+  									<versionRange>
+  										[3.1,)
+  									</versionRange>
+  									<goals>
+  										<goal>testCompile</goal>
+  									</goals>
+  								</pluginExecutionFilter>
+  								<action>
+  									<ignore></ignore>
+  								</action>
+  							</pluginExecution>
+  						</pluginExecutions>
+  					</lifecycleMappingMetadata>
+  				</configuration>
+  			</plugin>
+  		</plugins>
+  	</pluginManagement>
+  </build>
 </project>

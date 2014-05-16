@@ -39,7 +39,7 @@ public class UIPerson extends UIContact {
 	 * @param phoneNumbers a list of phone numbers
 	 * @param address an address
 	 */
-	public UIPerson(final int id, final String name, final String lastName1, final String lastName2,
+	public UIPerson(final String id, final String name, final String lastName1, final String lastName2,
 			final ObservableList<UIPhoneNumber> phoneNumbers, final String address) {
 		super(id, name, ContactType.Person, phoneNumbers, address);
 		this.lastName1 = new SimpleStringProperty(lastName1);
@@ -96,15 +96,14 @@ public class UIPerson extends UIContact {
 
 	@Override
 	public final Contact toContact() {
-		Person person = new Person(getId(), getName(), null,
+		Person person = new Person(getName(), null,
 				getAddress(), getLastName1(), getLastName2());
+		person.setId(getId());
 
 		List<PhoneNumber> numbers = new ArrayList<PhoneNumber>();
 
 		for (UIPhoneNumber phoneNumber : getPhoneNumbers()) {
 			PhoneNumber number = phoneNumber.toPhoneNumber();
-			number.setContact(person);
-
 			numbers.add(number);
 		}
 		person.setPhoneNumbers(numbers);

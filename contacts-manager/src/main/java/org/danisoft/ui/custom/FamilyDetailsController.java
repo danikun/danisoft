@@ -150,7 +150,7 @@ public class FamilyDetailsController implements Controller {
 		getContact();
 
 		if (contactsService != null) {
-			int id;
+			String id;
 			try {
 				if (family.getPhoto() != null) {
 					InputStream photoStream = new BufferedInputStream(new FileInputStream(family.getPhoto()));
@@ -159,7 +159,7 @@ public class FamilyDetailsController implements Controller {
 					id = contactsService.saveContact(family.toContact(), null);
 				}
 
-				if (family.getId() == 0) {
+				if (family.getId() == null) {
 					family.setId(id);
 					contacts.add(family);
 				}

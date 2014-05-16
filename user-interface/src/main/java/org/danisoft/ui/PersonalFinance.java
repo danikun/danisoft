@@ -26,7 +26,7 @@ public class PersonalFinance extends Application {
 	@Override
 	public void start(final Stage stage) throws Exception {
 		// Spring application Context
-		ApplicationContext context = new AnnotationConfigApplicationContext("org.danisoft"); 
+		ApplicationContext context = new AnnotationConfigApplicationContext(AppConfiguration.class); 
 				//new ClassPathXmlApplicationContext("ApplicationContext.xml");
 
 		// Window title

@@ -11,19 +11,19 @@ import org.danisoft.model.Family;
 import org.danisoft.model.Person;
 import org.danisoft.model.PhoneNumber;
 import org.danisoft.model.PhoneNumberType;
+import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit4.AbstractTransactionalJUnit4SpringContextTests;
-import org.springframework.test.context.transaction.TransactionConfiguration;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.google.common.collect.Lists;
 
+@RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = TestConfiguration.class)
-@TransactionConfiguration
-public class ContactDaoIT extends AbstractTransactionalJUnit4SpringContextTests {
+public class ContactDaoIT {
 	
 	@Autowired
 	protected IContactDao contactDao;
@@ -34,21 +34,20 @@ public class ContactDaoIT extends AbstractTransactionalJUnit4SpringContextTests 
 	private Family family;
 	
 	@Before
-	@Transactional
 	public void setup() {
 		ArrayList<PhoneNumber> numbers = new ArrayList<PhoneNumber>();
 		numbers.add(new PhoneNumber(PhoneNumberType.Mobile, "00000000"));
 		numbers.add(new PhoneNumber(PhoneNumberType.Home, "11111111"));
 		
 		//Setup a person.
-		person = contactDao.save(new Person(0, "Daniel", numbers, "an address", "Garcia", "Pino"));
+		person = contactDao.save(new Person("Daniel", numbers, "an address", "Garcia", "Pino"));
 		//Setup a company.
-		company = contactDao.save(new Company(0, "Company", null, "address"));
+		company = contactDao.save(new Company("Company", null, "address"));
 		//Setup a family
 		List<Person> persons = new ArrayList<Person>();
-		persons.add(new Person(0, "name", null, "address", "lastName1", "lastName2"));
+		persons.add(new Person("name", null, "address", "lastName1", "lastName2"));
 		
-		family = contactDao.save(new Family(0, "Garcia", null, "an address", persons));
+		family = contactDao.save(new Family("Garcia", null, "an address", persons));
 	}
 	
 	@Test
@@ -84,6 +83,11 @@ public class ContactDaoIT extends AbstractTransactionalJUnit4SpringContextTests 
 	@Test
 	public void TestGetAll() {
 		List<Contact> result = Lists.newArrayList(contactDao.findAll());
-		Assert.assertEquals(4, result.size());
+		Assert.assertEquals(3, result.size());
+	}
+	
+	@After
+	public void tearDown() {
+		contactDao.deleteAll();
 	}
 }

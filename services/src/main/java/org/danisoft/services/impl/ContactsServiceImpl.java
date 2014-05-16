@@ -41,8 +41,8 @@ public class ContactsServiceImpl implements IContactsService {
 
 	@Override
 	@Transactional
-	public int saveContact(Contact contact, InputStream stream) {
-		int id = contactDao.save(contact).getId();
+	public String saveContact(Contact contact, InputStream stream) {
+		String id = contactDao.save(contact).getId();
 		if (stream != null) {
 			jcrTemplate.addBinary("image.png", "image/png", "contacts/" + id + "/", stream);
 		}
@@ -71,7 +71,7 @@ public class ContactsServiceImpl implements IContactsService {
 	}
 
 	@Override
-	public InputStream getContactImage(int id) {
+	public InputStream getContactImage(String id) {
 		return jcrTemplate.getBinary("/contacts/" + id + "/image.png");
 	}
 }

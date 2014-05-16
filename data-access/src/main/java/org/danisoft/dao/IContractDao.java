@@ -1,8 +1,8 @@
 package org.danisoft.dao;
 
 import org.danisoft.model.Contract;
-import org.springframework.data.repository.PagingAndSortingRepository;
+import org.springframework.data.mongodb.repository.MongoRepository;
 
-public interface IContractDao extends PagingAndSortingRepository<Contract, Integer> {
+public interface IContractDao extends MongoRepository<Contract, String> {
 
 }

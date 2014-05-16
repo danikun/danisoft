@@ -38,18 +38,6 @@ public class UIPhoneNumber {
 	}
 
 	/**
-	 * @param id the id
-	 * @param number the number
-	 * @param type the type
-	 */
-	public UIPhoneNumber(final int id, final String number, final String type) {
-		super();
-		this.number = new SimpleStringProperty(number);
-		this.type = new SimpleStringProperty(type);
-		this.id = id;
-	}
-
-	/**
 	 * @return the number
 	 */
 	public StringProperty numberProperty() {
@@ -113,7 +101,6 @@ public class UIPhoneNumber {
 	public PhoneNumber toPhoneNumber() {
 		PhoneNumber phoneNumber = new PhoneNumber();
 
-		phoneNumber.setId(id);
 		phoneNumber.setNumber(getNumber());
 		phoneNumber.setType(getType().substring(0, 1));
 
@@ -127,7 +114,7 @@ public class UIPhoneNumber {
 	 * @return the UI phone number
 	 */
 	public static UIPhoneNumber fromPhoneNumber(final PhoneNumber phoneNumber) {
-		UIPhoneNumber uiPhoneNumber = new UIPhoneNumber(phoneNumber.getId(), phoneNumber.getNumber(), phoneNumber.getType().getDisplayName());
+		UIPhoneNumber uiPhoneNumber = new UIPhoneNumber(phoneNumber.getNumber(), phoneNumber.getType().getDisplayName());
 
 		return uiPhoneNumber;
 	}
