@@ -1,7 +1,5 @@
 package org.danisoft.ui.bootstrap;
 
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.scene.Parent;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
@@ -20,13 +18,14 @@ public abstract class Module {
 	
 	protected <T extends Parent> MenuItem createMenuItem(final ICommand command, final String label) {
 		MenuItem menuItem = new MenuItem(label);
-		menuItem.setOnAction(new EventHandler<ActionEvent>() {
-			public void handle(ActionEvent e) {
-				if (command.canExecute()) {
-					command.execute();
-				}
-			}
-		});
+		menuItem.setOnAction(e -> executeCommand(command));
+		menuItem.disableProperty().bind(command.canExecute().not());
 		return menuItem;
+	}
+	
+	private void executeCommand(ICommand command) {
+		if (command.canExecute().getValue()) {
+			command.execute();
+		}
 	}
 }

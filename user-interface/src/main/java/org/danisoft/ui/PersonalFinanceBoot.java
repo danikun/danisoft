@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.SeparatorMenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
 import javafx.scene.layout.BorderPane;
@@ -39,6 +41,7 @@ public class PersonalFinanceBoot extends Application implements CommandLineRunne
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		//Starting spring application
 		ApplicationContext context = SpringApplication.run(PersonalFinanceBoot.class, new String[0]);
 		this.modules = new ArrayList<>(context.getBeansOfType(Module.class).values());
 		
@@ -61,20 +64,46 @@ public class PersonalFinanceBoot extends Application implements CommandLineRunne
 		mainLayout.setTop(menuBar);
 		mainLayout.setCenter(tabPane);
 
+		addFileMenu(stage, menuBar);
 		loadModules(menuBar, tabPane);
-		
-		//Add system menu
-		Menu system = new Menu("System");
-		MenuItem exit = new MenuItem("Exit");
-		
-		system.getItems().add(exit);
-		menuBar.getMenus().add(system);
+		addHelpMenu(menuBar);
+		addMainTab(context, tabPane);
 		
 		// Final lines
 		stage.setScene(scene);
 		stage.show();
 		stage.setMinWidth(640);
 		stage.setMinHeight(480);
+	}
+
+	private void addMainTab(ApplicationContext context, TabPane tabPane) {
+		Tab title = new Tab("Personal Finance");
+		title.setClosable(false);
+		title.setContent(context.getBean(TitleComponent.class));
+		tabPane.getTabs().add(title);
+	}
+
+	private void addFileMenu(Stage stage, MenuBar menuBar) {
+		Menu file = new Menu("File");
+		
+		//Exit option
+		MenuItem exit = new MenuItem("Exit");
+		exit.setOnAction(e -> stage.close());
+		file.getItems().add(new SeparatorMenuItem());
+		file.getItems().add(exit);
+		
+		menuBar.getMenus().add(file);
+	}
+	
+	private void addHelpMenu(MenuBar menuBar) {
+		Menu help = new Menu("Help");
+		
+		//About option
+		MenuItem about = new MenuItem("About...");
+		help.getItems().add(new SeparatorMenuItem());
+		help.getItems().add(about);
+		
+		menuBar.getMenus().add(help);
 	}
 
 	private void loadModules(MenuBar menuBar, TabPane tabPane) {
