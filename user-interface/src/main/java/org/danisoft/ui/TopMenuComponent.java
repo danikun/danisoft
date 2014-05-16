@@ -12,7 +12,6 @@ import javafx.scene.control.TabPane;
 import javafx.scene.layout.FlowPane;
 
 import org.danisoft.ui.command.ICommand;
-import org.danisoft.ui.command.LoadTabCommand;
 import org.springframework.stereotype.Controller;
 
 @Controller
