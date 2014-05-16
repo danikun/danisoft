@@ -4,8 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.collections.FXCollections;
@@ -27,7 +25,7 @@ public class UIContact {
 	/**
 	 * Primary key.
 	 */
-	private final IntegerProperty id;
+	private final StringProperty id;
 	/**
 	 * Base name.
 	 */
@@ -62,11 +60,11 @@ public class UIContact {
 	 * @param phoneNumbers a list of phone numbers
 	 * @param address an address
 	 */
-	public UIContact(final int id, final String name, final ContactType type,
+	public UIContact(final String id, final String name, final ContactType type,
 			final ObservableList<UIPhoneNumber> phoneNumbers,
 			final String address) {
 		super();
-		this.id = new SimpleIntegerProperty(id);
+		this.id = new SimpleStringProperty(id);
 		this.name = new SimpleStringProperty(name);
 		this.type = type;
 		this.phoneNumbers = phoneNumbers;
@@ -79,14 +77,14 @@ public class UIContact {
 	/**
 	 * @return the id
 	 */
-	public final int getId() {
+	public final String getId() {
 		return id.get();
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public final void setId(final int id) {
+	public final void setId(final String id) {
 		this.id.set(id);
 	}
 
@@ -164,7 +162,7 @@ public class UIContact {
 	/**
 	 * @return the idProperty
 	 */
-	public final IntegerProperty idProperty() {
+	public final StringProperty idProperty() {
 		return id;
 	}
 
@@ -195,12 +193,11 @@ public class UIContact {
 	public Contact toContact() {
 		List<PhoneNumber> numbers = new ArrayList<PhoneNumber>();
 
-		Contact contact = new Contact(this.getId(), this.getName(), this.getType(), null, this.getAddress());
+		Contact contact = new Contact(this.getName(), this.getType(), null, this.getAddress());
+		contact.setId(id.get());
 
 		for (UIPhoneNumber phoneNumber : phoneNumbers) {
 			PhoneNumber number = phoneNumber.toPhoneNumber();
-			number.setContact(contact);
-
 			numbers.add(number);
 		}
 		contact.setPhoneNumbers(numbers);

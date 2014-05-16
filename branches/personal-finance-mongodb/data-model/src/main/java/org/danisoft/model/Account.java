@@ -3,19 +3,6 @@ package org.danisoft.model;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
-
-@Entity
-@Audited
 public class Account implements Serializable {
 
 	/**
@@ -26,7 +13,7 @@ public class Account implements Serializable {
 	/**
 	 * Primary Key
 	 */
-	private int id;
+	private String id;
 	
 	/**
 	 * Account Number.
@@ -55,23 +42,18 @@ public class Account implements Serializable {
 	 * @param number Account number
 	 * @param balance current balance
 	 */
-	public Account(int id, String number, double balance, String description, List<Movement> movements) {
-		this.id = id;
+	public Account(String number, double balance, String description, List<Movement> movements) {
 		this.number = number;
 		this.balance = balance;
 		this.description = description;
 		this.setMovements(movements);
 	}
 
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name = "account_id")
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -102,7 +84,6 @@ public class Account implements Serializable {
 	/**
 	 * @return the movements
 	 */
-	@OneToMany(mappedBy="account", cascade={CascadeType.ALL}, fetch = FetchType.EAGER)
 	public List<Movement> getMovements() {
 		return movements;
 	}

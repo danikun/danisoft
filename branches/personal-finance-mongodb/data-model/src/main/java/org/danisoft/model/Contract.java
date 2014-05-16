@@ -3,18 +3,8 @@ package org.danisoft.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
+import org.springframework.data.mongodb.core.mapping.DBRef;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
-
-@Entity
-@Audited
 public class Contract implements Serializable {
 
 	/**
@@ -25,7 +15,7 @@ public class Contract implements Serializable {
 	/**
 	 * Primary key from the DB.
 	 */
-	private int id;
+	private String id;
 	
 	/**
 	 * Concept of the contract.
@@ -55,12 +45,9 @@ public class Contract implements Serializable {
 	/**
 	 * Account to charge contract's movements.
 	 */
+	@DBRef
 	private Account account;
 	
-	/**
-	 * 
-	 */
-
 	/**
 	 * Primary constructor.
 	 * 
@@ -71,13 +58,12 @@ public class Contract implements Serializable {
 	 * @param amount
 	 * @param account
 	 */
-	public Contract(int id, String concept, Date lastPaymentDate,
-			Period periodicty, boolean fixedAmount, double amount, Account account) {
+	public Contract(String concept, Date lastPaymentDate,
+			Period period, boolean fixedAmount, double amount, Account account) {
 		super();
-		this.id = id;
 		this.concept = concept;
 		this.lastPaymentDate = lastPaymentDate;
-		this.period = periodicty;
+		this.period = period;
 		this.fixedAmount = fixedAmount;
 		this.amount = amount;
 		this.account = account;
@@ -86,18 +72,14 @@ public class Contract implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name = "contract_id")
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -160,8 +142,6 @@ public class Contract implements Serializable {
 	/**
 	 * @return the account
 	 */
-	@ManyToOne
-	@JoinColumn(name="account_id", nullable = false)
 	public Account getAccount() {
 		return account;
 	}

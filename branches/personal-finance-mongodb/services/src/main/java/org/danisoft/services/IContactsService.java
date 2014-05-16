@@ -34,7 +34,7 @@ public interface IContactsService {
 	 * @param stream the photo stream of the contact
 	 * @return the id of the newly created contact
 	 */
-	int saveContact(Contact contact, InputStream stream);
+	String saveContact(Contact contact, InputStream stream);
 	
 	/**
 	 * Deletes a contact
@@ -47,5 +47,5 @@ public interface IContactsService {
 	 * @param id contact id
 	 * @return the image that represents a contact
 	 */
-	InputStream getContactImage(int id);
+	InputStream getContactImage(String id);
 }

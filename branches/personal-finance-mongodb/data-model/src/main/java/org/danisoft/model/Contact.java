@@ -3,26 +3,12 @@ package org.danisoft.model;
 import java.io.Serializable;
 import java.util.List;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.Inheritance;
-import javax.persistence.InheritanceType;
-import javax.persistence.OneToMany;
-
-import org.hibernate.annotations.GenericGenerator;
-
 /**
  * Parent class for all the entities suitable of being a contact.
  * 
  * @author Daniel García
  *
  */
-@Entity
-@Inheritance(strategy = InheritanceType.JOINED)
 public class Contact implements Serializable {
 	/**
 	 * 
@@ -31,7 +17,7 @@ public class Contact implements Serializable {
 	/**
 	 * Primary key.
 	 */
-	protected int id;
+	protected String id;
 	/**
 	 * Base name.
 	 */
@@ -49,10 +35,9 @@ public class Contact implements Serializable {
 	 */
 	protected String address;
 	
-	public Contact(int id, String name, ContactType type,
+	public Contact(String name, ContactType type,
 			List<PhoneNumber> phoneNumbers, String address) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.type = type;
 		this.phoneNumbers = phoneNumbers;
@@ -65,17 +50,13 @@ public class Contact implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name = "contact_id")
-	public int getId() {
+	public String getId() {
 		return id;
 	}
 	/**
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 	/**
@@ -106,7 +87,6 @@ public class Contact implements Serializable {
 	/**
 	 * @return the phoneNumbers
 	 */
-	@OneToMany(mappedBy = "contact", fetch=FetchType.EAGER, cascade= {CascadeType.ALL})	
 	public List<PhoneNumber> getPhoneNumbers() {
 		return phoneNumbers;
 	}

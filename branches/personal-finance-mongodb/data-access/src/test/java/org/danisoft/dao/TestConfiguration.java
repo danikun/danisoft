@@ -1,47 +1,28 @@
 package org.danisoft.dao;
 
-import javax.sql.DataSource;
-
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseBuilder;
-import org.springframework.jdbc.datasource.embedded.EmbeddedDatabaseType;
-import org.springframework.orm.jpa.JpaTransactionManager;
-import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
-import org.springframework.orm.jpa.vendor.Database;
-import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
-import org.springframework.transaction.PlatformTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
+import org.springframework.data.mongodb.config.AbstractMongoConfiguration;
+import org.springframework.data.mongodb.repository.config.EnableMongoRepositories;
 
-@ComponentScan
+import com.mongodb.Mongo;
+
 @Configuration
-@EnableJpaRepositories
-@EnableTransactionManagement
-public class TestConfiguration {
-	@Bean
-	public DataSource dataSource() {
-		EmbeddedDatabaseBuilder builder = new EmbeddedDatabaseBuilder();
-		return builder.setType(EmbeddedDatabaseType.HSQL).build();
+@EnableMongoRepositories
+class TestConfiguration extends AbstractMongoConfiguration {
+
+	@Override
+	protected String getDatabaseName() {
+		return "personal-finance-test";
 	}
 
-	@Bean
-	public LocalContainerEntityManagerFactoryBean entityManagerFactory() {
-		HibernateJpaVendorAdapter vendorAdapter = new HibernateJpaVendorAdapter();
-		vendorAdapter.setDatabase(Database.HSQL);
-		vendorAdapter.setGenerateDdl(true);
-		vendorAdapter.setShowSql(true);
-		LocalContainerEntityManagerFactoryBean factory = new LocalContainerEntityManagerFactoryBean();
-		factory.setJpaVendorAdapter(vendorAdapter);
-		factory.setPackagesToScan("org.danisoft.model");
-		factory.setDataSource(dataSource());
-
-		return factory;
+	@SuppressWarnings("deprecation")
+	@Override
+	public Mongo mongo() throws Exception {
+		return new Mongo();
 	}
 
-	@Bean
-	public PlatformTransactionManager transactionManager() {
-		return new JpaTransactionManager();
+	@Override
+	protected String getMappingBasePackage() {
+		return "org.danisoft.dao.IContactDao";
 	}
 }

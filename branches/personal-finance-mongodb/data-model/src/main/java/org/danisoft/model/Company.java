@@ -2,17 +2,12 @@ package org.danisoft.model;
 
 import java.util.List;
 
-import javax.persistence.Entity;
-import javax.persistence.PrimaryKeyJoinColumn;
-
 /**
  * Data object that represents a Company.
  * 
  * @author Daniel Garcia
  * 
  */
-@Entity
-@PrimaryKeyJoinColumn(name = "CompanyId")
 public class Company extends Contact {
 
 	/**
@@ -24,9 +19,9 @@ public class Company extends Contact {
 		super();
 	}
 
-	public Company(int id, String name, List<PhoneNumber> phoneNumbers,
+	public Company(String name, List<PhoneNumber> phoneNumbers,
 			String address) {
-		super(id, name, ContactType.Company, phoneNumbers, address);
+		super(name, ContactType.Company, phoneNumbers, address);
 	}
 
 }

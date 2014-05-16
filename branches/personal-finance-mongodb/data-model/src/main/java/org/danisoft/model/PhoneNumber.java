@@ -1,12 +1,5 @@
 package org.danisoft.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import org.hibernate.annotations.GenericGenerator;
 
 /**
  * Data object to represent a phone number.
@@ -14,7 +7,6 @@ import org.hibernate.annotations.GenericGenerator;
  * @author Daniel García
  *
  */
-@Entity
 public class PhoneNumber {
 	
 	/**
@@ -30,13 +22,6 @@ public class PhoneNumber {
 	}
 
 	/**
-	 * Id.
-	 */
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
-	private int id;
-	/**
 	 * Type of phone number.
 	 */
 	private PhoneNumberType type;
@@ -44,12 +29,6 @@ public class PhoneNumber {
 	 * The actual phone number.
 	 */
 	private String number;
-	/**
-	 * The contact owning this phone number.
-	 */
-	@ManyToOne
-	@JoinColumn(name = "contact_id")
-	private Contact contact;	
 	
 	/**
 	 * @return the type Id
@@ -81,39 +60,9 @@ public class PhoneNumber {
 	public void setNumber(String number) {
 		this.number = number;
 	}
-	/**
-	 * @return the contactid
-	 */
-	public int getContactId() {
-		return contact.getId();
-	}
-	/**
-	 * @return the contact
-	 */
-	public Contact getContact() {
-		return contact;
-	}
-	/**
-	 * @param contact the contact to set
-	 */
-	public void setContact(Contact contact) {
-		this.contact = contact;
-	}
-	/**
-	 * @return the id
-	 */
-	public int getId() {
-		return id;
-	}
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(int id) {
-		this.id = id;
-	}
 	
 	@Override
 	public String toString() {
-		return String.format("[Type: {0} Number: {1}]", this.type, this.number);
+		return String.format("[Type: %s Number: %s]", this.type, this.number);
 	}
 }

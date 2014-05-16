@@ -3,18 +3,6 @@ package org.danisoft.model;
 import java.io.Serializable;
 import java.util.Date;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.envers.Audited;
-
-@Entity
-@Audited
 public class Movement implements Serializable {
 
 	/**
@@ -81,10 +69,6 @@ public class Movement implements Serializable {
 	/**
 	 * @return the id
 	 */
-	@Id
-	@GeneratedValue(generator="increment")
-	@GenericGenerator(name="increment", strategy = "increment")
-	@Column(name = "movement_id")
 	public long getId() {
 		return id;
 	}
@@ -155,8 +139,6 @@ public class Movement implements Serializable {
 	/**
 	 * @return the account
 	 */
-	@ManyToOne
-	@JoinColumn(name="account_id")
 	public Account getAccount() {
 		return account;
 	}
@@ -171,8 +153,6 @@ public class Movement implements Serializable {
 	/**
 	 * @return the contract
 	 */
-	@ManyToOne
-	@JoinColumn(name="contract_id")
 	public Contract getContract() {
 		return contract;
 	}

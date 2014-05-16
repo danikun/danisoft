@@ -81,7 +81,7 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 			throw new RuntimeException("Incorrect contact Type.");
 		
 		if (contact == null) {
-			this.contact = new UIPerson(0, "", "", "", null, "");
+			this.contact = new UIPerson(null, "", "", "", null, "");
 		} else {
 			UIPerson person = (UIPerson) contact;
 			this.contact = person;
@@ -142,7 +142,7 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 		getContact();
 
 		if (contactsService != null) {
-			int id;
+			String id;
 			try {
 				if (contact.getPhoto() != null) {
 					InputStream photoStream = new BufferedInputStream(new FileInputStream(contact.getPhoto()));
@@ -151,7 +151,7 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 					id = contactsService.saveContact(contact.toContact(), null);
 				}
 
-				if (contact.getId() == 0) {
+				if (contact.getId() == null) {
 					contact.setId(id);
 					contacts.add(contact);
 				}
