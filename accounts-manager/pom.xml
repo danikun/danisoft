@@ -7,13 +7,24 @@
 		<version>0.0.1-SNAPSHOT</version>
 		<relativePath>..</relativePath>
 	</parent>
-	<artifactId>data-model</artifactId>
-	<name>Data Model</name>
-	<description>Set of data entities.</description>
+	<artifactId>accounts-manager</artifactId>
+	<description>UI module dedicated to the accounts manager part of the application</description>
+	<name>Accounts Manager</name>
 	<dependencies>
 		<dependency>
-			<groupId>org.springframework.data</groupId>
-			<artifactId>spring-data-mongodb</artifactId>
+			<groupId>org.danisoft</groupId>
+			<artifactId>common</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.danisoft</groupId>
+			<artifactId>data-model</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.danisoft</groupId>
+			<artifactId>services</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

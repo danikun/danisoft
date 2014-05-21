@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.*?> 
+<?import javafx.geometry.*?> 
+
+<BorderPane xmlns:fx="http://javafx.com/fxml/1" minWidth="1024" minHeight="768">
+    <left>
+        <VBox alignment="TOP_CENTER" spacing="10" >
+            <BorderPane.margin>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </BorderPane.margin>
+            <TableView fx:id="accountsTable" BorderPane.alignment="TOP_CENTER" prefWidth="200" VBox.vgrow="ALWAYS" onMouseClicked="#openAccountDetails" >
+                <columns>
+                    <TableColumn fx:id="numberColumn" text="Account number">
+                        <cellValueFactory>
+                            <PropertyValueFactory property="number"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+            <HBox alignment="CENTER_RIGHT" spacing="10" >
+                <Button fx:id="addButton" text="Add" onAction="#addAccount" />
+                <Button fx:id="deleteButton" text="Delete" onAction="#deleteAccount" />
+            </HBox>
+        </VBox> 
+    </left>
+    <center>
+        <VBox spacing="10" >
+            <BorderPane.margin>
+                <Insets bottom="10" left="10" right="10" top="10" />
+            </BorderPane.margin>
+            <GridPane hgap="10" vgap="10" >
+                <columnConstraints>
+                    <ColumnConstraints percentWidth="10" />
+                    <ColumnConstraints percentWidth="40" />
+                    <ColumnConstraints percentWidth="10" />
+                    <ColumnConstraints percentWidth="40" />
+                </columnConstraints>
+                <Label text="Number: " styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="0" />
+                <TextField fx:id="tNumber" GridPane.columnIndex="1" GridPane.rowIndex="0" />
+                <Label text="Balance: " styleClass="form-field" GridPane.columnIndex="2" GridPane.rowIndex="0" />
+                <TextField fx:id="tBalance" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                <Label text="Description: " styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP"/>
+                <TextArea fx:id="tDescription" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="3" GridPane.valignment="TOP" />
+            </GridPane>
+            <Label text="Movements:" styleClass="form-field" alignment="CENTER_LEFT" />
+            <TableView fx:id="movementsTable" VBox.vgrow="ALWAYS" >
+                <columns>
+                    <TableColumn text="Date" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="date"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Value Date" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="valueDate"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Description" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="description"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                    <TableColumn text="Amount" >
+                        <cellValueFactory>
+                            <PropertyValueFactory property="amount"/>
+                        </cellValueFactory>
+                    </TableColumn>
+                </columns>
+            </TableView>
+            <HBox spacing="10" alignment="CENTER_RIGHT" >
+                <Button fx:id="loadMovementsButton" text="Load Movements..." onAction="#loadMovements" />
+                <Button fx:id="saveButton" text="Save" onAction="#saveAccount" />
+            </HBox>
+        </VBox>
+    </center>
+</BorderPane>

@@ -30,12 +30,12 @@ public class AccountDaoIT {
 	@Before
 	public void Setup(){
 		List<Movement> movements = new ArrayList<Movement>();
-		movements.add(new Movement(0, new Date(), new Date(), "test movement", 100.0));
+		movements.add(new Movement(new Date(), new Date(), "test movement", 100.0));
 		
 		persisted = accountDao.save(new Account("XXXXXXXXXXX", 0.0, "Test account", movements));
 		
 		List<Movement> movements2 = new ArrayList<Movement>();
-		movements2.add(new Movement(0, new Date(), new Date(), "test movement 2", 100.0));
+		movements2.add(new Movement(new Date(), new Date(), "test movement 2", 100.0));
 		
 		accountDao.save(new Account("XXXXXXXXXXX", 0.0, "Test account 2", movements2));
 	}
