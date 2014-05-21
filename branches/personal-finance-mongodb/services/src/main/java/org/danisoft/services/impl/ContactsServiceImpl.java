@@ -9,7 +9,6 @@ import org.danisoft.repo.IJcrTemplate;
 import org.danisoft.services.IContactsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import com.google.common.collect.Lists;
 
@@ -28,19 +27,16 @@ public class ContactsServiceImpl implements IContactsService {
 	private IJcrTemplate jcrTemplate = null;
 
 	@Override
-	@Transactional(readOnly=true)
 	public List<Contact> getAllContacts() {
 		return Lists.newArrayList(contactDao.findAll());
 	}
 
 	@Override
-	@Transactional(readOnly=true)
 	public List<Contact> searchContacts(String keyword) {
 		return null;
 	}
 
 	@Override
-	@Transactional
 	public String saveContact(Contact contact, InputStream stream) {
 		String id = contactDao.save(contact).getId();
 		if (stream != null) {
@@ -57,7 +53,6 @@ public class ContactsServiceImpl implements IContactsService {
 	}
 
 	@Override
-	@Transactional
 	public void deleteContact(final Contact contact) {
 		contactDao.delete(contact);
 		jcrTemplate.deleteNode("/contacts/" + contact.getId());

@@ -33,6 +33,11 @@ It will provide the framework for the rest of the modules to work.</description>
 	<dependencies>
 		<dependency>
 			<groupId>org.danisoft</groupId>
+			<artifactId>accounts-manager</artifactId>
+			<version>0.0.1-SNAPSHOT</version>
+		</dependency>
+		<dependency>
+			<groupId>org.danisoft</groupId>
 			<artifactId>common</artifactId>
 			<version>0.0.1-SNAPSHOT</version>
 		</dependency>

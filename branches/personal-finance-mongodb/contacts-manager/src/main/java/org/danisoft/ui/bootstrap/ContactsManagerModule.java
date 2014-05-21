@@ -14,7 +14,7 @@ public class ContactsManagerModule extends Module {
 	@Override
 	public void loadModule(MenuBar menuBar, TabPane tabPane) {
 		Menu menu = new Menu("Contacts");
-		menu.getItems().add(createMenuItem(new LoadTabCommand<>(tabPane, "Manage Contacts...", ContactsPage.class), "Manage Contacts..."));
+		menu.getItems().add(createMenuItem(new LoadTabCommand<>(tabPane, "Manage Contacts", ContactsPage.class), "Manage Contacts..."));
 		menuBar.getMenus().add(menu);
 	}
 }

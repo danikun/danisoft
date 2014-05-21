@@ -3,17 +3,14 @@ package org.danisoft.model;
 import java.io.Serializable;
 import java.util.Date;
 
+import org.springframework.data.mongodb.core.mapping.DBRef;
+
 public class Movement implements Serializable {
 
 	/**
 	 * Generated Serial Version. 
 	 */
 	private static final long serialVersionUID = -7003850171775135550L;
-
-	/**
-	 * Primary key from the DB.
-	 */
-	private long id;
 	
 	/**
 	 * Date.
@@ -36,13 +33,9 @@ public class Movement implements Serializable {
 	private double amount;
 	
 	/**
-	 * Account owning the movement.
-	 */
-	private Account account;
-	
-	/**
 	 * Contract related to the movement.
 	 */
+	@DBRef
 	private Contract contract;
 
 	/**
@@ -56,28 +49,13 @@ public class Movement implements Serializable {
 	 * @param account
 	 * @param contract
 	 */
-	public Movement(long id, Date date, Date valueDate, String description,
+	public Movement(Date date, Date valueDate, String description,
 			double amount) {
 		super();
-		this.id = id;
 		this.date = date;
 		this.valueDate = valueDate;
 		this.description = description;
 		this.amount = amount;
-	}
-
-	/**
-	 * @return the id
-	 */
-	public long getId() {
-		return id;
-	}
-
-	/**
-	 * @param id the id to set
-	 */
-	public void setId(long id) {
-		this.id = id;
 	}
 
 	/**
@@ -134,20 +112,6 @@ public class Movement implements Serializable {
 	 */
 	public void setAmount(double amount) {
 		this.amount = amount;
-	}
-
-	/**
-	 * @return the account
-	 */
-	public Account getAccount() {
-		return account;
-	}
-
-	/**
-	 * @param account the account to set
-	 */
-	public void setAccount(Account account) {
-		this.account = account;
 	}
 
 	/**

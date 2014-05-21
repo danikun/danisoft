@@ -21,11 +21,6 @@ public class Account implements Serializable {
 	private String number;
 	
 	/**
-	 * Current Balance.
-	 */
-	private double balance;
-	
-	/**
 	 * Description of the account
 	 */
 	private String description;
@@ -44,9 +39,11 @@ public class Account implements Serializable {
 	 */
 	public Account(String number, double balance, String description, List<Movement> movements) {
 		this.number = number;
-		this.balance = balance;
 		this.description = description;
 		this.setMovements(movements);
+	}
+
+	public Account() {
 	}
 
 	public String getId() {
@@ -66,11 +63,10 @@ public class Account implements Serializable {
 	}
 
 	public double getBalance() {
-		return balance;
-	}
-
-	public void setBalance(double balance) {
-		this.balance = balance;
+		if (movements != null && !movements.isEmpty()) {
+			return movements.stream().mapToDouble(Movement::getAmount).sum();
+		}
+		return 0d;
 	}
 
 	public String getDescription() {
