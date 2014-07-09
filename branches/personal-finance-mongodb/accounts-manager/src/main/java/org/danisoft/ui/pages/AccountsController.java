@@ -8,217 +8,171 @@ package org.danisoft.ui.pages;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ResourceBundle;
 
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.ObjectProperty;
-import javafx.beans.property.SimpleBooleanProperty;
-import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
-import javafx.event.ActionEvent;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
-import javafx.scene.control.TextArea;
-import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.FileChooser;
 
+import org.controlsfx.control.ButtonBar.ButtonType;
+import org.controlsfx.control.action.ActionUtils;
+import org.controlsfx.dialog.Dialogs;
 import org.danisoft.model.Account;
 import org.danisoft.model.Movement;
 import org.danisoft.services.IAccountsService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.danisoft.ui.base.ListDetailsController;
+import org.danisoft.ui.command.SimpleAction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
 
 /**
+ * Controller for the accounts view.
  *
  * @author dgarcia
  */
 @Controller
 @Scope("prototype")
-public class AccountsController implements Initializable {
-	
-    private static final Logger log = LoggerFactory.getLogger(AccountsController.class);
-	
+public class AccountsController extends ListDetailsController<Account> {	
 	//Service
 	@Autowired
 	private IAccountsService accountsService;
-	
-    //Tables
-    @FXML
-    private TableView<Account> accountsTable;
-    @FXML
-    private TableView<Movement> movementsTable;
-    
-    //Form controls
-    @FXML
-    private TextField tNumber;
-    @FXML
-    private TextField tBalance;
-    @FXML
-    private TextArea tDescription;
+	//Form Controller
+	@Autowired
+	private AccountsFormController formController;
     
     //Action Buttons.
-    @FXML
     private Button addButton;
-    @FXML
     private Button deleteButton;
-    @FXML
     private Button saveButton;
-    @FXML
     private Button loadMovementsButton;
     
-    //Variables
-    private BooleanProperty isNew;
-    private BooleanProperty isModified;
     private ObservableList<Account> accounts;
-    private ObservableList<Movement> movements;
-    
-    private ObjectProperty<Account> current;
-    
-    @Override
-    public void initialize(URL url, ResourceBundle rb) {
-        //Setup variables
-        isNew = new SimpleBooleanProperty(false);
-        isModified = new SimpleBooleanProperty(false);
-        current = new SimpleObjectProperty<>();
-        
-        //Load account List
-        accounts = FXCollections.observableArrayList();
-        accounts.addAll(accountsService.getAllAccounts());
-        
-        //Create movements observable list
-        movements = FXCollections.observableArrayList();
-        
-        //Setup Accounts table
-        accountsTable.setItems(accounts);
-        accountsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        
-        //Setup movements table
-        movementsTable.setItems(movements);
-        movementsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
-        movementsTable.disableProperty().bind(current.isNull().or(isNew));
-        
-        //Button bindings
-        deleteButton.disableProperty().bind(accountsTable.getSelectionModel().selectedItemProperty().isNull());
-        saveButton.disableProperty().bind(current.isNotNull().and(isNew.or(isModified)).not());
-        loadMovementsButton.disableProperty().bind(current.isNull());
-        
-        //Control Binding
-        tNumber.disableProperty().bind(current.isNull());
-        tNumber.editableProperty().bind(isNew);
-        tNumber.textProperty().addListener(e -> isModified.set(true));
-        
-        tDescription.disableProperty().bind(current.isNull());
-        tDescription.textProperty().addListener(e -> isModified.set(true));
-        
-        tBalance.disableProperty().bind(current.isNull());
-    }    
     
     @FXML
-    public void openAccountDetails(MouseEvent e) {
+    private void openAccountDetails(MouseEvent e) {
         if (e.getClickCount() != 2) return;
         
-        //We are opening an existing account
-        isNew.set(false);
-        
         //Obtain the selected item from the table
-        current.set(accountsTable.getSelectionModel().getSelectedItem());
-        
-        if (current.isNull().get()) {
-            clearFields();
-            return;
-        }
-        
-        //Set the fields values
-        tNumber.setText(current.get().getNumber());
-        tDescription.setText(current.get().getDescription());
-        tBalance.setText(String.valueOf(current.get().getBalance()));
-        movements.clear();
-        movements.addAll(current.get().getMovements());
-        
-        //Resetting the modified account
-        isModified.set(false);
+        formController.setCurrent(listTable.getSelectionModel().getSelectedItem());
     }
     
-    @FXML
-    public void addAccount(ActionEvent e) {
+    private void addAccount() {
         //We are adding a new account
-        isNew.set(true);
-        current.set(new Account());
-        clearFields();
-        
+    	formController.setCurrent(new Account());
         //Clear account table selection
-        accountsTable.getSelectionModel().clearSelection();
-        
-        //Reset the isModified value
-        isModified.set(false);
-    }
-
-    private void clearFields() {
-        tNumber.clear();
-        tDescription.clear();
-        tBalance.clear();
-        movements.clear();
+        listTable.getSelectionModel().clearSelection();
     }
     
-    @FXML
-    public void deleteAccount(ActionEvent e) {
+    private void deleteAccount() {
         //Obtain the selected item from the table
-        current.set(accountsTable.getSelectionModel().getSelectedItem());
-        clearFields();
-        
-        accountsService.deleteAccount(current.get());
+        Account toDelete = listTable.getSelectionModel().getSelectedItem();
+        accountsService.deleteAccount(toDelete);
         
         //Remove it from the list
-        accounts.remove(current.get());
-        current.set(null);
+        accounts.remove(toDelete);
+        formController.setCurrent(null);
     }
     
-    @FXML
-    public void loadMovements(ActionEvent e) {
+    private void loadMovements() {
         FileChooser fileChooser = new FileChooser();
-        File file = fileChooser.showOpenDialog(accountsTable.getScene().getWindow());
+        File file = fileChooser.showOpenDialog(listTable.getScene().getWindow());
         
         if (file != null) {
-        	try {
-        		//call service to load and save Movements from file;
-        		List<Movement> result = 
-        				accountsService.loadMovementsFromFile(current.get(), new FileInputStream(file));
-        		movements.addAll(result);
-			} catch (FileNotFoundException e1) {
-				log.error("File not found", e);
-			}
+        	Task<Void> load = new Task<Void>() {
+				@Override
+				protected Void call() throws Exception {
+					List<Movement> result = 
+	        				accountsService.loadMovementsFromFile(formController.getCurrent(), new FileInputStream(file));
+					formController.addMovements(result);
+					return null;
+				}
+			};
+			
+        	Dialogs.create()
+        		.message("Loading Movements...")
+        		.showWorkerProgress(load);
+        	
+        	Thread th = new Thread(load);
+            th.setDaemon(true);
+            th.start();
         }
     }
     
-    @FXML
-    public void saveAccount(ActionEvent e) {
-    	current.get().setNumber(tNumber.getText());
-        current.get().setDescription(tDescription.getText());
-        current.get().setMovements(new ArrayList<Movement>(movements));
-        
-        //Call service to persist the account
-        accountsService.saveAccount(current.get());
+    private void saveAccount() {
+    	//Update instance from currently entered values.
+    	formController.updateCurrent();
+
+    	//Call service to persist the account
+        Account persisted = accountsService.saveAccount(formController.getCurrent());
         
         //Select The saved account in the accounts table
-        accountsTable.getSelectionModel().select(current.get());
+        listTable.getSelectionModel().select(formController.getCurrent());
         
-        if (isNew.get()) {
-            accounts.add(current.get());
+        if (formController.isNew()) {
+            accounts.add(persisted);
         }
         
         //Reset variables
-        isNew.set(false);
-        isModified.set(false);
+        formController.setCurrent(persisted);
     }
+
+	@Override
+	protected void initTableColumns() {
+		TableColumn<Account, String> column = new TableColumn<Account, String>("Number");
+		column.setCellValueFactory(a -> new SimpleStringProperty(a.getValue().getNumber()));
+		listTable.getColumns().add(column);
+		listTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
+		listTable.setOnMouseClicked(e -> openAccountDetails(e));
+	}
+
+	@Override
+	protected void initForm() throws Exception {
+		FXMLLoader loader = new FXMLLoader(this.getClass().getResource("/org/danisoft/ui/pages/AccountsForm.fxml"));
+		loader.setController(formController);
+		
+		Node form = loader.load();
+		attachForm(form);
+	}
+
+	@Override
+	protected void loadData() {
+		//Load account List
+        accounts = FXCollections.observableArrayList();
+        accounts.addAll(accountsService.getAllAccounts());
+	}
+
+	@Override
+	protected void bindView() {
+		listTable.setItems(accounts);
+		
+		//Button bindings
+        deleteButton.disableProperty().bind(listTable.getSelectionModel().selectedItemProperty().isNull());
+        saveButton.disableProperty().bind(formController.canSave());
+        loadMovementsButton.disableProperty().bind(formController.canLoadMovements());
+	}
+
+	@Override
+	protected void createActions() {
+		addButton = ActionUtils.createButton(new SimpleAction("Add", () -> addAccount()));
+		deleteButton = ActionUtils.createButton(new SimpleAction("Delete", () -> deleteAccount()));
+		saveButton = ActionUtils.createButton(new SimpleAction("Save", () -> saveAccount()));
+		loadMovementsButton = ActionUtils.createButton(new SimpleAction("Load Movements...", () -> loadMovements()));
+		
+		listButtonBar.addButton(addButton, ButtonType.YES);
+		listButtonBar.addButton(deleteButton, ButtonType.NO);
+		
+		formButtonBar.addButton(saveButton, ButtonType.RIGHT);
+		formButtonBar.addButton(loadMovementsButton, ButtonType.RIGHT);
+	}
+	
 }

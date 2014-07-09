@@ -37,12 +37,12 @@ public class ContactsServiceImpl implements IContactsService {
 	}
 
 	@Override
-	public String saveContact(Contact contact, InputStream stream) {
-		String id = contactDao.save(contact).getId();
+	public Contact saveContact(Contact contact, InputStream stream) {
+		Contact persisted = contactDao.save(contact);
 		if (stream != null) {
-			jcrTemplate.addBinary("image.png", "image/png", "contacts/" + id + "/", stream);
+			jcrTemplate.addBinary("image.png", "image/png", "contacts/" + persisted.getId() + "/", stream);
 		}
-		return id;
+		return persisted;
 	}
 
 	/**

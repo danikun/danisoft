@@ -1,6 +1,5 @@
 package org.danisoft.services;
 
-import java.io.FileInputStream;
 import java.io.InputStream;
 import java.util.List;
 
@@ -28,8 +27,9 @@ public interface IAccountsService {
 	/**
 	 * Persists an account
 	 * @param account the account to persist
+	 * @return 
 	 */
-	void saveAccount(Account account);
+	Account saveAccount(Account account);
 	/**
 	 * Loads a list of movements from a file.
 	 * @param account the account to load the movements.

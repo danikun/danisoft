@@ -8,7 +8,7 @@ import org.danisoft.model.Contact;
 /**
  * Service to perform operations with contacts.
  * 
- * @author Daniel García
+ * @author Daniel Garcï¿½a
  *
  */
 public interface IContactsService {
@@ -34,7 +34,7 @@ public interface IContactsService {
 	 * @param stream the photo stream of the contact
 	 * @return the id of the newly created contact
 	 */
-	String saveContact(Contact contact, InputStream stream);
+	Contact saveContact(Contact contact, InputStream stream);
 	
 	/**
 	 * Deletes a contact

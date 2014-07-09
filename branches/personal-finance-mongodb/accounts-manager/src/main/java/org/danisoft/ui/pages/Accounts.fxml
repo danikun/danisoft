@@ -44,7 +44,7 @@
                 <Label text="Number: " styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="0" />
                 <TextField fx:id="tNumber" GridPane.columnIndex="1" GridPane.rowIndex="0" />
                 <Label text="Balance: " styleClass="form-field" GridPane.columnIndex="2" GridPane.rowIndex="0" />
-                <TextField fx:id="tBalance" editable="false" GridPane.columnIndex="3" GridPane.rowIndex="0" />
+                <TextField fx:id="tBalance" GridPane.columnIndex="3" GridPane.rowIndex="0" />
                 <Label text="Description: " styleClass="form-field" GridPane.columnIndex="0" GridPane.rowIndex="1" GridPane.valignment="TOP"/>
                 <TextArea fx:id="tDescription" GridPane.columnIndex="1" GridPane.rowIndex="1" GridPane.columnSpan="3" GridPane.valignment="TOP" />
             </GridPane>
