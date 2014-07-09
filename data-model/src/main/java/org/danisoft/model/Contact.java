@@ -1,12 +1,15 @@
 package org.danisoft.model;
 
+import java.io.File;
 import java.io.Serializable;
 import java.util.List;
+
+import org.springframework.data.annotation.Transient;
 
 /**
  * Parent class for all the entities suitable of being a contact.
  * 
- * @author Daniel García
+ * @author Daniel Garcï¿½a
  *
  */
 public class Contact implements Serializable {
@@ -34,6 +37,11 @@ public class Contact implements Serializable {
 	 * Contact address
 	 */
 	protected String address;
+	/**
+	 * Photo file to upload.
+	 */
+	@Transient
+	private File photo;
 	
 	public Contact(String name, ContactType type,
 			List<PhoneNumber> phoneNumbers, String address) {
@@ -107,6 +115,14 @@ public class Contact implements Serializable {
 	 */
 	public void setAddress(String address) {
 		this.address = address;
+	}
+	
+	public void setPhoto(File photo) {
+		this.photo = photo;
+	}
+	
+	public File getPhoto() {
+		return this.photo;
 	}
 	
 	@Override

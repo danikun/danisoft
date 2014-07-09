@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Data object to represent a person data.
  * 
- * @author Daniel García
+ * @author Daniel Garcï¿½a
  *
  */
 public class Person extends Contact {
@@ -25,6 +25,7 @@ public class Person extends Contact {
 	
 	public Person() {
 		super();
+		this.type = ContactType.Person;
 	}
 	
 	public Person(String name, List<PhoneNumber> phoneNumbers, 

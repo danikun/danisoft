@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.control.cell.*?> 
+<?import javafx.geometry.*?>
+<?import javafx.scene.layout.RowConstraints?>
+
+<GridPane xmlns:fx="http://javafx.com/fxml/1" hgap="10" vgap="10">
+	<columnConstraints>
+		<ColumnConstraints percentWidth="10" />
+		<ColumnConstraints percentWidth="40" />
+		<ColumnConstraints percentWidth="10" />
+		<ColumnConstraints percentWidth="40" />
+	</columnConstraints>
+	<rowConstraints>
+		<RowConstraints />
+		<RowConstraints />
+		<RowConstraints />
+		<RowConstraints />
+		<RowConstraints vgrow="ALWAYS"/>
+	</rowConstraints>
+	<Label text="Account Details" styleClass="contactDetailsTitle"
+		GridPane.columnIndex="0" GridPane.rowIndex="0" GridPane.columnSpan="4" /> 
+	<Label text="Number: " styleClass="form-field"
+		GridPane.columnIndex="0" GridPane.rowIndex="1" />
+	<TextField fx:id="tNumber" GridPane.columnIndex="1"
+		GridPane.rowIndex="1" />
+	<Label text="Balance: " styleClass="form-field"
+		GridPane.columnIndex="2" GridPane.rowIndex="1" />
+	<TextField fx:id="tBalance" GridPane.columnIndex="3"
+		GridPane.rowIndex="1" />
+	<Label text="Description: " styleClass="form-field"
+		GridPane.columnIndex="0" GridPane.rowIndex="2" GridPane.valignment="TOP" />
+	<TextArea fx:id="tDescription" GridPane.columnIndex="1"
+		GridPane.rowIndex="2" GridPane.columnSpan="3" GridPane.valignment="TOP" />
+	<Label text="Movements:" styleClass="form-field" alignment="CENTER_LEFT"
+		GridPane.columnIndex="0" GridPane.rowIndex="3" />
+	<TableView fx:id="movementsTable" 
+		GridPane.columnIndex="0" GridPane.rowIndex="4" GridPane.columnSpan="4" >
+		<columns>
+			<TableColumn text="Date">
+				<cellValueFactory>
+					<PropertyValueFactory property="date" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="Value Date">
+				<cellValueFactory>
+					<PropertyValueFactory property="valueDate" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="Description">
+				<cellValueFactory>
+					<PropertyValueFactory property="description" />
+				</cellValueFactory>
+			</TableColumn>
+			<TableColumn text="Amount">
+				<cellValueFactory>
+					<PropertyValueFactory property="amount" />
+				</cellValueFactory>
+			</TableColumn>
+		</columns>
+	</TableView>
+</GridPane>
+
+

@@ -1,15 +1,17 @@
 package org.danisoft.ui.command;
 
+import org.controlsfx.control.action.AbstractAction;
 import org.danisoft.spring.ServiceLocator;
 
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
-public class LoadFXMLTabCommand<T> implements ICommand {
+public class LoadFXMLTabCommand<T> extends AbstractAction {
 
 	private TabPane tabPane;
 	private String tabName;
@@ -18,14 +20,21 @@ public class LoadFXMLTabCommand<T> implements ICommand {
 	private BooleanProperty canExecute;
 	
 	public LoadFXMLTabCommand(TabPane tabPane, String tabName, String fxmlFile, Class<T> clazz) {
+		super(tabName);
+		
 		this.tabPane = tabPane;
 		this.tabName = tabName;
 		this.fxmlFile = fxmlFile;
 		this.clazz = clazz;
 		canExecute = new SimpleBooleanProperty(true);
 	}
-	
-	public void execute() {
+
+	public BooleanProperty canExecute() {
+		return canExecute;
+	}
+
+	@Override
+	public void execute(ActionEvent arg0) {
 		ObservableList<Tab> tabs = tabPane.getTabs();
 
 		for (Tab t : tabs) {
@@ -47,10 +56,6 @@ public class LoadFXMLTabCommand<T> implements ICommand {
 		
 		tabs.add(tab);
 		tabPane.getSelectionModel().select(tab);
-	}
-
-	public BooleanProperty canExecute() {
-		return canExecute;
 	}
 
 }

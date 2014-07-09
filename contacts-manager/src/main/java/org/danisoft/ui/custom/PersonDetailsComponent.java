@@ -146,9 +146,9 @@ public class PersonDetailsComponent extends ContactDetailsAbstractComponent {
 			try {
 				if (contact.getPhoto() != null) {
 					InputStream photoStream = new BufferedInputStream(new FileInputStream(contact.getPhoto()));
-					id = contactsService.saveContact(contact.toContact(), photoStream);
+					id = contactsService.saveContact(contact.toContact(), photoStream).getId();
 				} else {
-					id = contactsService.saveContact(contact.toContact(), null);
+					id = contactsService.saveContact(contact.toContact(), null).getId();
 				}
 
 				if (contact.getId() == null) {

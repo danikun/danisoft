@@ -3,13 +3,15 @@ package org.danisoft.ui.command;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.scene.Node;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 
+import org.controlsfx.control.action.AbstractAction;
 import org.danisoft.spring.ServiceLocator;
 
-public class LoadTabCommand<T extends Node> implements ICommand {
+public class LoadTabCommand<T extends Node> extends AbstractAction {
 
 	private TabPane tabPane;
 	private String tabName;
@@ -17,13 +19,19 @@ public class LoadTabCommand<T extends Node> implements ICommand {
 	private BooleanProperty canExecute;
 	
 	public LoadTabCommand(TabPane tabPane, String tabName, Class<T> clazz) {
+		super(tabName);
 		this.tabPane = tabPane;
 		this.tabName = tabName;
 		this.clazz = clazz;
 		canExecute = new SimpleBooleanProperty(true);
 	}
-	
-	public void execute() {
+
+	public BooleanProperty canExecute() {
+		return canExecute;
+	}
+
+	@Override
+	public void execute(ActionEvent arg0) {
 		ObservableList<Tab> tabs = tabPane.getTabs();
 
 		for (Tab t : tabs) {
@@ -43,10 +51,6 @@ public class LoadTabCommand<T extends Node> implements ICommand {
 		
 		tabs.add(tab);
 		tabPane.getSelectionModel().select(tab);
-	}
-
-	public BooleanProperty canExecute() {
-		return canExecute;
 	}
 
 }

@@ -12,12 +12,16 @@ import org.danisoft.dao.IAccountDao;
 import org.danisoft.model.Account;
 import org.danisoft.model.Movement;
 import org.danisoft.services.IAccountsService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
 public class AccountsServiceImpl implements IAccountsService {
 
+	private static final Logger log = LoggerFactory.getLogger(AccountsServiceImpl.class);
+	
 	@Autowired
 	private IAccountDao accountDao;
 	
@@ -39,8 +43,8 @@ public class AccountsServiceImpl implements IAccountsService {
 	}
 
 	@Override
-	public void saveAccount(Account account) {
-		accountDao.save(account);
+	public Account saveAccount(Account account) {
+		return accountDao.save(account);
 	}
 
 	@Override
@@ -67,8 +71,7 @@ public class AccountsServiceImpl implements IAccountsService {
 			}
 			
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			log.error("Exception reading movements file.", e);
 		}
 		return result;
 	}

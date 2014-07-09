@@ -154,9 +154,9 @@ public class FamilyDetailsController implements Controller {
 			try {
 				if (family.getPhoto() != null) {
 					InputStream photoStream = new BufferedInputStream(new FileInputStream(family.getPhoto()));
-					id = contactsService.saveContact(family.toContact(), photoStream);
+					id = contactsService.saveContact(family.toContact(), photoStream).getId();
 				} else {
-					id = contactsService.saveContact(family.toContact(), null);
+					id = contactsService.saveContact(family.toContact(), null).getId();
 				}
 
 				if (family.getId() == null) {

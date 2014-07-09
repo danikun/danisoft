@@ -5,10 +5,7 @@ import java.util.List;
 
 import javafx.application.Application;
 import javafx.scene.Scene;
-import javafx.scene.control.Menu;
 import javafx.scene.control.MenuBar;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.image.Image;
@@ -16,7 +13,13 @@ import javafx.scene.layout.BorderPane;
 import javafx.stage.Screen;
 import javafx.stage.Stage;
 
+import org.controlsfx.control.action.ActionGroup;
+import org.controlsfx.control.action.ActionMap;
+import org.controlsfx.control.action.ActionProxy;
+import org.controlsfx.control.action.ActionUtils;
+import org.controlsfx.dialog.Dialogs;
 import org.danisoft.ui.bootstrap.Module;
+import org.danisoft.ui.command.CloseAction;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
@@ -31,19 +34,19 @@ public class PersonalFinanceBoot extends Application implements CommandLineRunne
 	
 	public static void main(String[] args) {
 		Application.launch(args);
-		
 	}
 
 	@Override
 	public void run(String... args) throws Exception {
-		
 	}
 
 	@Override
 	public void start(Stage stage) throws Exception {
+		ActionMap.register(this);
+		
 		//Starting spring application
 		ApplicationContext context = SpringApplication.run(PersonalFinanceBoot.class, new String[0]);
-		this.modules = new ArrayList<>(context.getBeansOfType(Module.class).values());
+		modules = new ArrayList<>(context.getBeansOfType(Module.class).values());
 		
 		// Window title
 		stage.setTitle("Personal finance");
@@ -57,23 +60,29 @@ public class PersonalFinanceBoot extends Application implements CommandLineRunne
 		Scene scene = new Scene(mainLayout, width - 20, height - 50);
 		scene.getStylesheets().add("personalFinance.css");
 
-		// Load the top menu
-		MenuBar menuBar = new MenuBar();
 		TabPane tabPane = new TabPane();
 		
+		//Load Actions.
+		List<ActionGroup> actions = new ArrayList<ActionGroup>();
+		
+		addFileMenu(stage, actions);
+		loadModules(actions, tabPane);
+		addHelpMenu(actions);
+		
+		// Load the top menu
+		MenuBar menuBar = ActionUtils.createMenuBar(actions);
+
 		mainLayout.setTop(menuBar);
 		mainLayout.setCenter(tabPane);
-
-		addFileMenu(stage, menuBar);
-		loadModules(menuBar, tabPane);
-		addHelpMenu(menuBar);
+		
+		//Load main tab.
 		addMainTab(context, tabPane);
 		
 		// Final lines
 		stage.setScene(scene);
 		stage.show();
-		stage.setMinWidth(640);
-		stage.setMinHeight(480);
+		stage.setMinWidth(1024);
+		stage.setMinHeight(768);
 	}
 
 	private void addMainTab(ApplicationContext context, TabPane tabPane) {
@@ -83,32 +92,30 @@ public class PersonalFinanceBoot extends Application implements CommandLineRunne
 		tabPane.getTabs().add(title);
 	}
 
-	private void addFileMenu(Stage stage, MenuBar menuBar) {
-		Menu file = new Menu("File");
-		
-		//Exit option
-		MenuItem exit = new MenuItem("Exit");
-		exit.setOnAction(e -> stage.close());
-		file.getItems().add(new SeparatorMenuItem());
-		file.getItems().add(exit);
-		
-		menuBar.getMenus().add(file);
+	private void addFileMenu(Stage stage, List<ActionGroup> actions) {
+		ActionGroup group = new ActionGroup("File", 
+				new CloseAction("Exit", stage));
+		actions.add(group);
 	}
 	
-	private void addHelpMenu(MenuBar menuBar) {
-		Menu help = new Menu("Help");
-		
-		//About option
-		MenuItem about = new MenuItem("About...");
-		help.getItems().add(new SeparatorMenuItem());
-		help.getItems().add(about);
-		
-		menuBar.getMenus().add(help);
+	private void addHelpMenu(List<ActionGroup> actions) {
+		ActionGroup group = 
+				new ActionGroup("Help",	ActionUtils.ACTION_SEPARATOR, ActionMap.action("showHelp"));
+		actions.add(group);
 	}
 
-	private void loadModules(MenuBar menuBar, TabPane tabPane) {
+	private void loadModules(List<ActionGroup> actions, TabPane tabPane) {
 		for (Module module : modules) {
-			module.loadModule(menuBar, tabPane);
+			actions.add(module.loadModule(tabPane));
 		}
+	}
+	
+	@ActionProxy(text="About...")
+	private void showHelp() {
+		Dialogs
+			.create()
+			.masthead("About...")
+			.message("Personal Finance, Developed by Daniel Garcia.")
+			.showInformation();
 	}
 }

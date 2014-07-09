@@ -5,14 +5,12 @@ import javafx.scene.control.TableCell;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
-import org.danisoft.ui.model.UIContact;
-
 /**
  * Custom cell to include an image inside a table cell.
  * 
  * @author Daniel Garcia
  */
-public class ImageTableCell extends TableCell<UIContact, String> {
+public class ImageTableCell<T> extends TableCell<T, String> {
 	/**
 	 * Width of the images to include in the table cell.
 	 */

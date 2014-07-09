@@ -1,20 +1,20 @@
 package org.danisoft.ui.bootstrap;
 
-import javafx.scene.control.Menu;
-import javafx.scene.control.MenuBar;
 import javafx.scene.control.TabPane;
 
-import org.danisoft.ui.command.LoadTabCommand;
-import org.danisoft.ui.pages.ContactsPage;
+import org.controlsfx.control.action.ActionGroup;
+import org.danisoft.ui.command.LoadFXMLTabCommand;
+import org.danisoft.ui.pages.ContactsController;
 import org.springframework.stereotype.Component;
 
 @Component
-public class ContactsManagerModule extends Module {
+public class ContactsManagerModule implements Module {
 
 	@Override
-	public void loadModule(MenuBar menuBar, TabPane tabPane) {
-		Menu menu = new Menu("Contacts");
-		menu.getItems().add(createMenuItem(new LoadTabCommand<>(tabPane, "Manage Contacts", ContactsPage.class), "Manage Contacts..."));
-		menuBar.getMenus().add(menu);
+	public ActionGroup loadModule(TabPane tabPane) {
+		ActionGroup actionGroup = new ActionGroup("Contacts",
+				new LoadFXMLTabCommand<>(tabPane, "Manage Contacts", 
+						"/org/danisoft/ui/base/ListDetailsView.fxml", ContactsController.class));
+		return actionGroup;
 	}
 }

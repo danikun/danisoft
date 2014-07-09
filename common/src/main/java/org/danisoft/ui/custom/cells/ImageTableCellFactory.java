@@ -4,20 +4,18 @@ import javafx.scene.control.TableCell;
 import javafx.scene.control.TableColumn;
 import javafx.util.Callback;
 
-import org.danisoft.ui.model.UIContact;
-
 /**
  * Image table cell factory.
  * 
  * @author Daniel Garcia
  * 
  */
-public class ImageTableCellFactory implements Callback<TableColumn<UIContact, String>, TableCell<UIContact, String>> {
+public class ImageTableCellFactory<T> implements Callback<TableColumn<T, String>, TableCell<T, String>> {
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public TableCell<UIContact, String> call(final TableColumn<UIContact, String> arg0) {
-		return new ImageTableCell();
+	public TableCell<T, String> call(final TableColumn<T, String> arg0) {
+		return new ImageTableCell<T>();
 	}
 }

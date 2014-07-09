@@ -69,6 +69,8 @@ public class Contract implements Serializable {
 		this.account = account;
 	}
 
+	public Contract() {	}
+
 	/**
 	 * @return the id
 	 */
@@ -115,6 +117,8 @@ public class Contract implements Serializable {
 	 * @return the period
 	 */
 	public String getPeriod() {
+		if (period == null)
+			return null;
 		return period.getCode();
 	}
 
