@@ -6,6 +6,7 @@ import org.controlsfx.control.action.ActionGroup;
 import org.danisoft.ui.command.LoadFXMLTabCommand;
 import org.danisoft.ui.pages.AccountsController;
 import org.danisoft.ui.pages.ContractsController;
+import org.danisoft.ui.pages.ForecastController;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -21,7 +22,11 @@ public class AccountsManagerModule implements Module {
 				new LoadFXMLTabCommand<>(tabPane,
 						"Manage Contracts", 
 						"/org/danisoft/ui/pages/Contracts.fxml", 
-						ContractsController.class));
+						ContractsController.class),
+				new LoadFXMLTabCommand<>(tabPane,
+						"Forecast", 
+						"/org/danisoft/ui/pages/Forecast.fxml", 
+						ForecastController.class));
 		return actionGroup;
 	}
 

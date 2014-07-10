@@ -1,6 +1,7 @@
 package org.danisoft.ui.pages;
 
 import java.net.URL;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import javafx.beans.property.BooleanPropertyBase;
@@ -31,6 +32,7 @@ import org.danisoft.model.Period;
 import org.danisoft.services.IAccountsService;
 import org.danisoft.services.IContractService;
 import org.danisoft.ui.command.SimpleAction;
+import org.danisoft.ui.custom.cells.DatePickerTableCell;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Controller;
@@ -178,10 +180,23 @@ public class ContractsController implements Initializable {
 					e.getRowValue().setAmount(e.getNewValue());
 					isModified.set(true);
 				});
-		//		this.lastPaymentDate = lastPaymentDate;
-		//		this.amount = amount;
+		
+		TableColumn<Contract, Date> lastPaymentDateColumn =
+				new TableColumn<Contract, Date>("Last Payment Date");
+		lastPaymentDateColumn.setEditable(true);
+		lastPaymentDateColumn.setCellValueFactory(
+				new PropertyValueFactory<>("lastPaymentDate"));
+		lastPaymentDateColumn.setCellFactory(
+				DatePickerTableCell.forTableColumn());
+		lastPaymentDateColumn.setOnEditCommit(
+				e -> {
+					e.getRowValue().setLastPaymentDate(e.getNewValue());
+					isModified.set(true);
+				});
 	
-		contractsTable.getColumns().addAll(conceptColumn, periodColumn, accountColumn, amountColumn, fixedAmountColumn);
+		contractsTable.getColumns().addAll(
+				conceptColumn, lastPaymentDateColumn, periodColumn,
+				accountColumn, amountColumn, fixedAmountColumn);
 		contractsTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		contractsTable.setItems(contracts);
 	}

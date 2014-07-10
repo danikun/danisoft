@@ -3,12 +3,11 @@ package org.danisoft.dao;
 import java.util.Date;
 import java.util.List;
 
-import org.junit.Assert;
-
 import org.danisoft.model.Account;
 import org.danisoft.model.Contract;
 import org.danisoft.model.Period;
 import org.junit.After;
+import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
